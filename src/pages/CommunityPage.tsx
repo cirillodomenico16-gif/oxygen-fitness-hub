@@ -118,7 +118,7 @@ const CommunityPage: React.FC = () => {
       <div
         style={{
           padding: '24px',
-          maxWidth: '1200px',
+          maxWidth: '100%',
           margin: '0 auto',
         }}
       >

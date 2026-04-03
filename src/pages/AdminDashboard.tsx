@@ -210,7 +210,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div
         style={{
-          padding: '32px 32px 24px',
+          padding: '20px 16px 16px',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
           display: 'flex',
           justifyContent: 'space-between',
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
       >
         <h1
           style={{
-            fontSize: '32px',
+            fontSize: '26px',
             fontWeight: 'bold',
             margin: 0,
             fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -233,11 +233,11 @@ export default function AdminDashboard() {
       {/* Stats Cards Row */}
       <div
         style={{
-          padding: '32px 32px',
+          padding: '20px 16px',
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '20px',
-          maxWidth: '1200px',
+          maxWidth: '100%',
         }}
       >
         <StatCard
@@ -273,7 +273,7 @@ export default function AdminDashboard() {
       {/* Revenue Trend Chart */}
       <div
         style={{
-          padding: '32px',
+          padding: '20px 16px',
           paddingTop: '24px',
         }}
       >
@@ -386,7 +386,7 @@ export default function AdminDashboard() {
       {/* Recent Activity */}
       <div
         style={{
-          padding: '32px',
+          padding: '20px 16px',
           paddingTop: '24px',
         }}
       >
@@ -527,7 +527,7 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div
         style={{
-          padding: '32px',
+          padding: '20px 16px',
           paddingTop: '24px',
         }}
       >
@@ -547,7 +547,7 @@ export default function AdminDashboard() {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '20px',
-            maxWidth: '1200px',
+            maxWidth: '100%',
           }}
         >
           {quickActions.map((action, index) => {

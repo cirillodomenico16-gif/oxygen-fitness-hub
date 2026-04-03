@@ -303,7 +303,7 @@ const AdminSchedeAI: React.FC = () => {
     >
       {/* Header */}
       <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '100%', margin: '0 auto' }}>
           <h1 style={{ fontSize: '32px', fontWeight: '700', margin: 0, flex: 1 }}>Schede AI & Diete</h1>
           <div
             style={{
@@ -326,7 +326,7 @@ const AdminSchedeAI: React.FC = () => {
       </div>
 
       {/* Member Carousel */}
-      <div style={{ padding: '32px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ padding: '20px 16px', maxWidth: '100%', margin: '0 auto' }}>
         <div style={{ display: 'flex', gap: '24px', overflowX: 'auto', paddingBottom: '8px', scrollBehavior: 'smooth' }}>
           {members.map((member, index) => (
             <div
@@ -365,7 +365,7 @@ const AdminSchedeAI: React.FC = () => {
       </div>
 
       {/* Client Data Form Section */}
-      <div style={{ padding: '32px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ padding: '20px 16px', maxWidth: '100%', margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
           <Clipboard size={24} color="#e53935" />
           <h2 style={{ fontSize: '22px', fontWeight: '700', margin: 0 }}>Dati Cliente</h2>
@@ -602,7 +602,7 @@ const AdminSchedeAI: React.FC = () => {
       </div>
 
       {/* AI Generation Buttons */}
-      <div style={{ padding: '32px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ padding: '20px 16px', maxWidth: '100%', margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
           <button
             onClick={handleGenerateWorkout}
@@ -672,7 +672,7 @@ const AdminSchedeAI: React.FC = () => {
 
       {/* Generated Workout Plan */}
       {isWorkoutGenerated && (
-        <div style={{ padding: '32px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ padding: '20px 16px', maxWidth: '100%', margin: '0 auto' }}>
           {isLoading ? (
             <div style={{ textAlign: 'center' }}>
               <PulsingDots />
@@ -783,7 +783,7 @@ const AdminSchedeAI: React.FC = () => {
 
       {/* Generated Diet Plan */}
       {isDietGenerated && (
-        <div style={{ padding: '32px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ padding: '20px 16px', maxWidth: '100%', margin: '0 auto' }}>
           {isLoading ? (
             <div style={{ textAlign: 'center' }}>
               <PulsingDots />

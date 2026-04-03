@@ -151,8 +151,8 @@ const AdminCalendar: React.FC = () => {
         minHeight: '100vh',
         fontFamily: "'Plus Jakarta Sans', sans-serif",
         color: '#fff',
-        padding: '32px 32px 100px 32px',
-        overflow: 'auto',
+        padding: '20px 16px 100px 16px',
+        overflowX: 'hidden',
       }}
     >
       {/* Header */}
@@ -201,7 +201,8 @@ const AdminCalendar: React.FC = () => {
               border: '1px solid rgba(255,255,255,0.06)',
               borderRadius: '16px',
               padding: '16px 20px',
-              minWidth: '140px',
+              flex: '1 1 0',
+              minWidth: '80px',
               textAlign: 'center',
             }}
           >
@@ -234,7 +235,7 @@ const AdminCalendar: React.FC = () => {
         <table
           style={{
             width: '100%',
-            minWidth: '700px',
+            minWidth: '500px',
             borderCollapse: 'collapse',
             fontSize: '13px',
           }}
@@ -258,7 +259,7 @@ const AdminCalendar: React.FC = () => {
                   key={day}
                   style={{
                     flex: 1,
-                    minWidth: '100px',
+                    minWidth: '70px',
                     padding: '12px 8px',
                     textAlign: 'center',
                     borderBottom: '1px solid rgba(255,255,255,0.06)',
@@ -295,7 +296,7 @@ const AdminCalendar: React.FC = () => {
                       key={`${day}-${time}`}
                       style={{
                         flex: 1,
-                        minWidth: '100px',
+                        minWidth: '70px',
                         padding: '8px',
                         borderBottom: '1px solid rgba(255,255,255,0.06)',
                         borderRight: '1px solid rgba(255,255,255,0.06)',
@@ -383,8 +384,8 @@ const AdminCalendar: React.FC = () => {
           >
             <button
               style={{
-                flex: 1,
-                minWidth: '140px',
+                flex: '1 1 0',
+                minWidth: '80px',
                 padding: '10px 16px',
                 backgroundColor: 'transparent',
                 border: '1px solid #3b82f6',
@@ -400,8 +401,8 @@ const AdminCalendar: React.FC = () => {
             </button>
             <button
               style={{
-                flex: 1,
-                minWidth: '140px',
+                flex: '1 1 0',
+                minWidth: '80px',
                 padding: '10px 16px',
                 backgroundColor: 'transparent',
                 border: '1px solid #e53935',
