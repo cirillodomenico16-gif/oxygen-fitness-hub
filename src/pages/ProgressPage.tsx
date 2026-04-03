@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import { PHOTOS } from '../App';
+import { PHOTOS } from '../constants';
 
 const ProgressPage: React.FC = () => {
   // Weight data for the chart

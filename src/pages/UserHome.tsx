@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PHOTOS } from '../App';
+import { PHOTOS } from '../constants';
 
 const UserHome: React.FC = () => {
   const navigate = useNavigate();

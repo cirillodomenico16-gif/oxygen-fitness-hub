@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PHOTOS } from '../App';
+import { PHOTOS } from '../constants';
 
 interface Exercise {
   name: string;

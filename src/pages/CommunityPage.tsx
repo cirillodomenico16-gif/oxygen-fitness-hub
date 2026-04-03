@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
-import { PHOTOS } from '../App';
+import { PHOTOS } from '../constants';
 
 interface ActivityItem {
   id: number;

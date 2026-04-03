@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, MapPin, Zap } from 'lucide-react';
-import { PHOTOS } from '../App';
+import { PHOTOS } from '../constants';
 
 interface Course {
   id: number;
