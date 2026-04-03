@@ -1,0 +1,195 @@
+/* Premium Bottom Navigation Styling */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-border);
+  background: linear-gradient(180deg, rgba(21, 27, 58, 0.95) 0%, rgba(10, 14, 39, 0.98) 100%);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.bottom-nav__container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 100%;
+  height: 100%;
+  padding: 0 var(--space-md);
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-body);
+  transition: all var(--transition-base);
+  position: relative;
+  min-width: 50px;
+  border-radius: var(--radius-md);
+  user-select: none;
+}
+
+.bottom-nav__item:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 61, 61, 0.08);
+  transform: translateY(-2px);
+}
+
+.bottom-nav__item--active {
+  color: var(--color-accent-red);
+}
+
+.bottom-nav__icon-wrapper {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.bottom-nav__item--active .bottom-nav__icon-wrapper {
+  background: rgba(255, 61, 61, 0.1);
+  box-shadow: inset 0 0 12px rgba(255, 61, 61, 0.2);
+}
+
+.bottom-nav__item--active .bottom-nav__icon-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: radial-gradient(circle, rgba(255, 61, 61, 0.3) 0%, transparent 70%);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.bottom-nav__label {
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  transition: opacity var(--transition-base);
+}
+
+.bottom-nav__item--active .bottom-nav__label {
+  opacity: 1;
+  font-weight: var(--font-weight-semibold);
+}
+
+.bottom-nav__indicator {
+  position: absolute;
+  bottom: -8px;
+  width: 24px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-red), transparent);
+  border-radius: var(--radius-full);
+  animation: slideInUp 300ms ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: inset 0 0 12px rgba(255, 61, 61, 0.2);
+  }
+  50% {
+    box-shadow: inset 0 0 20px rgba(255, 61, 61, 0.3);
+  }
+}
+
+/* Touch/Mobile Optimizations */
+@media (max-width: 640px) {
+  .bottom-nav {
+    height: 72px;
+    padding: var(--space-xs) 0;
+  }
+
+  .bottom-nav__item {
+    min-width: 44px;
+    gap: 2px;
+  }
+
+  .bottom-nav__label {
+    font-size: 9px;
+  }
+
+  .bottom-nav__icon-wrapper {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Active State Animations */
+.bottom-nav__item--active {
+  animation: bottomNavPulse 400ms ease-out;
+}
+
+@keyframes bottomNavPulse {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Accessibility */
+.bottom-nav__item:focus-visible {
+  outline: 2px solid var(--color-accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Dark Mode (already in dark mode - enhanced) */
+@media (prefers-color-scheme: dark) {
+  .bottom-nav {
+    background: linear-gradient(180deg, rgba(15, 20, 45, 0.96) 0%, rgba(10, 14, 39, 0.99) 100%);
+    border-top-color: rgba(255, 61, 61, 0.1);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav__item,
+  .bottom-nav__icon-wrapper,
+  .bottom-nav__label {
+    transition: none;
+  }
+
+  .bottom-nav__item--active {
+    animation: none;
+  }
+
+  .bottom-nav__item--active .bottom-nav__icon-wrapper::after {
+    animation: none;
+  }
+}

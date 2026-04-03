@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { COLORS } from './config/theme';
 import BottomNav from './components/BottomNav';
-import AdminBottomNav from './components/AdminBottomNav';
 import HomePage from './components/HomePage';
 import BookingPage from './components/BookingPage';
 import WorkoutPage from './components/WorkoutPage';
@@ -10,10 +10,7 @@ import PersonalTrainerAIPage from './components/PersonalTrainerAIPage';
 import AdminDashboardPage from './components/AdminDashboardPage';
 import AdminAIPage from './components/AdminAIPage';
 import AdminCalendarPage from './components/AdminCalendarPage';
-
-type UserPage = 'home' | 'booking' | 'workout' | 'progress' | 'ai-trainer';
-type AdminPage = 'admin-dashboard' | 'admin-ai' | 'admin-calendar';
-type Mode = 'user' | 'admin';
+import AdminBottomNav from './components/AdminBottomNav';
 
 function AdminBadge() {
   return (
@@ -33,59 +30,56 @@ function AdminBadge() {
 }
 
 export default function App() {
-  const [mode, setMode] = useState<Mode>('user');
-  const [userPage, setUserPage] = useState<UserPage>('home');
-  const [adminPage, setAdminPage] = useState<AdminPage>('admin-dashboard');
-
-  const switchToAdmin = () => {
-    setMode('admin');
-    setAdminPage('admin-dashboard');
-  };
-
-  const switchToUser = () => {
-    setMode('user');
-    setUserPage('home');
-  };
-
   return (
-    <div style={{
-      background: COLORS.bg, minHeight: '100vh',
-      maxWidth: '430px', margin: '0 auto',
-      position: 'relative',
-    }}>
-      {mode === 'admin' && <AdminBadge />}
+    <Router>
+      <div style={{
+        background: COLORS.bg, minHeight: '100vh',
+        maxWidth: '430px', margin: '0 auto',
+        position: 'relative',
+      }}>
+        <Routes>
+          {/* User Routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/booking" element={<BookingPage />} />
+          <Route path="/workout" element={<WorkoutPage />} />
+          <Route path="/schedule" element={<BookingPage />} />
+          <Route path="/progress" element={<ProgressPage />} />
+          <Route path="/community" element={<PersonalTrainerAIPage />} />
+          <Route path="/ai-trainer" element={<PersonalTrainerAIPage />} />
 
-      {mode === 'user' && (
-        <>
-          <div style={{ paddingTop: 0 }}>
-            {userPage === 'home'       && <HomePage onNavigate={(p) => setUserPage(p as UserPage)} />}
-            {userPage === 'booking'    && <BookingPage />}
-            {userPage === 'workout'    && <WorkoutPage />}
-            {userPage === 'ai-trainer' && <PersonalTrainerAIPage />}
-            {userPage === 'progress'   && <ProgressPage />}
-          </div>
-          <BottomNav
-            currentPage={userPage}
-            onNavigate={setUserPage}
-            onAdminClick={switchToAdmin}
-          />
-        </>
-      )}
+          {/* Admin Routes */}
+          <Route path="/admin-dashboard" element={
+            <>
+              <AdminBadge />
+              <div style={{ paddingTop: '24px' }}>
+                <AdminDashboardPage />
+              </div>
+              <AdminBottomNav currentPage="admin-dashboard" onNavigate={() => {}} onBackToUser={() => {}} />
+            </>
+          } />
+          <Route path="/admin-ai" element={
+            <>
+              <AdminBadge />
+              <div style={{ paddingTop: '24px' }}>
+                <AdminAIPage />
+              </div>
+              <AdminBottomNav currentPage="admin-ai" onNavigate={() => {}} onBackToUser={() => {}} />
+            </>
+          } />
+          <Route path="/admin-calendar" element={
+            <>
+              <AdminBadge />
+              <div style={{ paddingTop: '24px' }}>
+                <AdminCalendarPage />
+              </div>
+              <AdminBottomNav currentPage="admin-calendar" onNavigate={() => {}} onBackToUser={() => {}} />
+            </>
+          } />
+        </Routes>
 
-      {mode === 'admin' && (
-        <>
-          <div style={{ paddingTop: '24px' }}>
-            {adminPage === 'admin-dashboard' && <AdminDashboardPage />}
-            {adminPage === 'admin-ai'        && <AdminAIPage />}
-            {adminPage === 'admin-calendar'  && <AdminCalendarPage />}
-          </div>
-          <AdminBottomNav
-            currentPage={adminPage}
-            onNavigate={setAdminPage}
-            onBackToUser={switchToUser}
-          />
-        </>
-      )}
-    </div>
+        {/* Bottom Nav for user routes - only show on non-admin routes */}
+        <BottomNav />
+      </div>
+    </Router>
   );
 }

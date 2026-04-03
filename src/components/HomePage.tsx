@@ -1,230 +1,245 @@
-import { useState } from 'react';
-import { COLORS } from '../config/theme';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  PlayIcon,
+  HeartIcon,
+  StarIcon,
+  ArrowRightIcon,
+} from './PremiumIcons';
+import './HomePage.css';
 
-interface HomePageProps {
-  onNavigate: (page: 'booking' | 'workout' | 'progress' | 'community') => void;
+interface Workout {
+  id: string;
+  name: string;
+  duration: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  muscle: string;
+  featured?: boolean;
 }
 
-const todayWorkout = [
-  { name: 'Squat', sets: 4, reps: '12', done: true },
-  { name: 'Stacco Rumeno', sets: 3, reps: '10', done: true },
-  { name: 'Leg Press', sets: 3, reps: '15', done: false },
-  { name: 'Leg Curl', sets: 3, reps: '12', done: false },
-];
+const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+  const [featuredWorkouts, setFeaturedWorkouts] = useState<Workout[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const upcomingCourses = [
-  { name: 'HIIT Totale', time: '18:30', instructor: 'Marco R.', emoji: '🔥' },
-  { name: 'Yoga Flow', time: '20:00', instructor: 'Sofia B.', emoji: '🧘' },
-];
+  useEffect(() => {
+    // Simulate loading featured workouts
+    const mockWorkouts: Workout[] = [
+      {
+        id: '1',
+        name: 'Power Push Day',
+        duration: 45,
+        difficulty: 'hard',
+        muscle: 'Chest, Shoulders, Triceps',
+        featured: true,
+      },
+      {
+        id: '2',
+        name: 'Leg Day Strength',
+        duration: 50,
+        difficulty: 'hard',
+        muscle: 'Quads, Glutes, Hamstrings',
+        featured: true,
+      },
+      {
+        id: '3',
+        name: 'Core & Cardio',
+        duration: 30,
+        difficulty: 'medium',
+        muscle: 'Core, Cardiovascular',
+        featured: true,
+      },
+    ];
 
-const stats = [
-  { label: 'Sessioni', value: '24', unit: 'questo mese', emoji: '🏋️' },
-  { label: 'Calorie', value: '12.4k', unit: 'bruciate', emoji: '🔥' },
-  { label: 'Streak', value: '18', unit: 'giorni', emoji: '⚡' },
-  { label: 'XP', value: '3.2k', unit: 'punti', emoji: '⭐' },
-];
+    setTimeout(() => {
+      setFeaturedWorkouts(mockWorkouts);
+      setLoading(false);
+    }, 300);
+  }, []);
 
-export default function HomePage({ onNavigate }: HomePageProps) {
-  const [greeting] = useState(() => {
-    const h = new Date().getHours();
-    if (h < 12) return 'Buongiorno';
-    if (h < 18) return 'Buon pomeriggio';
-    return 'Buonasera';
-  });
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy':
+        return '#10b981';
+      case 'medium':
+        return '#ffd700';
+      case 'hard':
+        return '#ff3d3d';
+      default:
+        return '#00d4ff';
+    }
+  };
 
   return (
-    <div style={{ background: COLORS.bg, minHeight: '100vh', paddingBottom: '100px' }}>
-      {/* Header */}
-      <div style={{
-        background: COLORS.gradientDark,
-        padding: '60px 20px 24px',
-        borderBottom: `1px solid ${COLORS.border}`,
-        position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute', top: -60, right: -40,
-          width: 200, height: 200,
-          background: `radial-gradient(circle, ${COLORS.primary}18 0%, transparent 70%)`,
-          borderRadius: '50%',
-        }} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <p style={{ color: COLORS.muted, fontSize: '13px', marginBottom: '4px' }}>{greeting} 👋</p>
-            <h1 style={{ color: COLORS.text, fontSize: '26px', fontWeight: 800 }}>Alessandro</h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
-              <div style={{
-                background: COLORS.gradient, borderRadius: '20px',
-                padding: '3px 12px', display: 'inline-flex', alignItems: 'center', gap: '6px',
-              }}>
-                <span style={{ fontSize: '12px' }}>⚡</span>
-                <span style={{ color: 'white', fontSize: '12px', fontWeight: 700 }}>18 giorni di streak</span>
-              </div>
-            </div>
-          </div>
-          <div style={{
-            width: 50, height: 50,
-            background: COLORS.gradient,
-            borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '22px', boxShadow: `0 0 20px ${COLORS.primary}40`,
-          }}>A</div>
-        </div>
-      </div>
-
-      <div style={{ padding: '20px' }}>
-        {/* Stats */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr',
-          gap: '12px', marginBottom: '24px',
-        }}>
-          {stats.map((s) => (
-            <div key={s.label} style={{
-              background: COLORS.card,
-              border: `1px solid ${COLORS.border}`,
-              borderRadius: '16px', padding: '16px',
-            }}>
-              <div style={{ fontSize: '24px', marginBottom: '8px' }}>{s.emoji}</div>
-              <div style={{ color: COLORS.text, fontSize: '22px', fontWeight: 800 }}>{s.value}</div>
-              <div style={{ color: COLORS.muted, fontSize: '11px', marginTop: '2px' }}>{s.label} · {s.unit}</div>
-            </div>
-          ))}
+    <div className="home-page">
+      {/* Hero Section */}
+      <section className="home-hero">
+        <div className="home-hero__background">
+          <div className="home-hero__blur-circle home-hero__blur-circle--1"></div>
+          <div className="home-hero__blur-circle home-hero__blur-circle--2"></div>
         </div>
 
-        {/* XP Progress Bar */}
-        <div style={{
-          background: COLORS.card,
-          border: `1px solid ${COLORS.border}`,
-          borderRadius: '16px', padding: '18px', marginBottom: '24px',
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <div>
-              <span style={{ color: COLORS.text, fontWeight: 700 }}>Livello 12</span>
-              <span style={{
-                marginLeft: '10px', background: COLORS.gradient,
-                borderRadius: '10px', padding: '2px 8px',
-                color: 'white', fontSize: '11px', fontWeight: 700,
-              }}>⭐ ELITE</span>
-            </div>
-            <span style={{ color: COLORS.muted, fontSize: '13px' }}>3,200 / 4,000 XP</span>
-          </div>
-          <div style={{
-            height: '8px', background: COLORS.dark, borderRadius: '10px', overflow: 'hidden',
-          }}>
-            <div style={{
-              width: '80%', height: '100%', background: COLORS.gradient,
-              borderRadius: '10px',
-              boxShadow: `0 0 10px ${COLORS.primary}60`,
-            }} />
-          </div>
-          <p style={{ color: COLORS.muted, fontSize: '12px', marginTop: '8px' }}>800 XP al prossimo livello 🚀</p>
-        </div>
+        <div className="home-hero__content">
+          <h1 className="home-hero__title">
+            Oxygen<span className="home-hero__title-accent">.</span>
+          </h1>
+          <p className="home-hero__subtitle">
+            Your personal fitness journey starts here. Transform your body, elevate your mind.
+          </p>
 
-        {/* Today's Workout */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <h2 style={{ color: COLORS.text, fontSize: '17px', fontWeight: 700 }}>💪 Allenamento di Oggi</h2>
-            <button onClick={() => onNavigate('workout')} style={{
-              background: 'none', border: 'none', color: COLORS.primary,
-              fontSize: '13px', cursor: 'pointer', fontWeight: 600,
-            }}>Vai →</button>
-          </div>
-          <div style={{
-            background: COLORS.card, border: `1px solid ${COLORS.border}`,
-            borderRadius: '16px', overflow: 'hidden',
-          }}>
-            {todayWorkout.map((ex, i) => (
-              <div key={ex.name} style={{
-                display: 'flex', alignItems: 'center', gap: '14px',
-                padding: '14px 16px',
-                borderBottom: i < todayWorkout.length - 1 ? `1px solid ${COLORS.border}` : 'none',
-              }}>
-                <div style={{
-                  width: 28, height: 28, borderRadius: '50%',
-                  background: ex.done ? COLORS.gradient : COLORS.dark,
-                  border: `2px solid ${ex.done ? COLORS.primary : COLORS.border}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '14px', flexShrink: 0,
-                }}>
-                  {ex.done ? '✓' : ''}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ color: ex.done ? COLORS.textSec : COLORS.text, fontSize: '14px', fontWeight: 600 }}>{ex.name}</p>
-                  <p style={{ color: COLORS.muted, fontSize: '12px' }}>{ex.sets} serie × {ex.reps} reps</p>
-                </div>
-                {ex.done && <span style={{ color: COLORS.success, fontSize: '12px', fontWeight: 700 }}>FATTO</span>}
-              </div>
-            ))}
-            <div style={{ padding: '14px 16px' }}>
-              <button onClick={() => onNavigate('workout')} style={{
-                width: '100%', background: COLORS.gradient, border: 'none',
-                borderRadius: '12px', padding: '12px',
-                color: 'white', fontSize: '14px', fontWeight: 700, cursor: 'pointer',
-                boxShadow: `0 4px 15px ${COLORS.primary}40`,
-              }}>
-                🏋️ Continua Allenamento
-              </button>
+          <div className="home-hero__stats">
+            <div className="home-stat">
+              <div className="home-stat__value">42</div>
+              <div className="home-stat__label">Workouts</div>
+            </div>
+            <div className="home-stat">
+              <div className="home-stat__value">156</div>
+              <div className="home-stat__label">Members</div>
+            </div>
+            <div className="home-stat">
+              <div className="home-stat__value">4.8</div>
+              <div className="home-stat__label">Rating</div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Upcoming Courses */}
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <h2 style={{ color: COLORS.text, fontSize: '17px', fontWeight: 700 }}>📅 Corsi di Oggi</h2>
-            <button onClick={() => onNavigate('booking')} style={{
-              background: 'none', border: 'none', color: COLORS.primary,
-              fontSize: '13px', cursor: 'pointer', fontWeight: 600,
-            }}>Tutti →</button>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {upcomingCourses.map((c) => (
-              <div key={c.name} style={{
-                background: COLORS.card, border: `1px solid ${COLORS.border}`,
-                borderRadius: '14px', padding: '14px 16px',
-                display: 'flex', alignItems: 'center', gap: '14px',
-              }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: '12px',
-                  background: `${COLORS.primary}20`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '22px', flexShrink: 0,
-                }}>{c.emoji}</div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ color: COLORS.text, fontSize: '14px', fontWeight: 700 }}>{c.name}</p>
-                  <p style={{ color: COLORS.muted, fontSize: '12px' }}>{c.instructor} · {c.time}</p>
-                </div>
-                <button style={{
-                  background: COLORS.gradient, border: 'none',
-                  borderRadius: '10px', padding: '7px 14px',
-                  color: 'white', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
-                }}>Prenota</button>
+      {/* Featured Workouts Section */}
+      <section className="home-featured">
+        <div className="home-featured__header">
+          <h2 className="home-featured__title">Featured Workouts</h2>
+          <button
+            className="home-featured__view-all"
+            onClick={() => navigate('/workout')}
+          >
+            View all
+            <ArrowRightIcon size={16} color="#00d4ff" />
+          </button>
+        </div>
+
+        {loading ? (
+          <div className="home-featured__skeleton">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="home-workout-card home-workout-card--skeleton">
+                <div className="skeleton-element skeleton-element--image"></div>
+                <div className="skeleton-element skeleton-element--title"></div>
+                <div className="skeleton-element skeleton-element--text"></div>
               </div>
             ))}
           </div>
+        ) : (
+          <div className="home-featured__grid">
+            {featuredWorkouts.map((workout, index) => (
+              <div
+                key={workout.id}
+                className="home-workout-card"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                }}
+              >
+                <div className="home-workout-card__header">
+                  <div className="home-workout-card__difficulty">
+                    <span
+                      className="home-workout-card__difficulty-dot"
+                      style={{
+                        background: getDifficultyColor(workout.difficulty),
+                      }}
+                    ></span>
+                    <span className="home-workout-card__difficulty-text">
+                      {workout.difficulty.charAt(0).toUpperCase() +
+                        workout.difficulty.slice(1)}
+                    </span>
+                  </div>
+                  <button className="home-workout-card__favorite">
+                    <HeartIcon size={20} color="#ff3d3d" withGradient />
+                  </button>
+                </div>
+
+                <h3 className="home-workout-card__title">{workout.name}</h3>
+                <p className="home-workout-card__muscle">{workout.muscle}</p>
+
+                <div className="home-workout-card__footer">
+                  <div className="home-workout-card__duration">
+                    <span className="home-workout-card__duration-value">
+                      {workout.duration}m
+                    </span>
+                  </div>
+                  <button className="home-workout-card__start-btn">
+                    <PlayIcon size={18} color="#ffffff" />
+                    Start
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Quick Stats Section */}
+      <section className="home-quick-stats">
+        <div className="home-quick-stats__header">
+          <h2 className="home-quick-stats__title">This Week</h2>
         </div>
 
-        {/* Community CTA */}
-        <div style={{
-          background: `linear-gradient(135deg, ${COLORS.card}, #1e0505)`,
-          border: `1px solid ${COLORS.borderBright}`,
-          borderRadius: '16px', padding: '20px',
-          display: 'flex', alignItems: 'center', gap: '16px',
-        }}>
-          <div style={{ fontSize: '40px' }}>🏆</div>
-          <div style={{ flex: 1 }}>
-            <p style={{ color: COLORS.text, fontWeight: 700, fontSize: '15px' }}>Challenge del Mese</p>
-            <p style={{ color: COLORS.muted, fontSize: '12px', marginTop: '3px' }}>
-              Sei al 3° posto — ancora 2 sessioni per scalare la classifica!
-            </p>
+        <div className="home-quick-stats__grid">
+          <div className="home-quick-stat-box">
+            <div className="home-quick-stat-box__icon">
+              <PlayIcon size={24} color="#ff3d3d" withGradient />
+            </div>
+            <div className="home-quick-stat-box__content">
+              <div className="home-quick-stat-box__value">5</div>
+              <div className="home-quick-stat-box__label">Workouts</div>
+            </div>
+            <div className="home-quick-stat-box__progress">
+              <div className="home-quick-stat-box__progress-bar">
+                <div
+                  className="home-quick-stat-box__progress-fill"
+                  style={{ width: '65%' }}
+                ></div>
+              </div>
+              <span className="home-quick-stat-box__progress-text">65%</span>
+            </div>
           </div>
-          <button onClick={() => onNavigate('community')} style={{
-            background: COLORS.gradient, border: 'none',
-            borderRadius: '10px', padding: '8px 14px',
-            color: 'white', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}>Vedi →</button>
+
+          <div className="home-quick-stat-box">
+            <div className="home-quick-stat-box__icon">
+              <StarIcon size={24} color="#ffd700" withGradient />
+            </div>
+            <div className="home-quick-stat-box__content">
+              <div className="home-quick-stat-box__value">2,450</div>
+              <div className="home-quick-stat-box__label">Calories Burned</div>
+            </div>
+            <div className="home-quick-stat-box__progress">
+              <div className="home-quick-stat-box__progress-bar">
+                <div
+                  className="home-quick-stat-box__progress-fill"
+                  style={{ width: '82%' }}
+                ></div>
+              </div>
+              <span className="home-quick-stat-box__progress-text">82%</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="home-cta">
+        <div className="home-cta__content">
+          <h2 className="home-cta__title">Ready for your next challenge?</h2>
+          <p className="home-cta__description">
+            Access premium workouts and personalized coaching today
+          </p>
+          <button
+            className="home-cta__button"
+            onClick={() => navigate('/workout')}
+          >
+            Explore Workouts
+            <ArrowRightIcon size={18} color="#ffffff" />
+          </button>
+        </div>
+      </section>
     </div>
   );
-}
+};
+
+export default HomePage;
