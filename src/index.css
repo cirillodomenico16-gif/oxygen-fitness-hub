@@ -1,0 +1,11 @@
+@import './O2_THEME_VARIABLES.css';
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #060202;
+  font-family: -apple-system, 'SF Pro Display', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+::-webkit-scrollbar { display: none; }
+input, button, textarea { font-family: inherit; }

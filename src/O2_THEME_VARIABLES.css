@@ -1,0 +1,264 @@
+/* Oxygen Fitness Hub - CSS Design Tokens */
+
+:root {
+  /* Color Palette */
+  --color-bg-primary: #0a0e27;
+  --color-bg-secondary: #151b3a;
+  --color-bg-tertiary: #1f2643;
+
+  --color-accent-red: #ff3d3d;
+  --color-accent-red-light: #ff6b6b;
+  --color-accent-red-dark: #e63030;
+
+  --color-accent-cyan: #00d4ff;
+  --color-accent-cyan-light: #33e0ff;
+  --color-accent-cyan-dark: #00a8cc;
+
+  --color-accent-gold: #ffd700;
+  --color-accent-gold-light: #ffed4e;
+  --color-accent-gold-dark: #daa500;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b0b5c8;
+  --color-text-tertiary: #8a8f9e;
+
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-light: rgba(255, 255, 255, 0.05);
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Gradients */
+  --gradient-red-neon: linear-gradient(135deg, #ff3d3d 0%, #ff6b6b 100%);
+  --gradient-cyan-neon: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+  --gradient-gold-neon: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  --gradient-dark-overlay: linear-gradient(180deg, rgba(10, 14, 39, 0.9) 0%, rgba(10, 14, 39, 0.7) 100%);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+
+  /* Glass Effects */
+  --glass-light: rgba(255, 255, 255, 0.08);
+  --glass-medium: rgba(255, 255, 255, 0.12);
+  --glass-dark: rgba(255, 255, 255, 0.06);
+  --glass-blur: blur(8px);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+
+  /* Glows */
+  --glow-red: 0 0 20px rgba(255, 61, 61, 0.3);
+  --glow-red-intense: 0 0 30px rgba(255, 61, 61, 0.5);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.2);
+  --glow-cyan-intense: 0 0 30px rgba(0, 212, 255, 0.4);
+  --glow-gold: 0 0 20px rgba(255, 215, 0, 0.25);
+
+  /* Border Radius */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+
+  /* Transitions */
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Typography */
+  --font-display: -apple-system, BlinkMacSystemFont, 'Inter Tight', 'DM Sans', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+}
+
+/* Global Resets & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animation Definitions */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 61, 61, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 61, 61, 0.5);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Utility Classes for Common States */
+.animate-fade-in-down {
+  animation: fadeInDown 500ms ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 500ms ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 500ms ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 400ms ease-out forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.glow-red {
+  box-shadow: var(--glow-red);
+}
+
+.glow-red-hover:hover {
+  box-shadow: var(--glow-red-intense);
+  transition: box-shadow var(--transition-base);
+}
+
+.glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+.glow-cyan-hover:hover {
+  box-shadow: var(--glow-cyan-intense);
+  transition: box-shadow var(--transition-base);
+}
+
+/* Backdrop Blur Support */
+.glass-effect {
+  background: var(--glass-medium);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border);
+}
+
+.glass-effect-light {
+  background: var(--glass-light);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-light);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-red);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-red-light);
+}
