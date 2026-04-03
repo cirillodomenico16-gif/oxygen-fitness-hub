@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Users,
   Euro,
@@ -86,6 +87,8 @@ export default function AdminDashboard() {
     },
   ];
 
+  const nav = useNavigate();
+
   // Quick actions
   const quickActions = [
     {
@@ -94,6 +97,7 @@ export default function AdminDashboard() {
       icon: Plus,
       color: '#3b82f6',
       bgColor: 'rgba(59, 130, 246, 0.1)',
+      route: '/admin/settings',
     },
     {
       id: 2,
@@ -101,6 +105,7 @@ export default function AdminDashboard() {
       icon: Brain,
       color: '#e53935',
       bgColor: 'rgba(229, 57, 53, 0.1)',
+      route: '/admin/schede-ai',
     },
     {
       id: 3,
@@ -108,6 +113,7 @@ export default function AdminDashboard() {
       icon: FileText,
       color: '#22c55e',
       bgColor: 'rgba(34, 197, 94, 0.1)',
+      route: '/admin',
     },
     {
       id: 4,
@@ -115,6 +121,7 @@ export default function AdminDashboard() {
       icon: Calendar,
       color: '#a855f7',
       bgColor: 'rgba(168, 85, 247, 0.1)',
+      route: '/admin/calendario',
     },
   ];
 
@@ -557,6 +564,7 @@ export default function AdminDashboard() {
                 }}
               >
                 <div
+                  onClick={() => (action as any).route && nav((action as any).route)}
                   style={{
                     backgroundColor: `${action.bgColor}`,
                     border: `2px solid ${action.color}40`,

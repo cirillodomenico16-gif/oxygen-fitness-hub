@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ArrowRight, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, ArrowRight, Check, ClipboardList } from 'lucide-react';
 
 interface Series {
   id: number;
@@ -7,6 +8,7 @@ interface Series {
 }
 
 export default function WorkoutActivePage() {
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(95);
   const [currentSeries, setCurrentSeries] = useState(3);
   const [series, setSeries] = useState<Series[]>([
@@ -79,6 +81,7 @@ export default function WorkoutActivePage() {
         }}
       >
         <button
+          onClick={() => navigate('/')}
           style={{
             position: 'absolute',
             left: '16px',
@@ -357,6 +360,31 @@ export default function WorkoutActivePage() {
           </span>
           <ArrowRight size={20} color="rgba(255,255,255,0.6)" />
         </div>
+
+        {/* View Weekly Schedule Link */}
+        <button
+          onClick={() => navigate('/scheda')}
+          style={{
+            width: '100%',
+            backgroundColor: 'rgba(17,24,39,0.85)',
+            borderRadius: '12px',
+            padding: '14px 16px',
+            border: '1px solid rgba(229,57,53,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+            color: '#ff7f7f',
+            fontSize: '14px',
+            fontWeight: '600',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            transition: 'all 0.2s ease',
+          }}
+        >
+          <ClipboardList size={18} />
+          Vedi Scheda Settimanale
+        </button>
       </div>
 
       {/* CTA Button */}

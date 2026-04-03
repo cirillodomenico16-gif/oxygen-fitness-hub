@@ -8,9 +8,9 @@ const UserBottomNav: React.FC = () => {
   const tabs = [
     { path: '/', label: 'Home', icon: 'house' },
     { path: '/corsi', label: 'Corsi', icon: 'calendar' },
-    { path: '/allenamento', label: 'Allenamento', icon: 'dumbbell' },
+    { path: '/allenamento', label: 'Workout', icon: 'dumbbell' },
+    { path: '/dieta', label: 'Dieta', icon: 'apple' },
     { path: '/progressi', label: 'Stats', icon: 'chart' },
-    { path: '/profilo', label: 'Profilo', icon: 'user' },
   ];
 
   const renderIcon = (iconName: string) => {
@@ -56,11 +56,11 @@ const UserBottomNav: React.FC = () => {
             <line x1="6" y1="20" x2="6" y2="16"></line>
           </svg>
         );
-      case 'user':
+      case 'apple':
         return (
           <svg {...iconProps}>
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M12 2c-1.5 0-2.5 1-3 2H9c-2 0-4 2-4 5 0 4 2 9 5 11 1 .5 1.5.5 2 0 3-2 5-7 5-11 0-3-2-5-4-5h0c-.5-1-1.5-2-3-2z"></path>
+            <path d="M12 2c.5-1 1.5-2 3-2"></path>
           </svg>
         );
       default:
