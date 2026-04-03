@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, MapPin, Zap } from 'lucide-react';
+import { PHOTOS } from '../App';
 
 interface Course {
   id: number;
@@ -184,6 +185,11 @@ const CorsiPage: React.FC = () => {
             {day}
           </button>
         ))}
+      </div>
+
+      {/* Photo Banner */}
+      <div style={{ margin: '0 20px 16px', borderRadius: '16px', height: '120px', backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.85), rgba(10,14,26,0.2)), url(${PHOTOS.sala})`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'flex-end', padding: '16px' }}>
+        <div style={{ color: 'white', fontSize: '16px', fontWeight: '700' }}>Le nostre sale</div>
       </div>
 
       {/* Courses List */}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PHOTOS } from '../App';
 
 const UserHome: React.FC = () => {
   const navigate = useNavigate();
@@ -33,16 +34,18 @@ const UserHome: React.FC = () => {
 
   const motivationalBannerStyle: React.CSSProperties = {
     margin: '20px 20px',
-    padding: '20px',
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
     borderRadius: '16px',
-    height: '120px',
+    height: '140px',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '20px',
     animation: 'fadeInUp 0.6s ease-out 0.1s both',
     border: '1px solid rgba(255, 255, 255, 0.06)',
+    backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.9) 10%, rgba(10,14,26,0.3) 100%), url(${PHOTOS.gym})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    overflow: 'hidden',
   };
 
   const motivationalTitleStyle: React.CSSProperties = {
@@ -71,12 +74,10 @@ const UserHome: React.FC = () => {
   };
 
   const workoutImageAreaStyle: React.CSSProperties = {
-    height: '100px',
-    background: 'linear-gradient(135deg, rgba(229,57,53,0.3), rgba(255,140,0,0.2)), linear-gradient(to bottom, rgba(17,24,39,0.5), rgba(17,24,39,0.95))',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '40px',
+    height: '120px',
+    backgroundImage: `linear-gradient(to bottom, rgba(10,14,26,0.1), rgba(17,24,39,0.95)), url(${PHOTOS.benchpress})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   };
 
   const workoutContentStyle: React.CSSProperties = {
@@ -250,19 +251,22 @@ const UserHome: React.FC = () => {
     gap: '12px',
   };
 
-  const quickActionCardStyle: React.CSSProperties = {
-    backgroundColor: 'rgba(17, 24, 39, 0.85)',
-    border: '1px solid rgba(255, 255, 255, 0.06)',
+  const quickActionCardBase: React.CSSProperties = {
     borderRadius: '16px',
-    height: '60px',
+    height: '80px',
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    fontSize: '14px',
-    fontWeight: 600,
-    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: '13px',
+    fontWeight: 700,
+    color: 'white',
+    padding: '12px',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    border: '1px solid rgba(255,255,255,0.06)',
+    textShadow: '0 1px 4px rgba(0,0,0,0.7)',
   };
 
   return (
@@ -306,16 +310,14 @@ const UserHome: React.FC = () => {
 
       {/* Motivational Banner */}
       <div style={motivationalBannerStyle}>
-        <div style={{ fontSize: '40px', marginBottom: '8px' }}>💪</div>
         <h2 style={motivationalTitleStyle}>LA TUA PALESTRA</h2>
         <p style={motivationalSubtitleStyle}>Oxygen Fitness Hub</p>
       </div>
 
       {/* Workout Card */}
       <div style={workoutCardStyle}>
-        <div style={workoutImageAreaStyle}>
-          🏋️
-        </div>
+        <div style={workoutImageAreaStyle} />
+
         <div style={workoutContentStyle}>
           <p style={workoutLabelStyle}>Il tuo allenamento</p>
           <h2 style={workoutTitleStyle}>Upper Body Strength</h2>
@@ -331,7 +333,7 @@ const UserHome: React.FC = () => {
             style={secondaryLinkStyle}
             onClick={() => navigate('/scheda')}
           >
-            📋 Vedi Scheda Settimanale
+            Vedi Scheda Settimanale
           </button>
         </div>
       </div>
@@ -340,7 +342,7 @@ const UserHome: React.FC = () => {
       <div style={statsRowStyle}>
         <div style={statCardStyle}>
           <p style={statValueStyle}>18<span style={{ fontSize: '16px' }}>g</span></p>
-          <p style={statLabelStyle}>🔥 Streak</p>
+          <p style={statLabelStyle}>Streak</p>
         </div>
         <div style={statCardStyle}>
           <p style={statValueStyle}>87%</p>
@@ -348,7 +350,7 @@ const UserHome: React.FC = () => {
         </div>
         <div style={statCardStyle}>
           <p style={statValueStyle}>4.2<span style={{ fontSize: '16px' }}>k</span></p>
-          <p style={statLabelStyle}>🔥 Kcal</p>
+          <p style={statLabelStyle}>Kcal</p>
         </div>
       </div>
 
@@ -369,52 +371,28 @@ const UserHome: React.FC = () => {
         <h3 style={quickActionsTitleStyle}>Accesso Rapido</h3>
         <div style={quickActionsGridStyle}>
           <div
-            style={quickActionCardStyle}
+            style={{...quickActionCardBase, backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url(${PHOTOS.nutrition})`}}
             onClick={() => navigate('/dieta')}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(17, 24, 39, 0.85)';
-            }}
           >
-            🍽️ La Mia Dieta
+            La Mia Dieta
           </div>
           <div
-            style={quickActionCardStyle}
+            style={{...quickActionCardBase, backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url(${PHOTOS.sala})`}}
             onClick={() => navigate('/corsi')}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(17, 24, 39, 0.85)';
-            }}
           >
-            📅 Corsi Oggi
+            Corsi Oggi
           </div>
           <div
-            style={quickActionCardStyle}
+            style={{...quickActionCardBase, backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url(${PHOTOS.running})`}}
             onClick={() => navigate('/progressi')}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(17, 24, 39, 0.85)';
-            }}
           >
-            📊 Progressi
+            Progressi
           </div>
           <div
-            style={quickActionCardStyle}
+            style={{...quickActionCardBase, backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url(${PHOTOS.community})`}}
             onClick={() => navigate('/community')}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(17, 24, 39, 0.85)';
-            }}
           >
-            👥 Community
+            Community
           </div>
         </div>
       </div>

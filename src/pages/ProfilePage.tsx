@@ -181,12 +181,12 @@ const ProfilePage: React.FC = () => {
       {/* Settings Links */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {[
-          { label: 'Modifica Profilo', icon: '✏️' },
-          { label: 'Impostazioni Privacy', icon: '🔒' },
-          { label: 'Password', icon: '🔑' },
-          { label: 'Notifiche', icon: '🔔' },
-          { label: 'Chi Siamo', icon: 'ℹ️' },
-          { label: 'Logout', icon: '↪️' },
+          { label: 'Modifica Profilo' },
+          { label: 'Impostazioni Privacy' },
+          { label: 'Password' },
+          { label: 'Notifiche' },
+          { label: 'Chi Siamo' },
+          { label: 'Logout' },
         ].map((item, idx) => (
           <button
             key={idx}
@@ -211,7 +211,6 @@ const ProfilePage: React.FC = () => {
               e.currentTarget.style.backgroundColor = '#1a1f2e';
             }}
           >
-            <span style={{ fontSize: '18px' }}>{item.icon}</span>
             <span>{item.label}</span>
             <span
               style={{

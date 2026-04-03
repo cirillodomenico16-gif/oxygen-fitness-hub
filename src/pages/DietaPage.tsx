@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PHOTOS } from '../App';
 
 interface Meal {
   name: string;
@@ -331,17 +332,17 @@ const DietaPage: React.FC = () => {
   const getMealIcon = (type: string): string => {
     switch (type) {
       case 'breakfast':
-        return '🥣';
+        return '';
       case 'snack':
-        return '🍎';
+        return '';
       case 'lunch':
-        return '🍽️';
+        return '';
       case 'snack2':
-        return '💪';
+        return '';
       case 'dinner':
-        return '🌙';
+        return '';
       default:
-        return '🍴';
+        return '';
     }
   };
 
@@ -432,6 +433,9 @@ const DietaPage: React.FC = () => {
           Piano nutrizionale personalizzato
         </p>
       </div>
+
+      {/* Nutrition Photo Banner */}
+      <div style={{ margin: '0 16px 24px 16px', borderRadius: '16px', height: '100px', backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.85), rgba(10,14,26,0.2)), url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=400&fit=crop)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
       {/* Macro Summary Card */}
       <div
@@ -638,7 +642,7 @@ const DietaPage: React.FC = () => {
                 transition: 'opacity 0.2s ease',
               }}
             >
-              💧
+
             </div>
           ))}
         </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
+import { PHOTOS } from '../App';
 
 interface ActivityItem {
   id: number;
@@ -48,10 +49,10 @@ const CommunityPage: React.FC = () => {
   ];
 
   const badges = [
-    { id: 1, title: 'Settimana Perfetta', icon: '📅', bg: '#e53935' },
-    { id: 2, title: '100 Allenamenti', icon: '💪', bg: '#3b82f6' },
-    { id: 3, title: 'Iron Warrior', icon: '🔥', bg: '#f97316' },
-    { id: 4, title: 'Early Bird', icon: '☀️', bg: '#a855f7' },
+    { id: 1, title: 'Settimana Perfetta', icon: '●', bg: '#e53935' },
+    { id: 2, title: '100 Allenamenti', icon: '●', bg: '#3b82f6' },
+    { id: 3, title: 'Iron Warrior', icon: '●', bg: '#f97316' },
+    { id: 4, title: 'Early Bird', icon: '●', bg: '#a855f7' },
   ];
 
   const getMedalColor = (medal: string) => {
@@ -70,13 +71,13 @@ const CommunityPage: React.FC = () => {
   const getMedalEmoji = (medal: string) => {
     switch (medal) {
       case 'gold':
-        return '👑';
+        return '1°';
       case 'silver':
-        return '🥈';
+        return '2°';
       case 'bronze':
-        return '🥉';
+        return '3°';
       default:
-        return '🏅';
+        return '●';
     }
   };
 
@@ -121,6 +122,11 @@ const CommunityPage: React.FC = () => {
           margin: '0 auto',
         }}
       >
+        {/* Community Photo Banner */}
+        <div style={{ margin: '0 20px 16px', borderRadius: '16px', height: '120px', backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.85), rgba(10,14,26,0.2)), url(${PHOTOS.community})`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'flex-end', padding: '16px' }}>
+          <div style={{ color: 'white', fontSize: '16px', fontWeight: '700' }}>La nostra community</div>
+        </div>
+
         {/* Monthly Challenge Card */}
         <div
           style={{
@@ -215,7 +221,7 @@ const CommunityPage: React.FC = () => {
                 fontSize: '14px',
               }}
             >
-              👥 48 partecipanti
+              48 partecipanti
             </div>
           </div>
         </div>
@@ -337,7 +343,7 @@ const CommunityPage: React.FC = () => {
                     fontSize: '28px',
                   }}
                 >
-                  👑
+                  {getMedalEmoji('gold')}
                 </div>
                 <div
                   style={{

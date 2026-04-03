@@ -19,182 +19,188 @@ import SchedaPage from './pages/SchedaPage';
 import UserBottomNav from './components/UserBottomNav';
 import AdminBottomNav from './components/AdminBottomNav';
 
+// Fitness photos from Unsplash
+const PHOTOS = {
+  avatar: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=100&h=100&fit=crop&crop=face',
+  gym: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=400&fit=crop',
+  weights: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&h=400&fit=crop',
+  workout: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&h=400&fit=crop',
+  yoga: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=400&fit=crop',
+  running: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=400&fit=crop',
+  boxing: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&h=300&fit=crop',
+  stretching: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop',
+  nutrition: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=400&fit=crop',
+  sala: 'https://images.unsplash.com/photo-1570829460005-c840387bb1ca?w=800&h=400&fit=crop',
+  benchpress: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop',
+  community: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=400&fit=crop',
+};
+
+export { PHOTOS };
+
 // Header component with user dropdown
 const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdminRoute, navigate }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
     };
 
-    if (dropdownOpen) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [dropdownOpen]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  const avatarInitials = isAdminRoute ? 'A' : 'MR';
-  const avatarGradient = isAdminRoute
-    ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-    : 'linear-gradient(135deg, #e53935, #c62828)';
+  const handleMenuClick = (path: string) => {
+    setDropdownOpen(false);
+    setTimeout(() => navigate(path), 10);
+  };
 
   return (
-    <>
-      <header
-        style={{
-          background: '#111827',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-          padding: '16px 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}
+    <header
+      style={{
+        background: '#111827',
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
+        padding: '12px 20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexShrink: 0,
+        zIndex: 100,
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+      }}
+    >
+      {/* Left: O2 Logo */}
+      <div
+        onClick={() => navigate(isAdminRoute ? '/admin' : '/')}
+        style={{ fontSize: '24px', fontWeight: '700', color: '#e53935', letterSpacing: '-1px', cursor: 'pointer' }}
       >
-        {/* Left: O2 Logo */}
-        <div style={{ fontSize: '24px', fontWeight: '700', color: '#e53935', letterSpacing: '-1px' }}>
-          O2
-        </div>
+        O<span style={{ fontSize: '16px', verticalAlign: 'sub' }}>2</span>
+      </div>
 
-        {/* Right: User Avatar */}
-        <div style={{ position: 'relative' }}>
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: avatarGradient,
-              border: 'none',
-              color: 'white',
-              fontSize: '14px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'transform 0.2s ease',
+      {/* Right: User Avatar with dropdown */}
+      <div ref={wrapperRef} style={{ position: 'relative' }}>
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
+            border: isAdminRoute ? '2px solid #f59e0b' : '2px solid #e53935',
+            padding: '0',
+            cursor: 'pointer',
+            overflow: 'hidden',
+            background: 'transparent',
+            transition: 'transform 0.2s ease',
+          }}
+        >
+          <img
+            src={PHOTOS.avatar}
+            alt="Avatar"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              (e.target as HTMLImageElement).parentElement!.style.background = isAdminRoute
+                ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #e53935, #c62828)';
+              (e.target as HTMLImageElement).parentElement!.innerHTML = `<span style="color:white;font-size:14px;font-weight:700">${isAdminRoute ? 'A' : 'MR'}</span>`;
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          />
+        </button>
+
+        {/* Dropdown Menu */}
+        {dropdownOpen && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '52px',
+              right: 0,
+              background: 'rgba(17,24,39,0.98)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '12px',
+              minWidth: '230px',
+              backdropFilter: 'blur(16px)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+              zIndex: 1000,
+              animation: 'scaleIn 0.15s ease-out',
+            }}
           >
-            {avatarInitials}
-          </button>
-
-          {/* Dropdown Menu */}
-          {dropdownOpen && (
-            <div
-              ref={dropdownRef}
-              style={{
-                position: 'absolute',
-                top: '48px',
-                right: 0,
-                background: 'rgba(17,24,39,0.98)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                borderRadius: '12px',
-                minWidth: '220px',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                zIndex: 1000,
-              }}
-            >
-              {/* User Info */}
-              <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+            {/* User Info */}
+            <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <img src={PHOTOS.avatar} alt="" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+              <div>
                 <div style={{ color: 'white', fontSize: '14px', fontWeight: '600' }}>Marco Rossi</div>
-                <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', marginTop: '4px' }}>
-                  Membro Premium
-                </div>
+                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginTop: '2px' }}>Membro Premium</div>
               </div>
+            </div>
 
-              {/* Menu Items */}
-              <div style={{ padding: '8px 0' }}>
-                {/* Il Mio Profilo */}
+            {/* Menu Items */}
+            <div style={{ padding: '6px 0' }}>
+              {[
+                { label: 'Il Mio Profilo', path: '/profilo', icon: '👤' },
+                { label: isAdminRoute ? 'Torna Utente' : 'Pannello Admin', path: isAdminRoute ? '/' : '/admin', icon: isAdminRoute ? '🏠' : '⚙️' },
+                { label: 'La Mia Scheda', path: '/scheda', icon: '📋' },
+                { label: 'La Mia Dieta', path: '/dieta', icon: '🥗' },
+              ].map((item) => (
                 <button
-                  onClick={() => {
-                    navigate('/profilo');
-                    setDropdownOpen(false);
-                  }}
+                  key={item.path}
+                  onClick={() => handleMenuClick(item.path)}
                   style={{
                     width: '100%',
-                    padding: '10px 16px',
+                    padding: '11px 16px',
                     background: 'transparent',
                     border: 'none',
                     color: 'rgba(255,255,255,0.9)',
                     fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    transition: 'background 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  Il Mio Profilo
-                </button>
-
-                {/* Pannello Admin */}
-                <button
-                  onClick={() => {
-                    navigate('/admin');
-                    setDropdownOpen(false);
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '10px 16px',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'rgba(255,255,255,0.9)',
-                    fontSize: '13px',
+                    fontWeight: '500',
                     textAlign: 'left',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    transition: 'background 0.2s ease',
+                    gap: '10px',
+                    fontFamily: 'inherit',
+                    transition: 'background 0.15s ease',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                  </svg>
-                  Pannello Admin
+                  <span style={{ fontSize: '16px', width: '20px', textAlign: 'center' }}>{item.icon}</span>
+                  {item.label}
                 </button>
+              ))}
 
-                {/* Esci */}
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '10px 16px',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'rgba(239,68,68,0.9)',
-                    fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    transition: 'background 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.1)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  Esci
-                </button>
-              </div>
+              <div style={{ margin: '4px 16px', borderTop: '1px solid rgba(255,255,255,0.06)' }} />
+
+              <button
+                onClick={() => setDropdownOpen(false)}
+                style={{
+                  width: '100%',
+                  padding: '11px 16px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'rgba(239,68,68,0.9)',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  fontFamily: 'inherit',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.06)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+              >
+                <span style={{ fontSize: '16px', width: '20px', textAlign: 'center' }}>🚪</span>
+                Esci
+              </button>
             </div>
-          )}
-        </div>
-      </header>
-    </>
+          </div>
+        )}
+      </div>
+    </header>
   );
 };
 

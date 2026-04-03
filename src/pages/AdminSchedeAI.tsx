@@ -31,7 +31,6 @@ interface Macros {
 
 interface Meal {
   nome: string;
-  emoji: string;
   descrizione: string;
   macros?: { p: number; c: number; g: number; kcal: number };
 }
@@ -186,31 +185,26 @@ const AdminSchedeAI: React.FC = () => {
     const meals: Meal[] = [
       {
         nome: 'Colazione',
-        emoji: '🥣',
         descrizione: 'Uova, pane integrale, frutta',
         macros: { p: Math.round(proteine * 0.15), c: Math.round(carboidrati * 0.25), g: Math.round(grassi * 0.15), kcal: Math.round(targetCals * 0.20) },
       },
       {
         nome: 'Spuntino Mattina',
-        emoji: '🥤',
         descrizione: 'Shake proteico con banana',
         macros: { p: Math.round(proteine * 0.20), c: Math.round(carboidrati * 0.15), g: Math.round(grassi * 0.10), kcal: Math.round(targetCals * 0.15) },
       },
       {
         nome: 'Pranzo',
-        emoji: '🍗',
         descrizione: 'Pollo/pesce, riso, verdure',
         macros: { p: Math.round(proteine * 0.30), c: Math.round(carboidrati * 0.30), g: Math.round(grassi * 0.30), kcal: Math.round(targetCals * 0.30) },
       },
       {
         nome: 'Spuntino Pomeriggio',
-        emoji: '🥜',
         descrizione: 'Frutta secca, yogurt greco',
         macros: { p: Math.round(proteine * 0.15), c: Math.round(carboidrati * 0.15), g: Math.round(grassi * 0.25), kcal: Math.round(targetCals * 0.15) },
       },
       {
         nome: 'Cena',
-        emoji: '🐟',
         descrizione: 'Salmone/manzo, patate dolci, insalata',
         macros: { p: Math.round(proteine * 0.20), c: Math.round(carboidrati * 0.15), g: Math.round(grassi * 0.20), kcal: Math.round(targetCals * 0.20) },
       },
@@ -639,7 +633,7 @@ const AdminSchedeAI: React.FC = () => {
               }
             }}
           >
-            🧠 GENERA SCHEDA AI
+            GENERA SCHEDA AI
           </button>
 
           <button
@@ -671,7 +665,7 @@ const AdminSchedeAI: React.FC = () => {
               }
             }}
           >
-            🥗 GENERA DIETA AI
+            GENERA DIETA AI
           </button>
         </div>
       </div>
@@ -754,7 +748,7 @@ const AdminSchedeAI: React.FC = () => {
                     (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
                   }}
                 >
-                  📋 Assegna a {members[selectedMember].name}
+                  Assegna a {members[selectedMember].name}
                 </button>
 
                 <button
@@ -779,7 +773,7 @@ const AdminSchedeAI: React.FC = () => {
                     (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
                   }}
                 >
-                  🔄 Rigenera
+                  Rigenera
                 </button>
               </div>
             </>
@@ -835,7 +829,6 @@ const AdminSchedeAI: React.FC = () => {
                       padding: '20px',
                     }}
                   >
-                    <div style={{ fontSize: '32px', marginBottom: '12px' }}>{meal.emoji}</div>
                     <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '8px' }}>
                       {meal.nome}
                     </div>
@@ -873,7 +866,7 @@ const AdminSchedeAI: React.FC = () => {
                     (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
                   }}
                 >
-                  📋 Assegna Dieta
+                  Assegna Dieta
                 </button>
 
                 <button
@@ -898,7 +891,7 @@ const AdminSchedeAI: React.FC = () => {
                     (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
                   }}
                 >
-                  🔄 Rigenera
+                  Rigenera
                 </button>
               </div>
             </>

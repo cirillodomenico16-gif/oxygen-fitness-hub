@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PHOTOS } from '../App';
 
 interface Exercise {
   name: string;
@@ -221,6 +222,9 @@ const SchedaPage: React.FC = () => {
           Piano settimanale personalizzato
         </p>
       </div>
+
+      {/* Workout Photo Banner */}
+      <div style={{ margin: '0 20px 16px', borderRadius: '16px', height: '100px', backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.85), rgba(10,14,26,0.2)), url(https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=400&fit=crop)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
       {/* Week Selector */}
       <div
