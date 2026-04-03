@@ -1,16 +1,16 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const AdminBottomNav: React.FC = () => {
+const UserBottomNav: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const tabs = [
-    { path: '/admin', label: 'Home', icon: 'grid' },
-    { path: '/admin/membri', label: 'Membri', icon: 'users' },
-    { path: '/admin/calendario', label: 'Calendario', icon: 'calendar' },
-    { path: '/admin/analisi', label: 'Analisi', icon: 'barchart' },
-    { path: '/admin/settings', label: 'Impostazioni', icon: 'settings' },
+    { path: '/', label: 'Home', icon: 'house' },
+    { path: '/corsi', label: 'Corsi', icon: 'calendar' },
+    { path: '/allenamento', label: 'Allenamento', icon: 'dumbbell' },
+    { path: '/progressi', label: 'Stats', icon: 'chart' },
+    { path: '/profilo', label: 'Profilo', icon: 'user' },
   ];
 
   const renderIcon = (iconName: string) => {
@@ -26,22 +26,11 @@ const AdminBottomNav: React.FC = () => {
     };
 
     switch (iconName) {
-      case 'grid':
+      case 'house':
         return (
           <svg {...iconProps}>
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-        );
-      case 'users':
-        return (
-          <svg {...iconProps}>
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
         );
       case 'calendar':
@@ -53,7 +42,13 @@ const AdminBottomNav: React.FC = () => {
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
         );
-      case 'barchart':
+      case 'dumbbell':
+        return (
+          <svg {...iconProps}>
+            <path d="M6 4h1v16H6zM17 4h1v16h-1zM8 6v12M16 6v12M9 4v16M15 4v16"></path>
+          </svg>
+        );
+      case 'chart':
         return (
           <svg {...iconProps}>
             <line x1="12" y1="20" x2="12" y2="10"></line>
@@ -61,11 +56,11 @@ const AdminBottomNav: React.FC = () => {
             <line x1="6" y1="20" x2="6" y2="16"></line>
           </svg>
         );
-      case 'settings':
+      case 'user':
         return (
           <svg {...iconProps}>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
           </svg>
         );
       default:
@@ -126,4 +121,4 @@ const AdminBottomNav: React.FC = () => {
   );
 };
 
-export default AdminBottomNav;
+export default UserBottomNav;
