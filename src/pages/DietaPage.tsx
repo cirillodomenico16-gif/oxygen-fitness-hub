@@ -1,669 +1,471 @@
 import React, { useState } from 'react';
-import { PHOTOS } from '../constants';
+import { useNavigate } from 'react-router-dom';
+
+interface Food {
+  name: string;
+  grams: string;
+  kcal: number;
+  image: string;
+}
 
 interface Meal {
   name: string;
   time: string;
-  items: string[];
-  calories: number;
-  type: 'breakfast' | 'snack' | 'lunch' | 'snack2' | 'dinner';
+  foods: Food[];
 }
 
-interface DayMeals {
-  [key: string]: Meal[];
+interface DayDiet {
+  day: string;
+  date: number;
+  totalKcal: number;
+  macros: { p: number; c: number; f: number };
+  meals: Meal[];
 }
 
-const DietaPage: React.FC = () => {
-  const days = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
-  const [selectedDay, setSelectedDay] = useState(0);
-
-  const mealData: DayMeals = {
-    LUN: [
-      {
-        name: 'Colazione',
-        time: '07:00',
-        items: ['Porridge proteico con banana e miele', 'Latte di mandorla 200ml'],
-        calories: 450,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '10:00',
-        items: ['Yogurt greco con noci e frutti di bosco'],
-        calories: 200,
-        type: 'snack',
-      },
-      {
-        name: 'Pranzo',
-        time: '13:00',
-        items: [
-          'Petto di pollo grigliato 200g',
-          'Riso integrale 80g',
-          'Verdure miste alla griglia',
-        ],
-        calories: 650,
-        type: 'lunch',
-      },
-      {
-        name: 'Spuntino',
-        time: '16:00',
-        items: ['Shake proteico', '30g mandorle'],
-        calories: 350,
-        type: 'snack2',
-      },
-      {
-        name: 'Cena',
-        time: '20:00',
-        items: [
-          'Salmone al forno 180g',
-          'Patate dolci 150g',
-          'Insalata mista con avocado',
-        ],
-        calories: 700,
-        type: 'dinner',
-      },
-    ],
-    MAR: [
-      {
-        name: 'Colazione',
-        time: '07:00',
-        items: ['Uova strapazzate 2', 'Pane integrale tostato 50g', 'Marmellata senza zuccheri'],
-        calories: 420,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '10:00',
-        items: ['Mela con burro di arachidi 15g'],
-        calories: 220,
-        type: 'snack',
-      },
-      {
-        name: 'Pranzo',
-        time: '13:00',
-        items: ['Tonno in scatola al naturale 150g', 'Pasta integrale 60g', 'Broccoli al vapore'],
-        calories: 620,
-        type: 'lunch',
-      },
-      {
-        name: 'Spuntino',
-        time: '16:00',
-        items: ['Banana media', 'Proteine in polvere whey'],
-        calories: 280,
-        type: 'snack2',
-      },
-      {
-        name: 'Cena',
-        time: '20:00',
-        items: [
-          'Petto di tacchino alla piastra 200g',
-          'Patate al forno 150g',
-          'Insalata verde mista',
-        ],
-        calories: 680,
-        type: 'dinner',
-      },
-    ],
-    MER: [
-      {
-        name: 'Colazione',
-        time: '07:00',
-        items: ['Smoothie proteico banana e spinaci', 'Granola 40g', 'Latte di cocco 200ml'],
-        calories: 480,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '10:00',
-        items: ['Arancia fresca', 'Mandorle 25g'],
-        calories: 210,
-        type: 'snack',
-      },
-      {
-        name: 'Pranzo',
-        time: '13:00',
-        items: [
-          'Filetto di merluzzo 200g',
-          'Riso basmati 70g',
-          'Carote e zucchine al vapore',
-        ],
-        calories: 640,
-        type: 'lunch',
-      },
-      {
-        name: 'Spuntino',
-        time: '16:00',
-        items: ['Yogurt magro 150g', 'Bacche miste 60g'],
-        calories: 160,
-        type: 'snack2',
-      },
-      {
-        name: 'Cena',
-        time: '20:00',
-        items: [
-          'Pollo al curry 180g',
-          'Quinoa cotta 60g',
-          'Cavolo riccio saltato in padella',
-        ],
-        calories: 720,
-        type: 'dinner',
-      },
-    ],
-    GIO: [
-      {
-        name: 'Colazione',
-        time: '07:00',
-        items: ['Pancake proteici 2', 'Sciroppo d\'acero 20ml', 'Caffè nero'],
-        calories: 440,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '10:00',
-        items: ['Pera fresca', 'Noci 20g'],
-        calories: 190,
-        type: 'snack',
-      },
-      {
-        name: 'Pranzo',
-        time: '13:00',
-        items: ['Manzo magro 200g', 'Patate dolci 120g', 'Spinaci saltati'],
-        calories: 660,
-        type: 'lunch',
-      },
-      {
-        name: 'Spuntino',
-        time: '16:00',
-        items: ['Frullato proteico', 'Fragole 100g'],
-        calories: 220,
-        type: 'snack2',
-      },
-      {
-        name: 'Cena',
-        time: '20:00',
-        items: [
-          'Orata al cartoccio 180g',
-          'Riso integrale 70g',
-          'Melanzane grigliate',
-        ],
-        calories: 710,
-        type: 'dinner',
-      },
-    ],
-    VEN: [
-      {
-        name: 'Colazione',
-        time: '07:00',
-        items: ['Avena 50g', 'Latte intero 200ml', 'Miele 10g', 'Cannella'],
-        calories: 410,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '10:00',
-        items: ['Kiwi 2', 'Anacardi 20g'],
-        calories: 200,
-        type: 'snack',
-      },
-      {
-        name: 'Pranzo',
-        time: '13:00',
-        items: [
-          'Petto di pollo 220g',
-          'Farro perlato 60g',
-          'Peperoni e cipolla grigliati',
-        ],
-        calories: 670,
-        type: 'lunch',
-      },
-      {
-        name: 'Spuntino',
-        time: '16:00',
-        items: ['Formaggio magro 30g', 'Pane croccante 30g'],
-        calories: 240,
-        type: 'snack2',
-      },
-      {
-        name: 'Cena',
-        time: '20:00',
-        items: [
-          'Trota al forno 190g',
-          'Patate al vapore 140g',
-          'Zucchine trifolate',
-        ],
-        calories: 690,
-        type: 'dinner',
-      },
-    ],
-    SAB: [
+const WEEK: DayDiet[] = [
+  {
+    day: 'Lunedì',
+    date: 18,
+    totalKcal: 2450,
+    macros: { p: 180, c: 260, f: 75 },
+    meals: [
       {
         name: 'Colazione',
         time: '08:00',
-        items: ['Waffle proteici', 'Fragole fresche 150g', 'Yogurt greco 100g'],
-        calories: 460,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '11:00',
-        items: ['Banana grande', 'Burro di mandorle 15g'],
-        calories: 240,
-        type: 'snack',
+        foods: [
+          { name: 'Avena', grams: '80g', kcal: 310, image: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=200&h=200&fit=crop' },
+          { name: 'Banana', grams: '120g', kcal: 105, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&h=200&fit=crop' },
+          { name: 'Yogurt greco', grams: '170g', kcal: 100, image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop' },
+        ],
       },
       {
         name: 'Pranzo',
-        time: '13:30',
-        items: ['Bistecca magra 200g', 'Riso selvaggio 70g', 'Funghi grigliati'],
-        calories: 680,
-        type: 'lunch',
+        time: '13:00',
+        foods: [
+          { name: 'Petto di pollo', grams: '200g', kcal: 330, image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=200&h=200&fit=crop' },
+          { name: 'Riso integrale', grams: '100g', kcal: 350, image: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=200&h=200&fit=crop' },
+          { name: 'Broccoli', grams: '150g', kcal: 50, image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200&h=200&fit=crop' },
+        ],
       },
       {
         name: 'Spuntino',
         time: '17:00',
-        items: ['Shake proteico', 'Avena 30g'],
-        calories: 300,
-        type: 'snack2',
-      },
-      {
-        name: 'Cena',
-        time: '20:30',
-        items: [
-          'Branzino al sale 180g',
-          'Patate dolci 140g',
-          'Insalata con vinaigrette',
+        foods: [
+          { name: 'Mandorle', grams: '30g', kcal: 170, image: 'https://images.unsplash.com/photo-1508747703725-719777637510?w=200&h=200&fit=crop' },
+          { name: 'Mela', grams: '150g', kcal: 80, image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=200&h=200&fit=crop' },
         ],
-        calories: 700,
-        type: 'dinner',
-      },
-    ],
-    DOM: [
-      {
-        name: 'Colazione',
-        time: '08:30',
-        items: ['Frittata di verdure 3 uova', 'Pane integrale 60g', 'Succo d\'arancia 200ml'],
-        calories: 470,
-        type: 'breakfast',
-      },
-      {
-        name: 'Spuntino',
-        time: '11:30',
-        items: ['Melone 200g', 'Pistacchio 25g'],
-        calories: 180,
-        type: 'snack',
-      },
-      {
-        name: 'Pranzo',
-        time: '14:00',
-        items: [
-          'Coscia di pollo 200g',
-          'Orzo perlato 70g',
-          'Verdure miste rosolate',
-        ],
-        calories: 650,
-        type: 'lunch',
-      },
-      {
-        name: 'Spuntino',
-        time: '17:30',
-        items: ['Yogurt greco 150g', 'Granola 30g', 'Miele 10g'],
-        calories: 280,
-        type: 'snack2',
       },
       {
         name: 'Cena',
         time: '20:00',
-        items: [
-          'Salmone affumicato 150g',
-          'Riso bianco 80g',
-          'Asparagi al vapore',
+        foods: [
+          { name: 'Salmone', grams: '180g', kcal: 370, image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&h=200&fit=crop' },
+          { name: 'Patate dolci', grams: '200g', kcal: 180, image: 'https://images.unsplash.com/photo-1596097635121-14b63b7a0c23?w=200&h=200&fit=crop' },
+          { name: 'Insalata mista', grams: '100g', kcal: 25, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop' },
         ],
-        calories: 680,
-        type: 'dinner',
       },
     ],
+  },
+  {
+    day: 'Martedì',
+    date: 19,
+    totalKcal: 2380,
+    macros: { p: 175, c: 250, f: 72 },
+    meals: [
+      {
+        name: 'Colazione',
+        time: '08:00',
+        foods: [
+          { name: 'Pancakes proteici', grams: '2 pezzi', kcal: 320, image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=200&fit=crop' },
+          { name: 'Frutti di bosco', grams: '100g', kcal: 60, image: 'https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Pranzo',
+        time: '13:00',
+        foods: [
+          { name: 'Tacchino', grams: '200g', kcal: 300, image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=200&h=200&fit=crop' },
+          { name: 'Quinoa', grams: '100g', kcal: 370, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200&h=200&fit=crop' },
+          { name: 'Spinaci', grams: '150g', kcal: 35, image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Cena',
+        time: '20:00',
+        foods: [
+          { name: 'Merluzzo', grams: '200g', kcal: 220, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200&h=200&fit=crop' },
+          { name: 'Zucchine grigliate', grams: '200g', kcal: 40, image: 'https://images.unsplash.com/photo-1564834744159-ff0ea41ba4b9?w=200&h=200&fit=crop' },
+        ],
+      },
+    ],
+  },
+  {
+    day: 'Mercoledì',
+    date: 20,
+    totalKcal: 2500,
+    macros: { p: 185, c: 270, f: 78 },
+    meals: [
+      {
+        name: 'Colazione',
+        time: '08:00',
+        foods: [
+          { name: 'Uova strapazzate', grams: '3 pezzi', kcal: 220, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop' },
+          { name: 'Pane integrale', grams: '80g', kcal: 200, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop' },
+          { name: 'Avocado', grams: '80g', kcal: 130, image: 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Pranzo',
+        time: '13:00',
+        foods: [
+          { name: 'Manzo magro', grams: '200g', kcal: 400, image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=200&h=200&fit=crop' },
+          { name: 'Pasta integrale', grams: '80g', kcal: 280, image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Cena',
+        time: '20:00',
+        foods: [
+          { name: 'Tonno', grams: '150g', kcal: 200, image: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=200&h=200&fit=crop' },
+          { name: 'Fagioli', grams: '150g', kcal: 200, image: 'https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?w=200&h=200&fit=crop' },
+        ],
+      },
+    ],
+  },
+  {
+    day: 'Giovedì',
+    date: 21,
+    totalKcal: 2420,
+    macros: { p: 178, c: 255, f: 74 },
+    meals: [
+      {
+        name: 'Colazione',
+        time: '08:00',
+        foods: [
+          { name: 'Porridge', grams: '200g', kcal: 300, image: 'https://images.unsplash.com/photo-1571748982800-fa51082c2224?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Pranzo',
+        time: '13:00',
+        foods: [
+          { name: 'Pollo grigliato', grams: '200g', kcal: 330, image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=200&h=200&fit=crop' },
+          { name: 'Cous cous', grams: '100g', kcal: 370, image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop' },
+        ],
+      },
+    ],
+  },
+  {
+    day: 'Venerdì',
+    date: 22,
+    totalKcal: 2450,
+    macros: { p: 180, c: 260, f: 76 },
+    meals: [
+      {
+        name: 'Colazione',
+        time: '08:00',
+        foods: [
+          { name: 'Smoothie proteico', grams: '400ml', kcal: 350, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Pranzo',
+        time: '13:00',
+        foods: [
+          { name: 'Insalata di pollo', grams: '350g', kcal: 450, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop' },
+        ],
+      },
+    ],
+  },
+  {
+    day: 'Sabato',
+    date: 23,
+    totalKcal: 2600,
+    macros: { p: 170, c: 300, f: 80 },
+    meals: [
+      {
+        name: 'Colazione',
+        time: '09:00',
+        foods: [
+          { name: 'French toast', grams: '2 pezzi', kcal: 380, image: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Pranzo',
+        time: '13:30',
+        foods: [
+          { name: 'Pizza integrale', grams: '300g', kcal: 700, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+        ],
+      },
+    ],
+  },
+  {
+    day: 'Domenica',
+    date: 24,
+    totalKcal: 2300,
+    macros: { p: 170, c: 240, f: 70 },
+    meals: [
+      {
+        name: 'Brunch',
+        time: '11:00',
+        foods: [
+          { name: 'Eggs benedict', grams: '2 pezzi', kcal: 500, image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=200&h=200&fit=crop' },
+        ],
+      },
+      {
+        name: 'Cena',
+        time: '20:00',
+        foods: [
+          { name: 'Bistecca + verdure', grams: '300g', kcal: 600, image: 'https://images.unsplash.com/photo-1558030006-450675393462?w=200&h=200&fit=crop' },
+        ],
+      },
+    ],
+  },
+];
+
+const DietaPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
+
+  const containerStyle: React.CSSProperties = {
+    backgroundColor: '#000000',
+    height: '100%',
+    padding: '8px 20px 120px 20px',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    color: 'white',
+    overflowY: 'scroll',
+    WebkitOverflowScrolling: 'touch',
+    scrollbarWidth: 'thin',
+    scrollbarColor: '#e53935 rgba(255,255,255,0.05)',
   };
 
-  const currentMeals = mealData[days[selectedDay]];
-  const totalCalories = currentMeals.reduce((sum, meal) => sum + meal.calories, 0);
-  const remainingCalories = 2450 - totalCalories;
-  const waterGlasses = 6;
-  const totalWaterGlasses = 8;
-
-  const getMealIcon = (type: string): string => {
-    switch (type) {
-      case 'breakfast':
-        return '';
-      case 'snack':
-        return '';
-      case 'lunch':
-        return '';
-      case 'snack2':
-        return '';
-      case 'dinner':
-        return '';
-      default:
-        return '';
-    }
-  };
-
-  const getMealBorderColor = (type: string): string => {
-    switch (type) {
-      case 'breakfast':
-        return '#ff8c00';
-      case 'snack':
-        return '#a855f7';
-      case 'lunch':
-        return '#22c55e';
-      case 'snack2':
-        return '#a855f7';
-      case 'dinner':
-        return '#3b82f6';
-      default:
-        return '#6b7280';
-    }
-  };
-
-  const CircularProgress: React.FC<{
-    value: number;
-    max: number;
-    label: string;
-    color: string;
-    unit: string;
-  }> = ({ value, max, label, color, unit }) => {
-    const percentage = (value / max) * 100;
-    const radius = 28;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-        <svg width="120" height="120" style={{ transform: 'rotate(-90deg)' }}>
-          <circle
-            cx="60"
-            cy="60"
-            r={radius}
-            fill="none"
-            stroke="rgba(107, 114, 128, 0.3)"
-            strokeWidth="4"
-          />
-          <circle
-            cx="60"
-            cy="60"
-            r={radius}
-            fill="none"
-            stroke={color}
-            strokeWidth="4"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-            style={{ transition: 'stroke-dashoffset 0.3s ease' }}
-          />
-          <text
-            x="60"
-            y="65"
-            textAnchor="middle"
-            fill="white"
-            fontSize="16"
-            fontWeight="600"
-            style={{ transform: 'rotate(90deg)', transformOrigin: '60px 60px' }}
-          >
-            {value}
-            {unit}
-          </text>
-        </svg>
-        <span style={{ fontSize: '13px', color: '#9ca3af', fontWeight: '500' }}>{label}</span>
-      </div>
-    );
-  };
+  const weekTotal = WEEK.reduce((a, d) => a + d.totalKcal, 0);
+  const avg = Math.round(weekTotal / WEEK.length);
 
   return (
-    <div
-      style={{
-        backgroundColor: '#0a0e1a',
-        minHeight: '100vh',
-        color: '#f3f4f6',
-        fontFamily: 'Plus Jakarta Sans, sans-serif',
-        paddingBottom: '100px',
-      }}
-    >
+    <div className="corsi-scroll" style={containerStyle}>
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .corsi-scroll::-webkit-scrollbar { width: 8px; }
+        .corsi-scroll::-webkit-scrollbar-track {
+          background: rgba(255,255,255,0.04);
+          border-radius: 999px;
+          margin: 8px 0;
+        }
+        .corsi-scroll::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #ef4444, #e53935);
+          border-radius: 999px;
+          box-shadow: 0 0 12px rgba(229,57,53,0.5);
+        }
+      `}</style>
+
       {/* Header */}
-      <div style={{ padding: '24px 16px', paddingTop: '40px', paddingBottom: '32px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '700', margin: '0 0 8px 0' }}>La Mia Dieta</h1>
-        <p style={{ fontSize: '14px', color: '#9ca3af', margin: '0' }}>
-          Piano nutrizionale personalizzato
-        </p>
-      </div>
-
-      {/* Nutrition Photo Banner */}
-      <div style={{ margin: '0 16px 24px 16px', borderRadius: '16px', height: '100px', backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.85), rgba(10,14,26,0.2)), url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=400&fit=crop)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-
-      {/* Macro Summary Card */}
-      <div
-        style={{
-          margin: '0 16px 24px 16px',
-          padding: '20px',
-          backgroundColor: 'rgba(17, 24, 39, 0.85)',
-          borderRadius: '16px',
-          border: '1px solid rgba(75, 85, 99, 0.3)',
-        }}
-      >
-        <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#d1d5db', marginBottom: '20px' }}>
-          Macro Giornaliere
-        </h3>
-        <div
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '12px 0 20px 0',
+      }}>
+        <button
+          onClick={() => navigate('/profilo')}
           style={{
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            cursor: 'pointer',
+            padding: '6px',
             display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'flex-start',
-            flexWrap: 'wrap',
-            gap: '12px',
           }}
         >
-          <CircularProgress value={180} max={180} label="Proteine" color="#e53935" unit="g" />
-          <CircularProgress value={250} max={250} label="Carboidrati" color="#3b82f6" unit="g" />
-          <CircularProgress value={60} max={60} label="Grassi" color="#ff8c00" unit="g" />
-          <CircularProgress value={totalCalories} max={2450} label="Totale" color="#22c55e" unit="kcal" />
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h1 style={{
+          fontSize: '20px',
+          fontWeight: 700,
+          color: 'white',
+          margin: 0,
+          letterSpacing: '-0.3px',
+        }}>La Tua Dieta</h1>
+        <div style={{ width: '22px' }} />
+      </div>
+
+      {/* Week summary card */}
+      <div style={{
+        position: 'relative',
+        borderRadius: '20px',
+        marginBottom: '22px',
+        overflow: 'hidden',
+        border: '1px solid rgba(229,57,53,0.3)',
+        boxShadow: '0 0 28px rgba(229,57,53,0.18)',
+        animation: 'fadeInUp 0.5s ease-out',
+        minHeight: '180px',
+        backgroundImage: `linear-gradient(180deg, rgba(10,0,2,0.35) 0%, rgba(30,6,8,0.82) 55%, rgba(10,0,2,0.95) 100%), url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=900&h=600&fit=crop')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
+        <div style={{
+          padding: '22px',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          minHeight: '180px',
+        }}>
+          <p style={{
+            fontSize: '11px',
+            fontWeight: 700,
+            color: '#ff5252',
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            margin: '0 0 6px 0',
+            textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+          }}>Settimana 18-24 Aprile</p>
+          <h2 style={{
+            fontSize: '28px',
+            fontWeight: 800,
+            color: 'white',
+            margin: '0 0 4px 0',
+            letterSpacing: '-0.5px',
+            textShadow: '0 2px 12px rgba(0,0,0,0.8)',
+          }}>{avg} kcal / giorno</h2>
+          <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.75)', margin: 0, textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
+            Obiettivo: massa muscolare
+          </p>
         </div>
       </div>
 
-      {/* Day Selector */}
-      <div style={{ paddingBottom: '24px', overflowX: 'auto', paddingLeft: '16px', paddingRight: '16px' }}>
-        <div style={{ display: 'flex', gap: '12px', minWidth: 'min-content', paddingBottom: '8px' }}>
-          {days.map((day, index) => (
-            <button
-              key={day}
-              onClick={() => setSelectedDay(index)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '20px',
-                border: 'none',
-                backgroundColor: selectedDay === index ? '#e53935' : 'rgba(75, 85, 99, 0.4)',
-                color: '#f3f4f6',
-                fontSize: '13px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
-      </div>
+      <p style={{
+        fontSize: '12px',
+        fontWeight: 700,
+        color: 'rgba(255,255,255,0.5)',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        margin: '0 0 14px 4px',
+      }}>Seleziona un giorno</p>
 
-      {/* Meal Cards */}
-      <div style={{ paddingLeft: '16px', paddingRight: '16px', marginBottom: '24px' }}>
-        {currentMeals.map((meal, index) => (
+      {/* Day cards */}
+      {WEEK.map((d, idx) => {
+        const expanded = expandedIdx === idx;
+        return (
           <div
-            key={index}
+            key={idx}
             style={{
-              marginBottom: '16px',
-              backgroundColor: 'rgba(17, 24, 39, 0.85)',
+              background: 'linear-gradient(135deg, rgba(60,12,16,0.85), rgba(30,6,8,0.85))',
+              border: '1px solid rgba(229,57,53,0.28)',
+              borderLeft: '3px solid #ef4444',
               borderRadius: '16px',
-              border: '1px solid rgba(75, 85, 99, 0.3)',
-              borderLeft: `4px solid ${getMealBorderColor(meal.type)}`,
-              padding: '16px',
-              display: 'flex',
-              gap: '12px',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(75, 85, 99, 0.5)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(75, 85, 99, 0.3)';
+              padding: '18px 18px',
+              marginBottom: '12px',
+              transition: 'all 0.3s ease',
+              animation: `fadeInUp 0.5s ease-out ${idx * 0.05}s both`,
             }}
           >
-            {/* Icon */}
             <div
+              onClick={() => setExpandedIdx(expanded ? null : idx)}
               style={{
-                fontSize: '32px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: '40px',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
               }}
             >
-              {getMealIcon(meal.type)}
-            </div>
-
-            {/* Content */}
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <h4 style={{ fontSize: '15px', fontWeight: '600', margin: '0' }}>{meal.name}</h4>
-                <span style={{ fontSize: '12px', color: '#6b7280' }}>{meal.time}</span>
+              <div style={{ flex: 1 }}>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: '#ff5252',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                }}>{d.day} {d.date}</span>
+                <h3 style={{
+                  fontSize: '19px',
+                  fontWeight: 800,
+                  color: 'white',
+                  margin: '4px 0',
+                  letterSpacing: '-0.3px',
+                }}>{d.totalKcal} kcal</h3>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
+                  P {d.macros.p}g · C {d.macros.c}g · F {d.macros.f}g
+                </p>
               </div>
-              <ul
-                style={{
-                  margin: '0',
-                  padding: '0 0 0 16px',
-                  listStyle: 'none',
-                }}
-              >
-                {meal.items.map((item, idx) => (
-                  <li
-                    key={idx}
-                    style={{
-                      fontSize: '13px',
-                      color: '#d1d5db',
-                      marginBottom: idx < meal.items.length - 1 ? '4px' : '0',
-                    }}
-                  >
-                    {item}
-                  </li>
+              <div style={{
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+                color: '#ff5252',
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            {expanded && (
+              <div style={{ marginTop: '16px' }}>
+                {d.meals.map((meal, mi) => (
+                  <div key={mi} style={{
+                    background: 'rgba(0,0,0,0.35)',
+                    border: '1px solid rgba(229,57,53,0.15)',
+                    borderRadius: '12px',
+                    padding: '12px 14px',
+                    marginBottom: '10px',
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'baseline',
+                      marginBottom: '10px',
+                      paddingBottom: '8px',
+                      borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    }}>
+                      <span style={{ fontSize: '13px', fontWeight: 800, color: 'white' }}>
+                        {meal.name}
+                      </span>
+                      <span style={{ fontSize: '11px', color: '#ff8a80', fontWeight: 600 }}>
+                        {meal.time}
+                      </span>
+                    </div>
+                    {meal.foods.map((f, fi) => (
+                      <div key={fi} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '8px 0',
+                        borderBottom: fi < meal.foods.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                      }}>
+                        <div style={{
+                          width: '50px',
+                          height: '50px',
+                          borderRadius: '10px',
+                          backgroundImage: `url('${f.image}')`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          border: '1px solid rgba(229,57,53,0.35)',
+                          boxShadow: '0 0 10px rgba(229,57,53,0.2)',
+                          flexShrink: 0,
+                        }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: '14px', color: 'white', fontWeight: 700 }}>{f.name}</div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', fontWeight: 500, marginTop: '2px' }}>
+                            {f.grams}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '13px', color: '#ff5252', fontWeight: 800 }}>
+                          {f.kcal} kcal
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ))}
-              </ul>
-            </div>
-
-            {/* Calorie Badge */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: '60px',
-                padding: '8px 12px',
-                backgroundColor: 'rgba(229, 57, 53, 0.15)',
-                borderRadius: '8px',
-                fontSize: '13px',
-                fontWeight: '600',
-                color: '#ff6b6b',
-              }}
-            >
-              {meal.calories}
-              <br />
-              <span style={{ fontSize: '11px' }}>kcal</span>
-            </div>
+              </div>
+            )}
           </div>
-        ))}
-      </div>
-
-      {/* Daily Total Bar */}
-      <div
-        style={{
-          margin: '0 16px 24px 16px',
-          padding: '16px',
-          backgroundColor: 'rgba(17, 24, 39, 0.85)',
-          borderRadius: '16px',
-          border: '1px solid rgba(75, 85, 99, 0.3)',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-          <span style={{ fontSize: '13px', fontWeight: '600' }}>Consumate</span>
-          <span style={{ fontSize: '13px', fontWeight: '600' }}>
-            {totalCalories} / 2450 kcal
-          </span>
-        </div>
-        <div
-          style={{
-            width: '100%',
-            height: '8px',
-            backgroundColor: 'rgba(75, 85, 99, 0.3)',
-            borderRadius: '4px',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              height: '100%',
-              width: `${(totalCalories / 2450) * 100}%`,
-              backgroundColor: '#22c55e',
-              transition: 'width 0.3s ease',
-            }}
-          />
-        </div>
-        <div style={{ marginTop: '12px', fontSize: '12px', color: '#9ca3af' }}>
-          Rimanenti: {remainingCalories} kcal
-        </div>
-      </div>
-
-      {/* Water Tracker */}
-      <div
-        style={{
-          margin: '0 16px 24px 16px',
-          padding: '16px',
-          backgroundColor: 'rgba(17, 24, 39, 0.85)',
-          borderRadius: '16px',
-          border: '1px solid rgba(75, 85, 99, 0.3)',
-        }}
-      >
-        <h3 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '16px', margin: '0 0 16px 0' }}>
-          Acqua: {waterGlasses} / {totalWaterGlasses} bicchieri
-        </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: '8px' }}>
-          {Array.from({ length: totalWaterGlasses }).map((_, index) => (
-            <div
-              key={index}
-              style={{
-                fontSize: '24px',
-                textAlign: 'center',
-                opacity: index < waterGlasses ? 1 : 0.3,
-                transition: 'opacity 0.2s ease',
-              }}
-            >
-
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Nutritionist Note */}
-      <div
-        style={{
-          margin: '0 16px 24px 16px',
-          padding: '16px',
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          borderRadius: '16px',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
-          borderLeft: '4px solid #22c55e',
-        }}
-      >
-        <p style={{ margin: '0', fontSize: '13px', color: '#d1d5db', lineHeight: '1.5' }}>
-          <strong style={{ color: '#22c55e' }}>Nota:</strong> Ricordati di bere almeno 2L di acqua al giorno
-          e mangiare lentamente.
-        </p>
-      </div>
+        );
+      })}
     </div>
   );
 };

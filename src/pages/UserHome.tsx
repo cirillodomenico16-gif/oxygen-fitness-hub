@@ -237,13 +237,13 @@ const UserHome: React.FC = () => {
       <div style={statsRowStyle}>
         <div style={statCardStyle}>
           <p style={statValueStyle}>
-            <span style={{ fontSize: '22px' }}>🔥</span>18<span style={{ fontSize: '18px' }}>g</span>
+            <span style={{ fontSize: '22px' }}>💪</span>18
           </p>
-          <p style={statLabelStyle}>Streak</p>
+          <p style={statLabelStyle}>All. Mensili</p>
         </div>
         <div style={statCardStyle}>
           <p style={statValueStyle}>87%</p>
-          <p style={statLabelStyle}>Obiettivo</p>
+          <p style={statLabelStyle}>Ob. Mensile</p>
         </div>
         <div style={statCardStyle}>
           <p style={statValueStyle}>4.2<span style={{ fontSize: '18px' }}>k</span></p>

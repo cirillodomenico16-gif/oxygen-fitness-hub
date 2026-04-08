@@ -6,7 +6,35 @@ interface Exercise {
   sets: number;
   reps: number;
   weight?: number;
+  image?: string;
 }
+
+const EX_IMG: Record<string, string> = {
+  'Bench Press': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop',
+  'Shoulder Press': 'https://images.unsplash.com/photo-1584863231364-2edc166de576?w=200&h=200&fit=crop',
+  'Lat Pulldown': 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=200&h=200&fit=crop',
+  'Bicep Curl': 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&h=200&fit=crop',
+  'Tricep Pushdown': 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop',
+  'Squat': 'https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?w=200&h=200&fit=crop',
+  'Leg Press': 'https://images.unsplash.com/photo-1434596922112-19c563067271?w=200&h=200&fit=crop',
+  'Romanian Deadlift': 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200&h=200&fit=crop',
+  'Leg Curl': 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=200&h=200&fit=crop',
+  'Calf Raises': 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=200&h=200&fit=crop',
+  'Incline Bench Press': 'https://images.unsplash.com/photo-1581122584612-713f89daa8eb?w=200&h=200&fit=crop',
+  'Arnold Press': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop',
+  'Cable Fly': 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=200&h=200&fit=crop',
+  'Front Raises': 'https://images.unsplash.com/photo-1583454122114-40ffbfd01cd9?w=200&h=200&fit=crop',
+  'Overhead Tricep Ext.': 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=200&h=200&fit=crop',
+  'Deadlift': 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=200&h=200&fit=crop',
+  'Pull-ups': 'https://images.unsplash.com/photo-1598971639058-bb2e5a35bdf9?w=200&h=200&fit=crop',
+  'Barbell Row': 'https://images.unsplash.com/photo-1581009137042-c552e485697a?w=200&h=200&fit=crop',
+  'Face Pull': 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop',
+  'Barbell Curl': 'https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=200&h=200&fit=crop',
+  'Burpees': 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop',
+  'Mountain Climbers': 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=200&h=200&fit=crop',
+  'Box Jumps': 'https://images.unsplash.com/photo-1520975916090-3105956dac38?w=200&h=200&fit=crop',
+  'Battle Ropes 30s': 'https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?w=200&h=200&fit=crop',
+};
 
 interface DayWorkout {
   day: string;
@@ -318,23 +346,28 @@ const SchedaPage: React.FC = () => {
                   {w.exercises.map((ex, i) => (
                     <div key={i} style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      padding: '8px 0',
+                      gap: '12px',
+                      padding: '10px 0',
                       borderBottom: i < w.exercises.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
                     }}>
-                      <span style={{
-                        fontSize: '14px',
-                        color: 'white',
-                        fontWeight: 600,
-                      }}>{ex.name}</span>
-                      <span style={{
-                        fontSize: '12px',
-                        color: 'rgba(255,255,255,0.55)',
-                        fontWeight: 500,
-                      }}>
-                        {ex.sets}×{ex.reps}{ex.weight ? ` · ${ex.weight}kg` : ''}
-                      </span>
+                      <div style={{
+                        width: '50px',
+                        height: '50px',
+                        borderRadius: '10px',
+                        backgroundImage: `url('${EX_IMG[ex.name] || 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop'}')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        border: '1px solid rgba(229,57,53,0.35)',
+                        boxShadow: '0 0 10px rgba(229,57,53,0.2)',
+                        flexShrink: 0,
+                      }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '14px', color: 'white', fontWeight: 700 }}>{ex.name}</div>
+                        <div style={{ fontSize: '11px', color: '#ff8a80', fontWeight: 600, marginTop: '2px' }}>
+                          {ex.sets}×{ex.reps}{ex.weight ? ` · ${ex.weight}kg` : ''}
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
