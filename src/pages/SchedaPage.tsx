@@ -183,35 +183,44 @@ const SchedaPage: React.FC = () => {
 
       {/* Week summary card */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(60,12,16,0.85), rgba(30,6,8,0.85))',
-        border: '1px solid rgba(229,57,53,0.3)',
+        position: 'relative',
         borderRadius: '20px',
-        padding: '22px',
         marginBottom: '22px',
-        textAlign: 'center',
+        overflow: 'hidden',
+        border: '1px solid rgba(229,57,53,0.3)',
         boxShadow: '0 0 28px rgba(229,57,53,0.18)',
         animation: 'fadeInUp 0.5s ease-out',
+        minHeight: '180px',
+        backgroundImage: `linear-gradient(180deg, rgba(10,0,2,0.35) 0%, rgba(30,6,8,0.82) 55%, rgba(10,0,2,0.95) 100%), url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=900&h=600&fit=crop')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}>
-        <p style={{
-          fontSize: '11px',
-          fontWeight: 700,
-          color: '#ff5252',
-          letterSpacing: '1.5px',
-          textTransform: 'uppercase',
-          margin: '0 0 6px 0',
-        }}>Settimana 18-24 Aprile</p>
-        <h2 style={{
-          fontSize: '28px',
-          fontWeight: 800,
-          color: 'white',
-          margin: '0 0 10px 0',
-          letterSpacing: '-0.5px',
-        }}>5 Allenamenti</h2>
-        <p style={{
-          fontSize: '13px',
-          color: 'rgba(255,255,255,0.6)',
-          margin: 0,
-        }}>Generata da AI Personal Trainer</p>
+        <div style={{
+          padding: '22px',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          minHeight: '180px',
+        }}>
+          <p style={{
+            fontSize: '11px',
+            fontWeight: 700,
+            color: '#ff5252',
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            margin: '0 0 6px 0',
+            textShadow: '0 2px 8px rgba(0,0,0,0.8)',
+          }}>Settimana 18-24 Aprile</p>
+          <h2 style={{
+            fontSize: '28px',
+            fontWeight: 800,
+            color: 'white',
+            margin: 0,
+            letterSpacing: '-0.5px',
+            textShadow: '0 2px 12px rgba(0,0,0,0.8)',
+          }}>5 Allenamenti</h2>
+        </div>
       </div>
 
       <p style={{
