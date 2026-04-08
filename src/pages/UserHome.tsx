@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from '../components/NotificationBell';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const UserHome: React.FC = () => {
   const navigate = useNavigate();
@@ -212,9 +213,13 @@ const UserHome: React.FC = () => {
       </div>
 
       {/* Greeting */}
-      <h1 style={greetingStyle}>
-        Ciao, Marco <span style={{ display: 'inline-block' }}></span>
-      </h1>
+      <AnimatedText
+        text="Ciao, Marco"
+        gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)"
+        gradientAnimationDuration={2.4}
+        style={{ margin: '12px 0 28px 0', animation: 'fadeInUp 0.6s ease-out' }}
+        textStyle={{ fontSize: '38px', fontWeight: 800, letterSpacing: '-0.5px' }}
+      />
 
       {/* Workout Card */}
       <div style={workoutCardStyle}>
