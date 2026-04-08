@@ -138,50 +138,6 @@ const ProfilePage: React.FC = () => {
           </p>
         </div>
 
-        {/* Stats */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '10px',
-          }}
-        >
-          {[
-            { label: 'Allenamenti', value: '42' },
-          ].map((s) => (
-            <div
-              key={s.label}
-              style={{
-                backgroundColor: 'rgba(0,0,0,0.35)',
-                border: '1px solid rgba(229,57,53,0.22)',
-                padding: '14px 8px',
-                borderRadius: '14px',
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '12px',
-                  color: 'rgba(255,255,255,0.55)',
-                  margin: '0 0 4px 0',
-                  fontWeight: 500,
-                }}
-              >
-                {s.label}
-              </p>
-              <p
-                style={{
-                  fontSize: '24px',
-                  fontWeight: 800,
-                  color: '#ff5252',
-                  margin: 0,
-                  lineHeight: 1,
-                }}
-              >
-                {s.value}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Shortcuts grid */}
