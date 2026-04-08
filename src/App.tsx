@@ -231,13 +231,15 @@ const App: React.FC = () => {
       style={{
         maxWidth: '430px',
         margin: '0 auto',
-        height: '100vh',
-        backgroundColor: '#0a0e1a',
+        height: '100dvh',
+        minHeight: '100vh',
+        backgroundColor: '#000',
         position: 'relative',
         fontFamily: "'Plus Jakarta Sans', sans-serif",
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        boxShadow: '0 0 60px rgba(239,68,68,0.12)',
       }}
     >
       {/* Scrollable content area */}
