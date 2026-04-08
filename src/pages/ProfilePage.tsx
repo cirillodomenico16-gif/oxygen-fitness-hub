@@ -1,114 +1,138 @@
 import React from 'react';
 
 const ProfilePage: React.FC = () => {
+  const avatarUrl =
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop';
+
+  const container: React.CSSProperties = {
+    minHeight: '100vh',
+    backgroundColor: '#000000',
+    padding: '8px 24px 120px 24px',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    color: 'white',
+    overflowY: 'auto',
+  };
+
+  const title: React.CSSProperties = {
+    fontSize: '38px',
+    fontWeight: 800,
+    margin: '18px 0 24px 0',
+    letterSpacing: '-0.5px',
+    animation: 'fadeInUp 0.5s ease-out',
+  };
+
+  const card: React.CSSProperties = {
+    position: 'relative',
+    backgroundColor: 'rgba(229, 57, 53, 0.06)',
+    border: '1.5px solid rgba(229, 57, 53, 0.55)',
+    borderRadius: '20px',
+    padding: '28px 20px 22px 20px',
+    marginBottom: '24px',
+    textAlign: 'center',
+    boxShadow:
+      '0 0 30px rgba(229, 57, 53, 0.25), inset 0 0 20px rgba(229, 57, 53, 0.08)',
+    animation: 'fadeInUp 0.6s ease-out 0.1s both',
+  };
+
+  const rowButton: React.CSSProperties = {
+    width: '100%',
+    backgroundColor: 'rgba(229, 57, 53, 0.07)',
+    border: '1px solid rgba(229, 57, 53, 0.2)',
+    borderRadius: '16px',
+    padding: '18px 18px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    cursor: 'pointer',
+    color: 'white',
+    fontSize: '15px',
+    fontWeight: 600,
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    transition: 'all 0.2s ease',
+    textAlign: 'left',
+  };
+
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#0a0e1a',
-        padding: '24px 16px 100px',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        color: '#ffffff',
-      }}
-    >
-      {/* Header */}
-      <div style={{ marginBottom: '32px' }}>
-        <h1
-          style={{
-            fontSize: '28px',
-            fontWeight: '700',
-            margin: '0 0 24px 0',
-            color: '#ffffff',
-          }}
-        >
-          Profilo
-        </h1>
-      </div>
+    <div style={container}>
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .profile-row:hover {
+          background-color: rgba(229, 57, 53, 0.14) !important;
+          border-color: rgba(229, 57, 53, 0.45) !important;
+          transform: translateX(2px);
+        }
+        .logout-row:hover {
+          background-color: rgba(229, 57, 53, 0.22) !important;
+        }
+      `}</style>
+
+      <h1 style={title}>Profilo</h1>
 
       {/* Profile Card */}
-      <div
-        style={{
-          backgroundColor: '#1a1f2e',
-          borderRadius: '12px',
-          padding: '24px',
-          marginBottom: '24px',
-          textAlign: 'center',
-        }}
-      >
-        {/* Avatar Circle */}
+      <div style={card}>
         <div
           style={{
-            width: '80px',
-            height: '80px',
+            width: '92px',
+            height: '92px',
             borderRadius: '50%',
-            backgroundColor: '#e53935',
-            margin: '0 auto 16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '36px',
-            fontWeight: 'bold',
-            color: '#ffffff',
+            margin: '0 auto 14px',
+            backgroundImage: `url(${avatarUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            border: '3px solid #e53935',
+            boxShadow: '0 0 28px rgba(229,57,53,0.65)',
           }}
-        >
-          MR
-        </div>
-
-        {/* Name */}
+        />
         <h2
           style={{
-            fontSize: '20px',
-            fontWeight: '700',
-            margin: '0 0 8px 0',
-            color: '#ffffff',
+            fontSize: '24px',
+            fontWeight: 800,
+            margin: '0 0 6px 0',
+            letterSpacing: '-0.3px',
           }}
         >
           Marco Rossi
         </h2>
-
-        {/* Email */}
         <p
           style={{
-            fontSize: '14px',
-            color: 'rgba(255, 255, 255, 0.6)',
-            margin: '0 0 16px 0',
+            fontSize: '13px',
+            color: 'rgba(255, 255, 255, 0.55)',
+            margin: '0 0 18px 0',
           }}
         >
           marco.rossi@example.com
         </p>
 
-        {/* Membership Info */}
+        {/* Membership badge */}
         <div
           style={{
-            backgroundColor: 'rgba(229, 57, 53, 0.1)',
-            borderLeft: '3px solid #e53935',
-            padding: '12px',
-            borderRadius: '6px',
-            marginBottom: '16px',
+            background:
+              'linear-gradient(90deg, rgba(229,57,53,0.18), rgba(229,57,53,0.04))',
+            border: '1px solid rgba(229,57,53,0.4)',
+            borderLeft: '4px solid #ff5252',
+            padding: '12px 14px',
+            borderRadius: '12px',
             textAlign: 'left',
+            marginBottom: '18px',
           }}
         >
           <p
             style={{
-              fontSize: '12px',
-              color: 'rgba(255, 255, 255, 0.6)',
+              fontSize: '11px',
+              color: '#ff8a80',
               margin: '0 0 4px 0',
               textTransform: 'uppercase',
-              fontWeight: '600',
-              letterSpacing: '0.5px',
+              fontWeight: 700,
+              letterSpacing: '1px',
             }}
           >
             Iscrizione
           </p>
-          <p
-            style={{
-              fontSize: '14px',
-              color: '#ffffff',
-              margin: 0,
-              fontWeight: '600',
-            }}
-          >
-            Premium - Scade il 15 Agosto 2024
+          <p style={{ fontSize: '14px', margin: 0, fontWeight: 700 }}>
+            Premium · Scade il 15 Agosto 2024
           </p>
         </div>
 
@@ -117,112 +141,97 @@ const ProfilePage: React.FC = () => {
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
-            gap: '12px',
-            marginBottom: '16px',
+            gap: '10px',
           }}
         >
-          <div
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              padding: '12px',
-              borderRadius: '8px',
-            }}
-          >
-            <p
+          {[
+            { label: 'Allenamenti', value: '42' },
+            { label: 'Streak', value: '8gg' },
+          ].map((s) => (
+            <div
+              key={s.label}
               style={{
-                fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.6)',
-                margin: '0 0 4px 0',
+                backgroundColor: 'rgba(0,0,0,0.35)',
+                border: '1px solid rgba(229,57,53,0.22)',
+                padding: '14px 8px',
+                borderRadius: '14px',
               }}
             >
-              Allenamenti
-            </p>
-            <p
-              style={{
-                fontSize: '20px',
-                fontWeight: '700',
-                color: '#e53935',
-                margin: 0,
-              }}
-            >
-              42
-            </p>
-          </div>
-          <div
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              padding: '12px',
-              borderRadius: '8px',
-            }}
-          >
-            <p
-              style={{
-                fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.6)',
-                margin: '0 0 4px 0',
-              }}
-            >
-              Streak
-            </p>
-            <p
-              style={{
-                fontSize: '20px',
-                fontWeight: '700',
-                color: '#e53935',
-                margin: 0,
-              }}
-            >
-              8 gg
-            </p>
-          </div>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.55)',
+                  margin: '0 0 4px 0',
+                  fontWeight: 500,
+                }}
+              >
+                {s.label}
+              </p>
+              <p
+                style={{
+                  fontSize: '24px',
+                  fontWeight: 800,
+                  color: '#ff5252',
+                  margin: 0,
+                  lineHeight: 1,
+                }}
+              >
+                {s.value}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Settings Links */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {/* Settings list */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          animation: 'fadeInUp 0.6s ease-out 0.2s both',
+        }}
+      >
         {[
-          { label: 'Modifica Profilo' },
-          { label: 'Impostazioni Privacy' },
-          { label: 'Password' },
-          { label: 'Notifiche' },
-          { label: 'Chi Siamo' },
-          { label: 'Logout' },
+          { label: 'Modifica Profilo', icon: '👤' },
+          { label: 'Impostazioni Privacy', icon: '🔒' },
+          { label: 'Password', icon: '🔑' },
+          { label: 'Notifiche', icon: '🔔' },
+          { label: 'Chi Siamo', icon: 'ℹ️' },
         ].map((item, idx) => (
-          <button
-            key={idx}
-            style={{
-              backgroundColor: '#1a1f2e',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              cursor: 'pointer',
-              color: '#ffffff',
-              fontSize: '14px',
-              fontWeight: '500',
-              transition: 'background-color 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(229, 57, 53, 0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#1a1f2e';
-            }}
-          >
+          <button key={idx} className="profile-row" style={rowButton}>
+            <span style={{ fontSize: '18px' }}>{item.icon}</span>
             <span>{item.label}</span>
             <span
               style={{
                 marginLeft: 'auto',
-                color: 'rgba(255, 255, 255, 0.4)',
-                fontSize: '16px',
+                color: '#ff5252',
+                fontSize: '18px',
+                fontWeight: 700,
               }}
             >
               →
             </span>
           </button>
         ))}
+
+        {/* Logout */}
+        <button
+          className="logout-row"
+          style={{
+            ...rowButton,
+            marginTop: '8px',
+            backgroundColor: 'rgba(229,57,53,0.14)',
+            border: '1.5px solid rgba(229,57,53,0.55)',
+            color: '#ff5252',
+            fontWeight: 800,
+            justifyContent: 'center',
+            letterSpacing: '0.5px',
+          }}
+        >
+          <span style={{ fontSize: '18px' }}>⎋</span>
+          <span>LOGOUT</span>
+        </button>
       </div>
     </div>
   );
