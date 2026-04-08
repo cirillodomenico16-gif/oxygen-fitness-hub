@@ -15,6 +15,7 @@ interface Course {
   current: number;
   capacity: number;
   status: Status;
+  image: string;
 }
 
 const DAYS = [
@@ -39,6 +40,7 @@ const COURSES: Course[] = [
     current: 12,
     capacity: 20,
     status: 'available',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop',
   },
   {
     id: 2,
@@ -51,6 +53,7 @@ const COURSES: Course[] = [
     current: 18,
     capacity: 18,
     status: 'full',
+    image: 'https://images.unsplash.com/photo-1549824506-b1f02ea6ac5b?w=400&h=300&fit=crop',
   },
   {
     id: 3,
@@ -63,9 +66,23 @@ const COURSES: Course[] = [
     current: 15,
     capacity: 20,
     status: 'almost_full',
+    image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400&h=300&fit=crop',
   },
   {
     id: 4,
+    name: 'CrossFit Extreme',
+    time: '19:00',
+    duration: '60 min',
+    room: 'Sala A',
+    instructor: 'Marco Rossi',
+    intensity: 'Alta Intensità',
+    current: 8,
+    capacity: 20,
+    status: 'available',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop',
+  },
+  {
+    id: 5,
     name: 'Functional Training',
     time: '20:00',
     duration: '55 min',
@@ -75,9 +92,10 @@ const COURSES: Course[] = [
     current: 15,
     capacity: 20,
     status: 'available',
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop',
   },
   {
-    id: 5,
+    id: 6,
     name: 'Yoga Flow',
     time: '21:00',
     duration: '60 min',
@@ -87,6 +105,7 @@ const COURSES: Course[] = [
     current: 22,
     capacity: 25,
     status: 'available',
+    image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=400&h=300&fit=crop',
   },
 ];
 
@@ -100,8 +119,11 @@ const CorsiPage: React.FC = () => {
   const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(0);
   const [confirmCourse, setConfirmCourse] = useState<Course | null>(null);
+  const [cancelCourse, setCancelCourse] = useState<Course | null>(null);
   const [booked, setBooked] = useState<number[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('Prenotazione confermata!');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const containerStyle: React.CSSProperties = {
     backgroundColor: '#000000',
@@ -215,17 +237,32 @@ const CorsiPage: React.FC = () => {
     flexShrink: 0,
   };
 
+  const tryBook = (course: Course) => {
+    // Block: same course name already booked on this day
+    const duplicate = COURSES.some(
+      (c) => c.id !== course.id && c.name === course.name && booked.includes(c.id)
+    );
+    if (duplicate) {
+      setErrorMsg(`Hai già prenotato "${course.name}" per oggi. Non puoi prenotare due volte lo stesso corso nella stessa giornata.`);
+      return;
+    }
+    setConfirmCourse(course);
+  };
+
   const renderButton = (course: Course) => {
     const isBooked = booked.includes(course.id);
     if (isBooked) {
       return (
-        <button style={{
-          ...buttonBase,
-          background: 'rgba(34,197,94,0.18)',
-          color: '#22c55e',
-          border: '1px solid rgba(34,197,94,0.4)',
-          cursor: 'default',
-        }}>PRENOTATO</button>
+        <button
+          onClick={() => setCancelCourse(course)}
+          style={{
+            ...buttonBase,
+            background: 'rgba(34,197,94,0.18)',
+            color: '#22c55e',
+            border: '1px solid rgba(34,197,94,0.4)',
+            cursor: 'pointer',
+          }}
+        >DISDICI</button>
       );
     }
     if (course.status === 'full') {
@@ -241,7 +278,7 @@ const CorsiPage: React.FC = () => {
     const isAlmostFull = course.status === 'almost_full';
     return (
       <button
-        onClick={() => setConfirmCourse(course)}
+        onClick={() => tryBook(course)}
         style={{
           ...buttonBase,
           background: isAlmostFull ? 'linear-gradient(180deg, #fb923c, #f97316)' : 'linear-gradient(180deg, #ef4444, #e53935)',
@@ -256,6 +293,16 @@ const CorsiPage: React.FC = () => {
     if (!confirmCourse) return;
     setBooked((prev) => [...prev, confirmCourse.id]);
     setConfirmCourse(null);
+    setSuccessMsg('Prenotazione confermata!');
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 2200);
+  };
+
+  const handleCancelBooking = () => {
+    if (!cancelCourse) return;
+    setBooked((prev) => prev.filter((id) => id !== cancelCourse.id));
+    setCancelCourse(null);
+    setSuccessMsg('Prenotazione disdetta');
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2200);
   };
@@ -318,6 +365,16 @@ const CorsiPage: React.FC = () => {
       {/* Courses */}
       {COURSES.map((c, idx) => (
         <div key={c.id} style={{ ...cardStyle, animationDelay: `${idx * 0.06}s` }}>
+          <div style={{
+            width: '72px',
+            height: '72px',
+            borderRadius: '12px',
+            backgroundImage: `linear-gradient(135deg, rgba(0,0,0,0.25), rgba(229,57,53,0.15)), url(${c.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            flexShrink: 0,
+            border: '1px solid rgba(229,57,53,0.3)',
+          }} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <h3 style={{
               fontSize: '17px',
@@ -506,6 +563,185 @@ const CorsiPage: React.FC = () => {
         </div>
       )}
 
+      {/* Cancel Modal */}
+      {cancelCourse && (
+        <div
+          onClick={() => setCancelCourse(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            animation: 'fadeIn 0.25s ease-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '380px',
+              background: 'linear-gradient(180deg, #1a0608 0%, #0a0203 100%)',
+              border: '1px solid rgba(229,57,53,0.35)',
+              borderRadius: '22px',
+              padding: '28px 24px',
+              textAlign: 'center',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.7)',
+            }}
+          >
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'rgba(239,68,68,0.15)',
+              border: '1px solid rgba(239,68,68,0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px auto',
+            }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: 800,
+              color: 'white',
+              margin: '0 0 10px 0',
+            }}>Disdire la prenotazione?</h2>
+            <p style={{
+              fontSize: '14px',
+              color: 'rgba(255,255,255,0.65)',
+              margin: '0 0 20px 0',
+              lineHeight: 1.5,
+            }}>
+              Stai per disdire <strong style={{ color: 'white' }}>{cancelCourse.name}</strong> delle {cancelCourse.time}.
+            </p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setCancelCourse(null)}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: 'white',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '14px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >Annulla</button>
+              <button
+                onClick={handleCancelBooking}
+                style={{
+                  flex: 1.4,
+                  padding: '14px',
+                  background: 'linear-gradient(180deg, #ef4444, #e53935)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '14px',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  letterSpacing: '0.5px',
+                  cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  boxShadow: '0 8px 24px rgba(229,57,53,0.5)',
+                }}
+              >DISDICI</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {errorMsg && (
+        <div
+          onClick={() => setErrorMsg(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 110,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            animation: 'fadeIn 0.25s ease-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '380px',
+              background: 'linear-gradient(180deg, #2a0a0a 0%, #0a0203 100%)',
+              border: '1px solid rgba(249,115,22,0.5)',
+              borderRadius: '22px',
+              padding: '28px 24px',
+              textAlign: 'center',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(249,115,22,0.2)',
+            }}
+          >
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'rgba(249,115,22,0.15)',
+              border: '1px solid rgba(249,115,22,0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px auto',
+            }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <h2 style={{
+              fontSize: '19px',
+              fontWeight: 800,
+              color: 'white',
+              margin: '0 0 10px 0',
+            }}>Prenotazione non consentita</h2>
+            <p style={{
+              fontSize: '14px',
+              color: 'rgba(255,255,255,0.7)',
+              margin: '0 0 22px 0',
+              lineHeight: 1.55,
+            }}>{errorMsg}</p>
+            <button
+              onClick={() => setErrorMsg(null)}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: 'linear-gradient(180deg, #fb923c, #f97316)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '14px',
+                fontSize: '14px',
+                fontWeight: 800,
+                letterSpacing: '0.5px',
+                cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                boxShadow: '0 8px 24px rgba(249,115,22,0.4)',
+              }}
+            >HO CAPITO</button>
+          </div>
+        </div>
+      )}
+
       {/* Success toast */}
       {showSuccess && (
         <div style={{
@@ -529,7 +765,7 @@ const CorsiPage: React.FC = () => {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          Prenotazione confermata!
+          {successMsg}
         </div>
       )}
     </div>
