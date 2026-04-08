@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from '../components/NotificationBell';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
+import ShaderBackground from '../components/ui/shader-background';
 
 const UserHome: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +13,10 @@ const UserHome: React.FC = () => {
     padding: '8px 24px 40px 24px',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     color: 'white',
+    position: 'relative',
+    overflow: 'hidden',
   };
+  const contentStyle: React.CSSProperties = { position: 'relative', zIndex: 1 };
 
   const greetingStyle: React.CSSProperties = {
     fontSize: '38px',
@@ -156,6 +160,8 @@ const UserHome: React.FC = () => {
 
   return (
     <div style={containerStyle}>
+      <ShaderBackground opacity={0.45} />
+      <div style={contentStyle}>
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(20px); }
@@ -263,6 +269,7 @@ const UserHome: React.FC = () => {
         <div style={progressBarContainerStyle}>
           <div style={progressBarFillStyle}></div>
         </div>
+      </div>
       </div>
     </div>
   );

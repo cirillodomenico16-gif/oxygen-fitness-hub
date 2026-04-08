@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { MEMBERS } from '../data/members';
 import { callClaude, hasApiKey, getHistory, saveToHistory, pushNotification, PlanRecord } from '../lib/llm';
 import { getProgressSummary } from '../data/progress';
+import { AnimatedAIChat } from '../components/ui/animated-ai-chat';
 
 type AgentType = 'scheda' | 'dieta';
 
@@ -500,29 +501,14 @@ Genera ora la nuova ${type === 'scheda' ? 'scheda di allenamento' : 'dieta'} ten
               ))}
             </div>
           ) : (
-            <form onSubmit={(e) => { e.preventDefault(); send(input); }} style={{ display: 'flex', gap: '8px' }}>
-              <input
-                autoFocus
-                type={q?.type === 'number' ? 'number' : 'text'}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Scrivi la risposta..."
-                style={{
-                  flex: 1, padding: '12px 14px',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: `1.5px solid ${cfg.accent}55`,
-                  borderRadius: '12px', color: '#fff', fontSize: '13px',
-                  outline: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif",
-                }}
-              />
-              <button type="submit" style={{
-                padding: '12px 18px',
-                background: `linear-gradient(135deg, ${cfg.accent}, ${cfg.accent2})`,
-                border: `1px solid ${cfg.accent}`, borderRadius: '12px',
-                color: '#fff', fontSize: '13px', fontWeight: 800, cursor: 'pointer',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}>Invia</button>
-            </form>
+            <AnimatedAIChat
+              title={q?.text || 'Scrivi la tua risposta'}
+              subtitle="Rispondi qui sotto per continuare"
+              placeholder="Scrivi la risposta..."
+              agentName={type}
+              suggestions={[]}
+              onSend={(val) => send(val)}
+            />
           )}
         </div>
       )}

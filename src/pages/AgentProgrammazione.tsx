@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedAIChat } from '../components/ui/animated-ai-chat';
 
 interface Msg { from: 'agent' | 'user'; text: string; }
 
@@ -104,7 +105,7 @@ const AgentProgrammazione: React.FC = () => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [generated, setGenerated] = useState<string | null>(null);
   const [typing, setTyping] = useState(false);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -246,27 +247,14 @@ const AgentProgrammazione: React.FC = () => {
               }}>{c}</button>
             ))}
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); send(input); setInput(''); }} style={{ display: 'flex', gap: '8px' }}>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Oppure scrivi una risposta libera..."
-              style={{
-                flex: 1, padding: '12px 14px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1.5px solid rgba(167,139,250,0.55)',
-                borderRadius: '12px', color: '#fff', fontSize: '13px',
-                outline: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}
-            />
-            <button type="submit" style={{
-              padding: '12px 18px',
-              background: 'linear-gradient(135deg,#8b5cf6,#6d28d9)',
-              border: '1px solid #a78bfa', borderRadius: '12px',
-              color: '#fff', fontSize: '14px', fontWeight: 800, cursor: 'pointer',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}></button>
-          </form>
+          <AnimatedAIChat
+            title="Risposta libera"
+            subtitle="Oppure scrivi qui la tua risposta"
+            placeholder="Scrivi una risposta libera..."
+            agentName="prog"
+            suggestions={[]}
+            onSend={(val) => { send(val); setInput(''); }}
+          />
         </div>
       )}
     </div>

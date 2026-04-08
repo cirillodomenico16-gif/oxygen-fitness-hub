@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
+import ShaderBackground from '../components/ui/shader-background';
 
 const EXPIRING = [
   { name: 'Luca Ferrari', plan: 'Mensile', date: '09/04/2026', email: 'luca.ferrari@email.com', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
@@ -86,7 +87,10 @@ const AdminDashboard: React.FC = () => {
       fontFamily: "'Plus Jakarta Sans', sans-serif",
       color: 'white',
       overflowY: 'auto',
+      position: 'relative',
     }}>
+      <ShaderBackground opacity={0.4} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
       <style>{`
         @keyframes fadeInUp { from { opacity:0; transform: translateY(16px);} to {opacity:1; transform: translateY(0);} }
         .corsi-scroll::-webkit-scrollbar { width: 6px; }
@@ -401,6 +405,7 @@ const AdminDashboard: React.FC = () => {
           </form>
         </div>
       )}
+      </div>
     </div>
   );
 };
