@@ -99,9 +99,10 @@ const initShaderProgram = (gl: WebGLRenderingContext, vs: string, fs: string) =>
 
 interface ShaderBackgroundProps {
   opacity?: number;
+  height?: number | string;
 }
 
-const ShaderBackground: React.FC<ShaderBackgroundProps> = ({ opacity = 0.55 }) => {
+const ShaderBackground: React.FC<ShaderBackgroundProps> = ({ opacity = 0.55, height = 260 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -154,19 +155,25 @@ const ShaderBackground: React.FC<ShaderBackgroundProps> = ({ opacity = 0.55 }) =
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
-        height: '100%',
+        height,
         zIndex: 0,
-        opacity,
         pointerEvents: 'none',
+        overflow: 'hidden',
+        maskImage: 'linear-gradient(180deg, #000 55%, rgba(0,0,0,0) 100%)',
+        WebkitMaskImage: 'linear-gradient(180deg, #000 55%, rgba(0,0,0,0) 100%)',
       }}
-    />
+    >
+      <canvas
+        ref={canvasRef}
+        style={{ width: '100%', height: '100%', display: 'block', opacity }}
+      />
+    </div>
   );
 };
 
