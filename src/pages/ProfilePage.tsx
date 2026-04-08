@@ -169,9 +169,9 @@ const ProfilePage: React.FC = () => {
         }}
       >
         {[
-          { label: 'Scheda', sub: 'Storico', icon: '', path: '/scheda' },
-          { label: 'Dieta', sub: 'Storico', icon: '', path: '/dieta' },
-          { label: 'Progressi', sub: 'Grafici', icon: '', path: '/progressi' },
+          { label: 'Scheda', icon: '', path: '/scheda' },
+          { label: 'Dieta', icon: '', path: '/dieta' },
+          { label: 'Progressi', icon: '', path: '/progressi' },
         ].map((s) => (
           <button
             key={s.label}
@@ -195,9 +195,6 @@ const ProfilePage: React.FC = () => {
           >
             <span style={{ fontSize: '24px' }}>{s.icon}</span>
             <span style={{ fontSize: '13px', fontWeight: 800 }}>{s.label}</span>
-            <span style={{ fontSize: '10px', color: '#ff8a80', fontWeight: 600 }}>
-              {s.sub}
-            </span>
           </button>
         ))}
       </div>
