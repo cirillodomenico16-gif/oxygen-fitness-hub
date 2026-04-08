@@ -97,6 +97,7 @@ const AgentProgrammazione: React.FC = () => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [generated, setGenerated] = useState<string | null>(null);
   const [typing, setTyping] = useState(false);
+  const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -104,6 +105,7 @@ const AgentProgrammazione: React.FC = () => {
   }, [messages, typing, generated]);
 
   const send = (value: string) => {
+    if (!value.trim()) return;
     const q = QUESTIONS[step];
     const newAnswers = { ...answers, [q.key]: value };
     setAnswers(newAnswers);
@@ -225,7 +227,7 @@ const AgentProgrammazione: React.FC = () => {
 
       {!generated && q && (
         <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(255,255,255,0.1)', background: '#0a0a0a' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
             {q.choices.map((c) => (
               <button key={c} onClick={() => send(c)} style={{
                 padding: '10px 14px',
@@ -237,6 +239,27 @@ const AgentProgrammazione: React.FC = () => {
               }}>{c}</button>
             ))}
           </div>
+          <form onSubmit={(e) => { e.preventDefault(); send(input); setInput(''); }} style={{ display: 'flex', gap: '8px' }}>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Oppure scrivi una risposta libera..."
+              style={{
+                flex: 1, padding: '12px 14px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1.5px solid rgba(167,139,250,0.55)',
+                borderRadius: '12px', color: '#fff', fontSize: '13px',
+                outline: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+            />
+            <button type="submit" style={{
+              padding: '12px 18px',
+              background: 'linear-gradient(135deg,#8b5cf6,#6d28d9)',
+              border: '1px solid #a78bfa', borderRadius: '12px',
+              color: '#fff', fontSize: '14px', fontWeight: 800, cursor: 'pointer',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+            }}>➤</button>
+          </form>
         </div>
       )}
     </div>
