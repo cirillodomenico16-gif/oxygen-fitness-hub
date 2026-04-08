@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
   const avatarUrl =
     'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop';
 
@@ -181,6 +183,50 @@ const ProfilePage: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Shortcuts grid */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '10px',
+          marginBottom: '22px',
+          animation: 'fadeInUp 0.6s ease-out 0.15s both',
+        }}
+      >
+        {[
+          { label: 'Scheda', sub: 'Storico', icon: '📋', path: '/scheda' },
+          { label: 'Dieta', sub: 'Storico', icon: '🥗', path: '/dieta' },
+          { label: 'Progressi', sub: 'Grafici', icon: '📊', path: '/progressi' },
+        ].map((s) => (
+          <button
+            key={s.label}
+            onClick={() => navigate(s.path)}
+            className="profile-row"
+            style={{
+              backgroundColor: 'rgba(229, 57, 53, 0.08)',
+              border: '1.5px solid rgba(229, 57, 53, 0.45)',
+              borderRadius: '16px',
+              padding: '16px 8px',
+              cursor: 'pointer',
+              color: 'white',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: '0 0 18px rgba(229,57,53,0.18)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span style={{ fontSize: '24px' }}>{s.icon}</span>
+            <span style={{ fontSize: '13px', fontWeight: 800 }}>{s.label}</span>
+            <span style={{ fontSize: '10px', color: '#ff8a80', fontWeight: 600 }}>
+              {s.sub}
+            </span>
+          </button>
+        ))}
       </div>
 
       {/* Settings list */}

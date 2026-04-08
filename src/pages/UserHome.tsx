@@ -197,16 +197,20 @@ const UserHome: React.FC = () => {
             marginLeft: '2px',
           }}>2</span>
         </div>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          borderRadius: '50%',
-          border: '2px solid rgba(229,57,53,0.5)',
-          backgroundImage: "url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          boxShadow: '0 0 12px rgba(229,57,53,0.4)',
-        }} />
+        <div
+          onClick={() => navigate('/profilo')}
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            border: '2px solid rgba(229,57,53,0.5)',
+            backgroundImage: "url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            boxShadow: '0 0 12px rgba(229,57,53,0.4)',
+            cursor: 'pointer',
+          }}
+        />
       </div>
 
       {/* Greeting */}
