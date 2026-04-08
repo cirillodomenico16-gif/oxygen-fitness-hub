@@ -1,9 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+type Measure = { label: string; value: string; delta: string; icon: string };
+
+const AVAILABLE_MEASURES: { label: string; icon: string }[] = [
+  { label: 'Vita', icon: '🧍' },
+  { label: 'Petto', icon: '💪' },
+  { label: 'Gambe', icon: '🦵' },
+  { label: 'Braccia', icon: '💪' },
+  { label: 'Spalle', icon: '🤸' },
+  { label: 'Glutei', icon: '🍑' },
+  { label: 'Polpacci', icon: '🦿' },
+  { label: 'Avambraccio', icon: '✊' },
+  { label: 'Collo', icon: '🧞' },
+  { label: 'Fianchi', icon: '🕺' },
+  { label: '% Grasso', icon: '📉' },
+  { label: 'Massa Magra', icon: '⚡' },
+];
 
 const ProgressPage: React.FC = () => {
   const navigate = useNavigate();
   const [compareOpen, setCompareOpen] = useState(false);
+  const [measures, setMeasures] = useState<Measure[]>([
+    { label: 'Vita', value: '82cm', delta: '-2', icon: '🧍' },
+    { label: 'Petto', value: '98cm', delta: '+1', icon: '💪' },
+    { label: 'Gambe', value: '54cm', delta: '-1', icon: '🦵' },
+  ]);
+  const [addMeasureOpen, setAddMeasureOpen] = useState(false);
+  const [newMeasureLabel, setNewMeasureLabel] = useState('Braccia');
+  const [newMeasureValue, setNewMeasureValue] = useState('');
+  const [beforePhoto, setBeforePhoto] = useState<string>(
+    'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=420&fit=crop'
+  );
+  const [afterPhoto, setAfterPhoto] = useState<string>(
+    'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=420&fit=crop'
+  );
+  const beforeInputRef = useRef<HTMLInputElement>(null);
+  const afterInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>, which: 'before' | 'after') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = reader.result as string;
+      if (which === 'before') setBeforePhoto(url);
+      else setAfterPhoto(url);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAddMeasure = () => {
+    if (!newMeasureValue.trim()) return;
+    const def = AVAILABLE_MEASURES.find((m) => m.label === newMeasureLabel);
+    if (!def) return;
+    setMeasures([
+      ...measures,
+      { label: def.label, icon: def.icon, value: newMeasureValue.trim(), delta: '0' },
+    ]);
+    setNewMeasureValue('');
+    setAddMeasureOpen(false);
+  };
 
   const weights = [
     86, 85.8, 85.6, 85.5, 85.3, 85.1, 85, 84.8, 84.6, 84.5,
@@ -28,15 +85,6 @@ const ProgressPage: React.FC = () => {
   const pathD = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
   const areaD = pathD + ` L ${pts[pts.length - 1][0].toFixed(1)} ${(padT + plotH).toFixed(1)} L ${pts[0][0].toFixed(1)} ${(padT + plotH).toFixed(1)} Z`;
 
-  const measures = [
-    { label: 'Vita', value: '82cm', delta: '-2', icon: '🧍' },
-    { label: 'Petto', value: '98cm', delta: '+1', icon: '💪' },
-    { label: 'Gambe', value: '54cm', delta: '-1', icon: '🦵' },
-  ];
-
-  const days = Array.from({ length: 30 }, (_, i) => i + 1);
-  const activeDays = 18;
-  const todayDay = 29;
 
   const sectionTitle: React.CSSProperties = {
     fontSize: '16px',
@@ -128,10 +176,29 @@ const ProgressPage: React.FC = () => {
         </svg>
       </div>
 
-      <h3 style={sectionTitle}>Misure Corporee</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+        <h3 style={{ ...sectionTitle, marginBottom: 0 }}>Misure Corporee</h3>
+        <button
+          onClick={() => setAddMeasureOpen(true)}
+          style={{
+            background: 'linear-gradient(180deg, #ef4444, #e53935)',
+            border: 'none',
+            color: 'white',
+            padding: '6px 12px',
+            borderRadius: '999px',
+            fontSize: '12px',
+            fontWeight: 800,
+            cursor: 'pointer',
+            boxShadow: '0 0 14px rgba(229,57,53,0.55)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
+          + Aggiungi
+        </button>
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px', animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
-        {measures.map((m) => (
-          <div key={m.label} style={{ backgroundColor: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.35)', borderRadius: '14px', padding: '14px 8px', textAlign: 'center', boxShadow: '0 0 14px rgba(229,57,53,0.12)' }}>
+        {measures.map((m, i) => (
+          <div key={m.label + i} style={{ backgroundColor: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.35)', borderRadius: '14px', padding: '14px 8px', textAlign: 'center', boxShadow: '0 0 14px rgba(229,57,53,0.12)' }}>
             <div style={{ fontSize: '22px', marginBottom: '4px' }}>{m.icon}</div>
             <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginBottom: '2px' }}>{m.label}</div>
             <div style={{ fontSize: '15px', fontWeight: 800, color: '#ff5252' }}>
@@ -142,79 +209,101 @@ const ProgressPage: React.FC = () => {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '10px' }}>
-        <h3 style={{ ...sectionTitle, marginBottom: 0 }}>Streak Mensile</h3>
-        <span style={{ fontSize: '12px', color: '#ff5252', fontWeight: 700 }}>Migliore: 22g</span>
+        <h3 style={{ ...sectionTitle, marginBottom: 0 }}>Allenamenti Mensili</h3>
+        <span style={{ fontSize: '12px', color: '#ff5252', fontWeight: 700 }}>Obiettivo: 24</span>
       </div>
       <div style={{
         background: 'radial-gradient(circle at 20% 50%, rgba(229,57,53,0.22), rgba(0,0,0,0.6))',
         border: '1.5px solid rgba(229,57,53,0.45)',
         borderRadius: '18px',
-        padding: '18px 14px',
+        padding: '18px 16px',
         marginBottom: '22px',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1.5fr',
-        gap: '14px',
-        alignItems: 'center',
         boxShadow: '0 0 24px rgba(229,57,53,0.2)',
         animation: 'fadeInUp 0.6s ease-out 0.15s both',
       }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '32px' }}>🔥</div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#ff5252', lineHeight: 1 }}>18 giorni</div>
-          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginTop: '4px' }}>Migliore: 22g</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+          <div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Settembre</div>
+            <div style={{ fontSize: '34px', fontWeight: 800, color: '#ff5252', lineHeight: 1, marginTop: '4px' }}>
+              18<span style={{ fontSize: '18px', color: 'rgba(255,255,255,0.5)' }}>/24</span>
+            </div>
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginTop: '4px' }}>allenamenti completati</div>
+          </div>
+          <div style={{ fontSize: '40px' }}>💪</div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
-          {days.map((d) => {
-            const active = d <= activeDays;
-            const isToday = d === todayDay;
+        <div style={{ width: '100%', height: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', overflow: 'hidden', marginBottom: '14px' }}>
+          <div style={{ width: '75%', height: '100%', background: 'linear-gradient(90deg, #ef4444, #ff5252)', boxShadow: '0 0 12px rgba(229,57,53,0.7)' }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '6px' }}>
+          {['Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set'].map((m, i) => {
+            const vals = [14, 17, 20, 19, 22, 18];
+            const h = (vals[i] / 24) * 100;
             return (
-              <div key={d} style={{
-                aspectRatio: '1',
-                borderRadius: '5px',
-                background: active ? 'linear-gradient(135deg, #ff5252, #b71c1c)' : 'rgba(255,255,255,0.05)',
-                border: isToday ? '1.5px solid white' : 'none',
-                boxShadow: isToday ? '0 0 10px rgba(255,255,255,0.8)' : active ? '0 0 6px rgba(229,57,53,0.5)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '9px',
-                fontWeight: 700,
-                color: active ? 'white' : 'rgba(255,255,255,0.35)',
-              }}>{d}</div>
+              <div key={m} style={{ textAlign: 'center' }}>
+                <div style={{ height: '48px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+                  <div style={{
+                    width: '70%',
+                    height: `${h}%`,
+                    background: i === 5 ? 'linear-gradient(180deg, #ff5252, #b71c1c)' : 'rgba(229,57,53,0.35)',
+                    borderRadius: '4px 4px 0 0',
+                    boxShadow: i === 5 ? '0 0 8px rgba(229,57,53,0.7)' : 'none',
+                  }} />
+                </div>
+                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.55)', marginTop: '4px', fontWeight: 600 }}>{m}</div>
+                <div style={{ fontSize: '10px', color: '#ff8a80', fontWeight: 700 }}>{vals[i]}</div>
+              </div>
             );
           })}
         </div>
       </div>
 
       <h3 style={sectionTitle}>I Tuoi Cambiamenti</h3>
+      <input ref={beforeInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handlePhotoUpload(e, 'before')} />
+      <input ref={afterInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handlePhotoUpload(e, 'after')} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px', animation: 'fadeInUp 0.6s ease-out 0.2s both' }}>
-        <div style={{
-          aspectRatio: '1/1.05',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))',
-          border: '1px solid rgba(255,255,255,0.15)',
-          borderRadius: '14px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          color: 'rgba(255,255,255,0.4)',
-        }}>
-          <div style={{ fontSize: '32px' }}>🖼️</div>
-          <div style={{ fontSize: '11px', marginTop: '8px', color: 'white' }}>Inizio (01 Set)</div>
+        <div
+          onClick={() => beforeInputRef.current?.click()}
+          style={{
+            aspectRatio: '1/1.15',
+            borderRadius: '14px',
+            backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85)), url('${beforePhoto}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top',
+            border: '1px solid rgba(229,57,53,0.35)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            padding: '10px',
+            cursor: 'pointer',
+            position: 'relative',
+          }}
+        >
+          <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.6)', color: '#ff5252', fontSize: '10px', padding: '4px 8px', borderRadius: '999px', fontWeight: 800 }}>
+            PRIMA
+          </div>
+          <div style={{ fontSize: '11px', fontWeight: 700 }}>📷 Inizio (01 Set)</div>
         </div>
-        <div style={{
-          aspectRatio: '1/1.05',
-          borderRadius: '14px',
-          backgroundImage: "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=400&fit=crop')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          border: '1px solid rgba(229,57,53,0.35)',
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-          padding: '8px',
-        }}>
-          <div style={{ fontSize: '11px', fontWeight: 700 }}>Oggi (19 Set)</div>
+        <div
+          onClick={() => afterInputRef.current?.click()}
+          style={{
+            aspectRatio: '1/1.15',
+            borderRadius: '14px',
+            backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85)), url('${afterPhoto}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top',
+            border: '1px solid rgba(229,57,53,0.35)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            padding: '10px',
+            cursor: 'pointer',
+            position: 'relative',
+          }}
+        >
+          <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.6)', color: '#ff5252', fontSize: '10px', padding: '4px 8px', borderRadius: '999px', fontWeight: 800 }}>
+            DOPO
+          </div>
+          <div style={{ fontSize: '11px', fontWeight: 700 }}>📷 Oggi (19 Set)</div>
         </div>
       </div>
       <button
@@ -242,7 +331,7 @@ const ProgressPage: React.FC = () => {
         {[
           { label: 'Allenamenti', value: '64' },
           { label: 'Kg Sollevati', value: '12.4k' },
-          { label: 'Miglior Streak', value: '22g' },
+          { label: 'All. Mensili', value: '18' },
         ].map((s) => (
           <div key={s.label} style={{
             backgroundColor: 'rgba(229,57,53,0.07)',
@@ -256,6 +345,114 @@ const ProgressPage: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {addMeasureOpen && (
+        <div onClick={() => setAddMeasureOpen(false)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          zIndex: 1000,
+        }}>
+          <div onClick={(e) => e.stopPropagation()} style={{
+            background: '#0c0c0c',
+            border: '1.5px solid rgba(229,57,53,0.5)',
+            borderRadius: '22px 22px 0 0',
+            padding: '24px 20px 32px 20px',
+            width: '100%',
+            maxWidth: '430px',
+            boxShadow: '0 -10px 50px rgba(229,57,53,0.35)',
+            animation: 'slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
+          }}>
+            <style>{`@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }`}</style>
+            <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '999px', margin: '0 auto 18px' }} />
+            <h3 style={{ margin: '0 0 16px 0', color: 'white', fontSize: '18px', fontWeight: 800 }}>
+              Aggiungi Misura
+            </h3>
+            <label style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+              Tipo di misura
+            </label>
+            <select
+              value={newMeasureLabel}
+              onChange={(e) => setNewMeasureLabel(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: 'rgba(229,57,53,0.08)',
+                border: '1.5px solid rgba(229,57,53,0.4)',
+                borderRadius: '12px',
+                color: 'white',
+                fontSize: '15px',
+                fontWeight: 600,
+                marginBottom: '14px',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                outline: 'none',
+              }}
+            >
+              {AVAILABLE_MEASURES.filter((m) => !measures.find((mm) => mm.label === m.label)).map((m) => (
+                <option key={m.label} value={m.label} style={{ background: '#111', color: 'white' }}>
+                  {m.icon} {m.label}
+                </option>
+              ))}
+            </select>
+            <label style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+              Valore
+            </label>
+            <input
+              type="text"
+              placeholder="es. 40cm"
+              value={newMeasureValue}
+              onChange={(e) => setNewMeasureValue(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: 'rgba(229,57,53,0.08)',
+                border: '1.5px solid rgba(229,57,53,0.4)',
+                borderRadius: '12px',
+                color: 'white',
+                fontSize: '15px',
+                marginBottom: '18px',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setAddMeasureOpen(false)}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  background: 'transparent',
+                  border: '1.5px solid rgba(255,255,255,0.2)',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                Annulla
+              </button>
+              <button
+                onClick={handleAddMeasure}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  background: 'linear-gradient(180deg, #ef4444, #e53935)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: '0 0 20px rgba(229,57,53,0.6)',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                AGGIUNGI
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {compareOpen && (
         <div onClick={() => setCompareOpen(false)} style={{
