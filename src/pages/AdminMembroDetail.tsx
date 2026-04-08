@@ -8,6 +8,15 @@ const AdminMembroDetail: React.FC = () => {
   const member = MEMBERS.find((m) => m.id === id) || MEMBERS[0];
   const [tab, setTab] = useState<'scheda' | 'dieta'>('scheda');
 
+  // Compute expiry date based on plan
+  const planMonths: Record<string, number> = { 'Mensile': 1, 'Trimestrale': 3, 'Semestrale': 6, 'Annuale': 12 };
+  const [dd, mm, yyyy] = member.joined.split('/').map(Number);
+  const start = new Date(yyyy, mm - 1, dd);
+  const expiry = new Date(start);
+  expiry.setMonth(expiry.getMonth() + (planMonths[member.plan] || 1));
+  const expiryStr = expiry.toLocaleDateString('it-IT');
+  const daysLeft = Math.ceil((expiry.getTime() - new Date('2026-04-08').getTime()) / (1000 * 60 * 60 * 24));
+
   const loadPlan = (key: string) => {
     try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; }
   };
@@ -49,6 +58,30 @@ const AdminMembroDetail: React.FC = () => {
           <div style={{ fontSize: '18px', fontWeight: 800 }}>{member.name}</div>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginTop: '3px' }}>{member.age} anni · {member.plan}</div>
           <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '3px' }}>✉ {member.email}</div>
+          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>📞 {member.phone}</div>
+        </div>
+      </div>
+
+      {/* Subscription info */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '18px' }}>
+        <div style={{
+          background: 'rgba(34,197,94,0.06)',
+          border: '1.5px solid rgba(34,197,94,0.4)',
+          borderRadius: '14px', padding: '12px 14px',
+        }}>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700 }}>ISCRITTO DAL</div>
+          <div style={{ fontSize: '15px', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>📅 {member.joined}</div>
+        </div>
+        <div style={{
+          background: daysLeft < 15 ? 'rgba(245,158,11,0.08)' : 'rgba(239,68,68,0.06)',
+          border: `1.5px solid ${daysLeft < 15 ? 'rgba(245,158,11,0.5)' : 'rgba(239,68,68,0.4)'}`,
+          borderRadius: '14px', padding: '12px 14px',
+        }}>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700 }}>SCADENZA</div>
+          <div style={{ fontSize: '15px', fontWeight: 800, color: daysLeft < 15 ? '#fbbf24' : '#ff5252', marginTop: '4px' }}>⏳ {expiryStr}</div>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', marginTop: '2px' }}>
+            {daysLeft > 0 ? `tra ${daysLeft} giorni` : `scaduto da ${-daysLeft} giorni`}
+          </div>
         </div>
       </div>
 
@@ -73,29 +106,65 @@ const AdminMembroDetail: React.FC = () => {
         borderRadius: '16px', padding: '16px', marginBottom: '16px', minHeight: '160px',
       }}>
         {tab === 'scheda' ? (
-          scheda ? (
-            <>
-              <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px', color: '#ff5252' }}>📋 Scheda Attuale</div>
-              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>Generata il {scheda.date}</div>
+          <>
+            <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#ff5252' }}>📋 Dettaglio Scheda</div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
+              {scheda ? `Generata il ${scheda.date} dal Coach AI` : 'Scheda base attiva · non ancora personalizzata'}
+            </div>
+            {scheda ? (
               <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{scheda.plan}</pre>
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '24px 0', color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
-              Nessuna scheda generata.<br />Clicca qui sotto per iniziare.
-            </div>
-          )
+            ) : (
+              <div style={{ fontSize: '12px', lineHeight: 1.7, color: 'rgba(255,255,255,0.85)' }}>
+                <div style={{ marginBottom: '10px' }}><b style={{ color: '#ff5252' }}>Obiettivo:</b> Ipertrofia generale</div>
+                <div style={{ marginBottom: '10px' }}><b style={{ color: '#ff5252' }}>Frequenza:</b> 4 giorni / settimana</div>
+                <div style={{ marginBottom: '10px' }}><b style={{ color: '#ff5252' }}>Durata:</b> 60-75 min a seduta</div>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', marginTop: '6px' }}>
+                  <b style={{ color: '#ff5252', fontSize: '11px' }}>LUN — Petto/Tricipiti</b><br />
+                  Panca piana · Panca inclinata · Croci · Pushdown<br /><br />
+                  <b style={{ color: '#ff5252', fontSize: '11px' }}>MAR — Schiena/Bicipiti</b><br />
+                  Trazioni · Rematore · Lat machine · Curl<br /><br />
+                  <b style={{ color: '#ff5252', fontSize: '11px' }}>GIO — Gambe</b><br />
+                  Squat · Leg press · Affondi · Leg curl<br /><br />
+                  <b style={{ color: '#ff5252', fontSize: '11px' }}>VEN — Spalle/Core</b><br />
+                  Military · Alzate · Plank · Crunch
+                </div>
+                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(239,68,68,0.08)', borderRadius: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>
+                  💡 Genera una scheda personalizzata con il Coach AI per risultati ottimali.
+                </div>
+              </div>
+            )}
+          </>
         ) : (
-          dieta ? (
-            <>
-              <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px', color: '#ff5252' }}>🥗 Dieta Attuale</div>
-              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>Generata il {dieta.date}</div>
-              <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{dieta.plan}</pre>
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '24px 0', color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
-              Nessuna dieta generata.<br />Clicca qui sotto per iniziare.
+          <>
+            <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#4ade80' }}>🥗 Dettaglio Dieta</div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
+              {dieta ? `Generata il ${dieta.date} dal Nutrizionista AI` : 'Piano alimentare base · non ancora personalizzato'}
             </div>
-          )
+            {dieta ? (
+              <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{dieta.plan}</pre>
+            ) : (
+              <div style={{ fontSize: '12px', lineHeight: 1.7, color: 'rgba(255,255,255,0.85)' }}>
+                <div style={{ marginBottom: '10px' }}><b style={{ color: '#4ade80' }}>Target calorico:</b> 2200 kcal</div>
+                <div style={{ marginBottom: '10px' }}><b style={{ color: '#4ade80' }}>Macro:</b> P 150g · C 240g · G 70g</div>
+                <div style={{ marginBottom: '10px' }}><b style={{ color: '#4ade80' }}>Pasti:</b> 5 al giorno</div>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', marginTop: '6px' }}>
+                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🌅 Colazione</b><br />
+                  Avena 60g · Latte 250ml · Frutti di bosco · Mandorle<br /><br />
+                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🍎 Spuntino</b><br />
+                  Yogurt greco · Miele · 1 frutto<br /><br />
+                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🍽 Pranzo</b><br />
+                  Pollo 150g · Riso 80g · Verdure grigliate<br /><br />
+                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🥪 Merenda</b><br />
+                  Pane integrale · Bresaola · 1 frutto<br /><br />
+                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🌙 Cena</b><br />
+                  Salmone 150g · Patate dolci · Insalata
+                </div>
+                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(34,197,94,0.08)', borderRadius: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>
+                  💡 Genera una dieta personalizzata con il Nutrizionista AI.
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 

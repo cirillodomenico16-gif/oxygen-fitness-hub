@@ -1,246 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const AdminSettings: React.FC = () => {
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#0a0e1a',
-        padding: '24px 16px 100px',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        color: '#ffffff',
-      }}
-    >
-      {/* Header */}
-      <div style={{ marginBottom: '32px' }}>
-        <h1
-          style={{
-            fontSize: '28px',
-            fontWeight: '700',
-            margin: '0 0 8px 0',
-            color: '#ffffff',
-          }}
-        >
-          Impostazioni
-        </h1>
-        <p
-          style={{
-            fontSize: '14px',
-            color: 'rgba(255, 255, 255, 0.6)',
-            margin: 0,
-          }}
-        >
-          Gestisci le impostazioni amministrative
-        </p>
+  const [toggles, setToggles] = useState({ backup: true, email: true, maint: false });
+
+  const section = (title: string, children: React.ReactNode, delay: number) => (
+    <div style={{ marginBottom: '18px', animation: `fadeInUp 0.5s ease-out ${delay}s both` }}>
+      <h2 style={{
+        fontSize: '11px', fontWeight: 800, color: 'rgba(255,255,255,0.55)',
+        textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 10px 4px',
+      }}>{title}</h2>
+      <div style={{
+        background: 'rgba(229,57,53,0.06)',
+        border: '1.5px solid rgba(229,57,53,0.45)',
+        borderRadius: '16px',
+        padding: '6px',
+        boxShadow: '0 0 18px rgba(229,57,53,0.18)',
+      }}>
+        {children}
       </div>
+    </div>
+  );
 
-      {/* Settings Sections */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {/* General Settings */}
-        <div>
-          <h2
-            style={{
-              fontSize: '14px',
-              fontWeight: '600',
-              color: 'rgba(255, 255, 255, 0.6)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              margin: '0 0 12px 0',
-            }}
-          >
-            Generali
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {[
-              { label: 'Nome Palestra', value: 'Oxygen Fitness Hub' },
-              { label: 'Email Supporto', value: 'support@oxygen.it' },
-              { label: 'Telefono', value: '+39 02 1234 5678' },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  backgroundColor: '#1a1f2e',
-                  borderRadius: '8px',
-                  padding: '12px 16px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '14px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                  }}
-                >
-                  {item.label}
-                </span>
-                <span
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#ffffff',
-                  }}
-                >
-                  {item.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+  const row = (label: string, right: React.ReactNode, last?: boolean) => (
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      padding: '13px 14px',
+      borderBottom: last ? 'none' : '1px solid rgba(255,255,255,0.06)',
+    }}>
+      <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)', fontWeight: 600 }}>{label}</span>
+      {right}
+    </div>
+  );
 
-        {/* Membership Settings */}
-        <div>
-          <h2
-            style={{
-              fontSize: '14px',
-              fontWeight: '600',
-              color: 'rgba(255, 255, 255, 0.6)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              margin: '0 0 12px 0',
-            }}
-          >
-            Iscrizioni
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {[
-              { label: 'Membri Totali', value: '234' },
-              { label: 'Iscritti Attivi', value: '189' },
-              { label: 'In Scadenza', value: '12' },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  backgroundColor: '#1a1f2e',
-                  borderRadius: '8px',
-                  padding: '12px 16px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '14px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                  }}
-                >
-                  {item.label}
-                </span>
-                <span
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#e53935',
-                  }}
-                >
-                  {item.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+  const toggle = (on: boolean, onClick: () => void) => (
+    <button onClick={onClick} style={{
+      width: '42px', height: '24px', borderRadius: '999px',
+      background: on ? 'linear-gradient(135deg,#ef4444,#b71c1c)' : 'rgba(255,255,255,0.15)',
+      border: on ? '1px solid #ff5252' : '1px solid rgba(255,255,255,0.2)',
+      position: 'relative', cursor: 'pointer', padding: 0,
+      boxShadow: on ? '0 0 12px rgba(229,57,53,0.6)' : 'none',
+      transition: 'all 0.25s ease',
+    }}>
+      <span style={{
+        position: 'absolute', top: '2px', left: on ? '20px' : '2px',
+        width: '18px', height: '18px', borderRadius: '50%', background: '#fff',
+        transition: 'left 0.25s ease',
+      }} />
+    </button>
+  );
 
-        {/* System Settings */}
-        <div>
-          <h2
-            style={{
-              fontSize: '14px',
-              fontWeight: '600',
-              color: 'rgba(255, 255, 255, 0.6)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              margin: '0 0 12px 0',
-            }}
-          >
-            Sistema
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {[
-              { label: 'Backup Automatico', enabled: true },
-              { label: 'Email Notifiche', enabled: true },
-              { label: 'Modalità Manutenzione', enabled: false },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  backgroundColor: '#1a1f2e',
-                  borderRadius: '8px',
-                  padding: '12px 16px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '14px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                  }}
-                >
-                  {item.label}
-                </span>
-                <div
-                  style={{
-                    width: '44px',
-                    height: '24px',
-                    borderRadius: '12px',
-                    backgroundColor: item.enabled ? '#e53935' : 'rgba(255, 255, 255, 0.2)',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.3s ease',
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+  return (
+    <div className="corsi-scroll" style={{
+      minHeight: '100vh', backgroundColor: '#000',
+      padding: '18px 22px 120px', color: '#fff',
+      fontFamily: "'Plus Jakarta Sans', sans-serif", overflowY: 'auto',
+    }}>
+      <style>{`
+        @keyframes fadeInUp { from { opacity:0; transform: translateY(14px);} to {opacity:1; transform: translateY(0);} }
+        .corsi-scroll::-webkit-scrollbar { width: 6px; }
+        .corsi-scroll::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#ef4444,#b71c1c); border-radius: 999px; }
+      `}</style>
 
-        {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
-          <button
-            style={{
-              backgroundColor: '#e53935',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 16px',
-              color: '#ffffff',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'opacity 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '0.9';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '1';
-            }}
-          >
-            Salva Impostazioni
-          </button>
-          <button
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '8px',
-              padding: '12px 16px',
-              color: 'rgba(255, 255, 255, 0.7)',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-            }}
-          >
-            Ripristina Predefiniti
-          </button>
-        </div>
+      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>PANNELLO AMMINISTRATORE</div>
+      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}>⚙️ Impostazioni</h1>
+      <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.55)', margin: '0 0 22px' }}>
+        Gestisci le impostazioni amministrative
+      </p>
+
+      {section('Generali', (
+        <>
+          {row('Nome Palestra', <span style={{ fontSize: '13px', fontWeight: 800, color: '#ff5252' }}>Oxygen Fitness Hub</span>)}
+          {row('Email Supporto', <span style={{ fontSize: '12px', fontWeight: 700, color: '#fff' }}>support@oxygen.it</span>)}
+          {row('Telefono', <span style={{ fontSize: '12px', fontWeight: 700, color: '#fff' }}>+39 02 1234 5678</span>, true)}
+        </>
+      ), 0)}
+
+      {section('Iscrizioni', (
+        <>
+          {row('Membri Totali', <span style={{ fontSize: '15px', fontWeight: 800, color: '#ff5252' }}>234</span>)}
+          {row('Iscritti Attivi', <span style={{ fontSize: '15px', fontWeight: 800, color: '#4ade80' }}>189</span>)}
+          {row('In Scadenza', <span style={{ fontSize: '15px', fontWeight: 800, color: '#fbbf24' }}>12</span>, true)}
+        </>
+      ), 0.05)}
+
+      {section('Sistema', (
+        <>
+          {row('Backup Automatico', toggle(toggles.backup, () => setToggles({ ...toggles, backup: !toggles.backup })))}
+          {row('Email Notifiche', toggle(toggles.email, () => setToggles({ ...toggles, email: !toggles.email })))}
+          {row('Modalità Manutenzione', toggle(toggles.maint, () => setToggles({ ...toggles, maint: !toggles.maint })), true)}
+        </>
+      ), 0.1)}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '22px', animation: 'fadeInUp 0.5s ease-out 0.15s both' }}>
+        <button style={{
+          padding: '14px',
+          background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+          border: '1px solid #ff5252', borderRadius: '14px',
+          color: '#fff', fontSize: '13px', fontWeight: 800, letterSpacing: '0.5px',
+          cursor: 'pointer', boxShadow: '0 6px 20px rgba(229,57,53,0.5)',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+        }}>💾 SALVA IMPOSTAZIONI</button>
+        <button style={{
+          padding: '14px',
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.2)', borderRadius: '14px',
+          color: 'rgba(255,255,255,0.8)', fontSize: '12px', fontWeight: 700,
+          cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
+        }}>Ripristina Predefiniti</button>
+        <button onClick={() => (window as any).__oxygenLogout?.()} style={{
+          padding: '14px',
+          background: 'rgba(239,68,68,0.08)',
+          border: '1px solid rgba(239,68,68,0.5)', borderRadius: '14px',
+          color: '#ff5252', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
+          cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
+        }}>🚪 LOGOUT</button>
       </div>
     </div>
   );
