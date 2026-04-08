@@ -81,7 +81,18 @@ const ProfilePage: React.FC = () => {
         WebkitMaskSize: 'contain', maskSize: 'contain',
         filter: 'drop-shadow(0 0 10px rgba(229,57,53,0.55))',
       }} />
-      <h1 style={title}>Profilo</h1>
+      <div style={{
+        display: 'inline-block',
+        background: 'linear-gradient(135deg, #ff5252 0%, #e53935 50%, #8b0000 100%)',
+        padding: '10px 24px',
+        borderRadius: '14px',
+        margin: '8px 0 22px 0',
+        boxShadow: '0 0 28px rgba(229,57,53,0.55), 0 8px 20px rgba(229,57,53,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
+        border: '1px solid rgba(255,255,255,0.12)',
+        animation: 'fadeInUp 0.5s ease-out',
+      }}>
+        <h1 style={{ ...title, fontSize: '28px', margin: 0, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,0.35)' }}>Profilo</h1>
+      </div>
 
       {/* Profile Card */}
       <div style={card}>
