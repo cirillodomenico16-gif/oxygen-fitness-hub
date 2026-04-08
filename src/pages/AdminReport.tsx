@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const AdminReport: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const AdminReport: React.FC = () => {
       }}>← Indietro</button>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>PANNELLO AMMINISTRATORE</div>
-      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 18px', letterSpacing: '-0.5px' }}> Report</h1>
+      <AnimatedText text="Report" gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)" gradientAnimationDuration={2.4} style={{ margin: '2px 0 18px' }} textStyle={{ fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px' }} />
 
       {/* Revenue chart */}
       <div style={{

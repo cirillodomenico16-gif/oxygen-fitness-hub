@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -91,7 +92,12 @@ const ProfilePage: React.FC = () => {
         border: '1px solid rgba(255,255,255,0.12)',
         animation: 'fadeInUp 0.5s ease-out',
       }}>
-        <h1 style={{ ...title, fontSize: '28px', margin: 0, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,0.35)' }}>Profilo</h1>
+        <AnimatedText
+          text="Profilo"
+          gradientColors="linear-gradient(90deg, #ffffff, #ffe0e0, #ffffff, #ffcccc, #ffffff)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px' }}
+        />
       </div>
 
       {/* Profile Card */}

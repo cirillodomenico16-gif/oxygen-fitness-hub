@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import NotificationBell from '../components/NotificationBell';
 import { getNotifications } from '../lib/llm';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 interface Exercise {
   name: string;
@@ -293,13 +294,12 @@ const SchedaPage: React.FC = () => {
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
-        <h1 style={{
-          fontSize: '20px',
-          fontWeight: 700,
-          color: 'white',
-          margin: 0,
-          letterSpacing: '-0.3px',
-        }}>La Tua Scheda</h1>
+        <AnimatedText
+          text="La Tua Scheda"
+          gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.3px' }}
+        />
         <NotificationBell onOpenPlan={(t) => { if (t === 'scheda') setOverlayOpen(true); else navigate('/dieta?show=1'); }} />
       </div>
 

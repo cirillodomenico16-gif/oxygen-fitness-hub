@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const COURSE_TYPES = ['CrossFit Extreme', 'Yoga Flow', 'HIIT Blast', 'Boxing Cardio', 'Pilates', 'Spinning', 'Zumba', 'Functional Training', 'Pump', 'Stretching'];
 const ROOMS = ['Sala A', 'Sala B', 'Sala C', 'Sala Pesi', 'Sala Spin'];
@@ -124,7 +125,7 @@ const AdminCalendar: React.FC = () => {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', padding: '6px 6px 0 6px' }}>
         <span style={{ fontSize: '22px' }}></span>
-        <h1 style={{ fontSize: '22px', fontWeight: 800, margin: 0, letterSpacing: '-0.3px' }}>Calendario Corsi</h1>
+        <AnimatedText text="Calendario Corsi" gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)" gradientAnimationDuration={2.4} textStyle={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.3px' }} />
       </div>
 
       {/* Week selector */}

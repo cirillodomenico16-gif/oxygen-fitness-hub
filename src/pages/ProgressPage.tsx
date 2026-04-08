@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 type Measure = { label: string; value: string; delta: string; icon: string };
 
@@ -121,7 +122,7 @@ const ProgressPage: React.FC = () => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0 16px 0' }}>
         <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '22px', cursor: 'pointer' }}>‹</button>
-        <h1 style={{ fontSize: '22px', fontWeight: 800, margin: 0, letterSpacing: '-0.3px' }}>I Miei Progressi</h1>
+        <AnimatedText text="I Miei Progressi" gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)" gradientAnimationDuration={2.4} textStyle={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.3px' }} />
         <button style={{ background: 'rgba(229,57,53,0.1)', border: '1px solid rgba(229,57,53,0.35)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px' }}></button>
       </div>
 

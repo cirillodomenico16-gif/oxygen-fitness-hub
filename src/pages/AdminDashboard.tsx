@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const EXPIRING = [
   { name: 'Luca Ferrari', plan: 'Mensile', date: '09/04/2026', email: 'luca.ferrari@email.com', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
@@ -131,7 +132,12 @@ const AdminDashboard: React.FC = () => {
         boxShadow: '0 0 28px rgba(229,57,53,0.55), 0 8px 20px rgba(229,57,53,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
         border: '1px solid rgba(255,255,255,0.12)',
       }}>
-        <h1 style={{ fontSize: '26px', fontWeight: 800, margin: 0, letterSpacing: '-0.5px', color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,0.35)' }}>Dashboard</h1>
+        <AnimatedText
+          text="Dashboard"
+          gradientColors="linear-gradient(90deg, #ffffff, #ffe0e0, #ffffff, #ffcccc, #ffffff)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }}
+        />
       </div>
 
       {/* Stats */}

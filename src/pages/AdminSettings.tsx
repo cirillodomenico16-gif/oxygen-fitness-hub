@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getApiKey, setApiKey, hasApiKey } from '../lib/llm';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const AdminSettings: React.FC = () => {
   const [toggles, setToggles] = useState({ backup: true, email: true, maint: false });
@@ -78,7 +79,7 @@ const AdminSettings: React.FC = () => {
       `}</style>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>PANNELLO AMMINISTRATORE</div>
-      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}> Impostazioni</h1>
+      <AnimatedText text="Impostazioni" gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)" gradientAnimationDuration={2.4} style={{ margin: '2px 0 4px' }} textStyle={{ fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px' }} />
       <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.55)', margin: '0 0 22px' }}>
         Gestisci le impostazioni amministrative
       </p>

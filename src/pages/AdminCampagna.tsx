@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MEMBERS } from '../data/members';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const DOMAIN = 'oxygenfitnesshub.it';
 const SENDER = `no-reply@${DOMAIN}`;
@@ -144,7 +145,7 @@ const AdminCampagna: React.FC = () => {
       }}>← Indietro</button>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>MARKETING AUTOMATION</div>
-      <h1 style={{ fontSize: '26px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}> Campagna Promo</h1>
+      <AnimatedText text="Campagna Promo" gradientColors="linear-gradient(90deg, #8b0000, #ff5252, #ffffff, #ff5252, #8b0000)" gradientAnimationDuration={2.4} style={{ margin: '2px 0 4px' }} textStyle={{ fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }} />
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginBottom: '18px' }}>
         Agente AI Marketing · invia da <b style={{ color: '#ff5252' }}>{SENDER}</b>
       </div>
