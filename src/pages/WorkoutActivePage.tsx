@@ -8,6 +8,39 @@ interface ExerciseDef {
   rest?: number;
 }
 
+// Real exercise photos from yuhonas/free-exercise-db (CC0 public domain)
+const FE = (slug: string) =>
+  `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${slug}/0.jpg`;
+
+const EX_IMG: Record<string, string> = {
+  'Bench Press': FE('Barbell_Bench_Press_-_Medium_Grip'),
+  'Shoulder Press': FE('Dumbbell_Shoulder_Press'),
+  'Lat Pulldown': FE('Wide-Grip_Lat_Pulldown'),
+  'Bicep Curl': FE('Dumbbell_Bicep_Curl'),
+  'Tricep Pushdown': FE('Tricep_Dumbbell_Kickback'),
+  'Squat': FE('Barbell_Squat'),
+  'Leg Press': FE('Leg_Press'),
+  'Romanian Deadlift': FE('Romanian_Deadlift'),
+  'Leg Curl': FE('Lying_Leg_Curls'),
+  'Calf Raises': FE('Standing_Calf_Raises'),
+  'Incline Bench Press': FE('Barbell_Incline_Bench_Press_-_Medium_Grip'),
+  'Arnold Press': FE('Dumbbell_Arnold_Press'),
+  'Cable Fly': FE('Cable_Crossover'),
+  'Front Raises': FE('Front_Dumbbell_Raise'),
+  'Overhead Tricep Ext.': FE('Seated_Dumbbell_Triceps_Extension'),
+  'Deadlift': FE('Barbell_Deadlift'),
+  'Pull-ups': FE('Pullups'),
+  'Barbell Row': FE('Bent_Over_Barbell_Row'),
+  'Face Pull': FE('Face_Pull'),
+  'Barbell Curl': FE('Barbell_Curl'),
+  'Burpees': FE('Burpee'),
+  'Mountain Climbers': FE('Mountain_Climbers'),
+  'Box Jumps': FE('Box_Jump'),
+  'Battle Ropes 30s': FE('Battling_Ropes'),
+};
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop';
+const imgFor = (name: string) => EX_IMG[name] || FALLBACK_IMG;
+
 const DEFAULT_EXERCISES: ExerciseDef[] = [
   { name: 'Bench Press', sets: 4, reps: 10, rest: 90 },
   { name: 'Shoulder Press', sets: 4, reps: 10, rest: 75 },
@@ -262,26 +295,39 @@ const WorkoutActivePage: React.FC = () => {
           marginBottom: '14px',
           animation: 'fadeInUp 0.5s ease-out 0.1s both',
         }}>
-          <p style={{
-            fontSize: '10px',
-            fontWeight: 700,
-            color: '#ff5252',
-            letterSpacing: '1.5px',
-            textTransform: 'uppercase',
-            margin: '0 0 6px 0',
-          }}>Esercizio {activeIdx + 1} di {exercises.length}</p>
-          <h2 style={{
-            fontSize: '26px',
-            fontWeight: 800,
-            color: 'white',
-            margin: '0 0 6px 0',
-            letterSpacing: '-0.5px',
-          }}>{currentExercise.name}</h2>
-          <p style={{
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.75)',
-            margin: '0 0 14px 0',
-          }}>{currentExercise.reps} reps · rec {currentExercise.rest || DEFAULT_REST}s</p>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'center', marginBottom: '12px' }}>
+            <div style={{
+              width: '76px', height: '76px', flexShrink: 0,
+              borderRadius: '14px',
+              backgroundImage: `url('${imgFor(currentExercise.name)}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              border: '1px solid rgba(229,57,53,0.4)',
+              boxShadow: '0 0 16px rgba(229,57,53,0.35)',
+            }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                color: '#ff5252',
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase',
+                margin: '0 0 4px 0',
+              }}>Esercizio {activeIdx + 1} di {exercises.length}</p>
+              <h2 style={{
+                fontSize: '22px',
+                fontWeight: 800,
+                color: 'white',
+                margin: '0 0 4px 0',
+                letterSpacing: '-0.5px',
+              }}>{currentExercise.name}</h2>
+              <p style={{
+                fontSize: '13px',
+                color: 'rgba(255,255,255,0.75)',
+                margin: 0,
+              }}>{currentExercise.reps} reps · rec {currentExercise.rest || DEFAULT_REST}s</p>
+            </div>
+          </div>
 
           {/* Series dots */}
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -420,6 +466,16 @@ const WorkoutActivePage: React.FC = () => {
               transition: 'all 0.3s ease',
             }}
           >
+            <div style={{
+              width: '54px', height: '54px', flexShrink: 0,
+              borderRadius: '12px',
+              backgroundImage: `url('${imgFor(ex.name)}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              border: isActive ? '1px solid rgba(229,57,53,0.5)' : '1px solid rgba(255,255,255,0.08)',
+              boxShadow: isActive ? '0 0 12px rgba(229,57,53,0.35)' : 'none',
+              filter: isComplete ? 'grayscale(0.6)' : 'none',
+            }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{
                 display: 'flex',
@@ -443,13 +499,12 @@ const WorkoutActivePage: React.FC = () => {
               <p style={{
                 fontSize: '12px',
                 color: 'rgba(255,255,255,0.55)',
-                margin: '0 0 6px 24px',
+                margin: '0 0 6px 0',
               }}>
                 {ex.sets}×{ex.reps} · rec {ex.rest || DEFAULT_REST}s · {done}/{ex.sets} fatte
               </p>
               {/* mini progress bar */}
               <div style={{
-                marginLeft: '24px',
                 height: '4px',
                 background: 'rgba(255,255,255,0.06)',
                 borderRadius: '999px',

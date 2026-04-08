@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import GlowTitleButton from '../components/ui/glow-title-button';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -82,7 +82,14 @@ const ProfilePage: React.FC = () => {
         WebkitMaskSize: 'contain', maskSize: 'contain',
         filter: 'drop-shadow(0 0 10px rgba(229,57,53,0.55))',
       }} />
-      <GlowTitleButton label="Profilo" fontSize={28} paddingX={24} paddingY={10} />
+      <div style={{ margin: '8px 0 22px 0' }}>
+        <AnimatedText
+          text="Profilo"
+          gradientColors="linear-gradient(90deg, #ff5252, #8b0000, #ff5252, #e53935, #ff5252)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.5px' }}
+        />
+      </div>
 
       {/* Profile Card */}
       <div style={card}>

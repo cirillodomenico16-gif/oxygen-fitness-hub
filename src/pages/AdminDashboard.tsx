@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import GlowTitleButton from '../components/ui/glow-title-button';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 import ShaderBackground from '../components/ui/shader-background';
 
 const EXPIRING = [
@@ -127,7 +127,14 @@ const AdminDashboard: React.FC = () => {
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px', marginBottom: '2px' }}>
         PANNELLO AMMINISTRATORE
       </div>
-      <GlowTitleButton label="Dashboard" fontSize={26} paddingX={22} paddingY={10} />
+      <div style={{ margin: '8px 0 18px 0' }}>
+        <AnimatedText
+          text="Dashboard"
+          gradientColors="linear-gradient(90deg, #ff5252, #8b0000, #ff5252, #e53935, #ff5252)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ fontSize: '20px', fontWeight: 800, letterSpacing: '-0.5px' }}
+        />
+      </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '22px', animation: 'fadeInUp 0.5s ease-out' }}>
