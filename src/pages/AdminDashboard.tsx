@@ -1,8 +1,42 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const EXPIRING = [
+  { name: 'Luca Ferrari', plan: 'Mensile', date: '09/04/2026', email: 'luca.ferrari@email.com', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
+  { name: 'Sara Conti', plan: 'Trimestrale', date: '09/04/2026', email: 'sara.conti@email.com', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop' },
+  { name: 'Davide Greco', plan: 'Annuale', date: '09/04/2026', email: 'davide.greco@email.com', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop' },
+];
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const [showNewMember, setShowNewMember] = React.useState(false);
+  const [form, setForm] = React.useState({ nome: '', cognome: '', email: '', telefono: '', piano: 'Mensile' });
+  const [toast, setToast] = React.useState<string | null>(null);
+
+  const sendRenewalEmails = () => {
+    const bcc = EXPIRING.map(e => e.email).join(',');
+    const subject = encodeURIComponent('Il tuo abbonamento Oxygen sta per scadere - Offerta di rinnovo');
+    const body = encodeURIComponent(
+      `Ciao,\n\nIl tuo abbonamento presso Oxygen Fitness Hub è in scadenza.\nTi proponiamo un'offerta esclusiva per il rinnovo del tuo piano.\n\nContattaci in palestra o rispondi a questa mail per attivare la promo.\n\nA presto,\nIl team Oxygen`
+    );
+    window.location.href = `mailto:?bcc=${bcc}&subject=${subject}&body=${body}`;
+    setToast('📧 Email di rinnovo inviate a ' + EXPIRING.length + ' soci');
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const submitNewMember = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.nome || !form.cognome || !form.email) return;
+    const subject = encodeURIComponent('Benvenuto in Oxygen Fitness Hub — Abbonamento attivato');
+    const body = encodeURIComponent(
+      `Ciao ${form.nome},\n\nIl tuo abbonamento ${form.piano} presso Oxygen Fitness Hub è stato ATTIVATO con successo.\n\nPuoi accedere in palestra da oggi. Ti aspettiamo!\n\nIl team Oxygen`
+    );
+    window.location.href = `mailto:${form.email}?subject=${subject}&body=${body}`;
+    setShowNewMember(false);
+    setForm({ nome: '', cognome: '', email: '', telefono: '', piano: 'Mensile' });
+    setToast('✅ Socio creato e mail di attivazione inviata');
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const stats = [
     { label: 'Soci attivi', value: '342' },
@@ -37,7 +71,7 @@ const AdminDashboard: React.FC = () => {
   ];
 
   const quick = [
-    { icon: '+', label: 'Nuovo Socio', path: '/admin' },
+    { icon: '+', label: 'Nuovo Socio', path: '__new__' },
     { icon: '📋', label: 'Scheda AI', path: '/admin/schede-ai' },
     { icon: '📊', label: 'Report', path: '/admin' },
     { icon: '🗓', label: 'Corsi', path: '/admin/calendario' },
@@ -151,6 +185,46 @@ const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Expiring list */}
+      <div style={{
+        background: 'rgba(245,158,11,0.06)',
+        border: '1.5px solid rgba(245,158,11,0.45)',
+        borderRadius: '16px',
+        padding: '16px',
+        marginBottom: '18px',
+        animation: 'fadeInUp 0.5s ease-out 0.12s both',
+      }}>
+        <h3 style={{ fontSize: '15px', fontWeight: 800, margin: '0 0 12px 0', color: '#fbbf24' }}>⏳ Abbonamenti in scadenza</h3>
+        {EXPIRING.map((e, i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 0',
+            borderBottom: i < EXPIRING.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+          }}>
+            <div style={{
+              width: '34px', height: '34px', borderRadius: '50%',
+              backgroundImage: `url('${e.avatar}')`, backgroundSize: 'cover', backgroundPosition: 'center',
+              border: '1.5px solid rgba(245,158,11,0.6)', flexShrink: 0,
+            }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '13px', fontWeight: 800 }}>{e.name}</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)' }}>{e.plan} · scade {e.date}</div>
+            </div>
+            <div style={{
+              padding: '4px 10px', borderRadius: '999px', fontSize: '9px', fontWeight: 800,
+              background: 'rgba(245,158,11,0.18)', color: '#fbbf24', border: '1px solid rgba(245,158,11,0.5)',
+            }}>IN SCADENZA</div>
+          </div>
+        ))}
+        <button onClick={sendRenewalEmails} style={{
+          marginTop: '14px', width: '100%', padding: '13px',
+          background: 'linear-gradient(135deg, #ef4444, #b71c1c)',
+          border: '1px solid #ff5252', borderRadius: '12px',
+          color: '#fff', fontSize: '13px', fontWeight: 800, letterSpacing: '0.5px',
+          cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+        }}>✉️ INVIA OFFERTA RINNOVO AI SOCI</button>
+      </div>
+
       {/* Recent activity */}
       <div style={{
         background: 'rgba(229,57,53,0.06)',
@@ -199,7 +273,7 @@ const AdminDashboard: React.FC = () => {
       <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 10px 0' }}>Quick Actions</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', animation: 'fadeInUp 0.5s ease-out 0.2s both' }}>
         {quick.map((q) => (
-          <button key={q.label} onClick={() => navigate(q.path)} style={{
+          <button key={q.label} onClick={() => q.path === '__new__' ? setShowNewMember(true) : navigate(q.path)} style={{
             background: 'rgba(229,57,53,0.08)',
             border: '1.5px solid rgba(229,57,53,0.5)',
             borderRadius: '14px',
@@ -215,6 +289,94 @@ const AdminDashboard: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '100px', left: '50%', transform: 'translateX(-50%)',
+          background: 'linear-gradient(135deg,#ef4444,#b71c1c)', color: '#fff',
+          padding: '12px 20px', borderRadius: '12px', fontSize: '12px', fontWeight: 800,
+          boxShadow: '0 8px 24px rgba(229,57,53,0.6)', zIndex: 100,
+          border: '1px solid #ff5252', maxWidth: '90%', textAlign: 'center',
+        }}>{toast}</div>
+      )}
+
+      {/* New Member Modal */}
+      {showNewMember && (
+        <div onClick={() => setShowNewMember(false)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          zIndex: 200, backdropFilter: 'blur(4px)',
+        }}>
+          <form onClick={(e) => e.stopPropagation()} onSubmit={submitNewMember} style={{
+            width: '100%', maxWidth: '430px',
+            background: '#0a0a0a',
+            border: '1.5px solid rgba(229,57,53,0.6)',
+            borderRadius: '24px 24px 0 0',
+            padding: '22px 22px 30px',
+            boxShadow: '0 -10px 40px rgba(229,57,53,0.4)',
+            animation: 'fadeInUp 0.3s ease-out',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}>
+            <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '999px', margin: '0 auto 16px' }} />
+            <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px 0', color: '#ff5252' }}>+ Nuovo Socio</h2>
+            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', margin: '0 0 18px 0' }}>Compila i dati. Al salvataggio verrà inviata mail di attivazione.</p>
+
+            {[
+              { k: 'nome', ph: 'Nome', t: 'text' },
+              { k: 'cognome', ph: 'Cognome', t: 'text' },
+              { k: 'email', ph: 'Email', t: 'email' },
+              { k: 'telefono', ph: 'Telefono', t: 'tel' },
+            ].map((f) => (
+              <input
+                key={f.k}
+                type={f.t}
+                placeholder={f.ph}
+                value={(form as any)[f.k]}
+                onChange={(e) => setForm({ ...form, [f.k]: e.target.value })}
+                required={f.k !== 'telefono'}
+                style={{
+                  width: '100%', padding: '13px 14px', marginBottom: '10px',
+                  background: 'rgba(255,255,255,0.04)', border: '1.5px solid rgba(229,57,53,0.35)',
+                  borderRadius: '12px', color: '#fff', fontSize: '13px',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", outline: 'none', boxSizing: 'border-box',
+                }}
+              />
+            ))}
+            <select
+              value={form.piano}
+              onChange={(e) => setForm({ ...form, piano: e.target.value })}
+              style={{
+                width: '100%', padding: '13px 14px', marginBottom: '16px',
+                background: 'rgba(255,255,255,0.04)', border: '1.5px solid rgba(229,57,53,0.35)',
+                borderRadius: '12px', color: '#fff', fontSize: '13px',
+                fontFamily: "'Plus Jakarta Sans', sans-serif", outline: 'none', boxSizing: 'border-box',
+              }}>
+              <option style={{ background: '#0a0a0a' }}>Mensile</option>
+              <option style={{ background: '#0a0a0a' }}>Trimestrale</option>
+              <option style={{ background: '#0a0a0a' }}>Semestrale</option>
+              <option style={{ background: '#0a0a0a' }}>Annuale</option>
+            </select>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="button" onClick={() => setShowNewMember(false)} style={{
+                flex: 1, padding: '13px', background: 'transparent',
+                border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>Annulla</button>
+              <button type="submit" style={{
+                flex: 2, padding: '13px',
+                background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                border: '1px solid #ff5252', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
+                cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>✅ CREA & INVIA MAIL</button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
