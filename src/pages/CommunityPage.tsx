@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 interface Challenge {
   id: number;
@@ -136,14 +137,12 @@ const CommunityPage: React.FC = () => {
 
       {/* Title */}
       <div style={{ marginBottom: '22px', animation: 'fadeInUp 0.5s ease-out' }}>
-        <h1 style={{
-          fontSize: '34px',
-          fontWeight: 800,
-          color: 'white',
-          margin: 0,
-          letterSpacing: '-0.8px',
-          lineHeight: 1,
-        }}>Community</h1>
+        <AnimatedText
+          text="Community"
+          gradientColors="linear-gradient(90deg, #ff5252, #8b0000, #ff5252, #e53935, #ff5252)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.5px', lineHeight: 1 }}
+        />
         <p style={{
           fontSize: '15px',
           color: 'rgba(255,255,255,0.55)',

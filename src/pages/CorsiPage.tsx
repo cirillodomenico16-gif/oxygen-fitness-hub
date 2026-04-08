@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 type Intensity = 'Alta Intensità' | 'Media Intensità' | 'Bassa Intensità';
 type Status = 'available' | 'full' | 'almost_full';
@@ -347,7 +348,12 @@ const CorsiPage: React.FC = () => {
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
-        <h1 style={headerTitleStyle}>Corsi di Oggi</h1>
+        <AnimatedText
+          text="Corsi di Oggi"
+          gradientColors="linear-gradient(90deg, #ff5252, #8b0000, #ff5252, #e53935, #ff5252)"
+          gradientAnimationDuration={2.4}
+          textStyle={{ ...headerTitleStyle, fontSize: '20px', fontWeight: 800, letterSpacing: '-0.3px' }}
+        />
         <button style={iconBtnStyle}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="4" y1="6" x2="20" y2="6"></line>
