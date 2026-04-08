@@ -95,7 +95,16 @@ const AdminDashboard: React.FC = () => {
       {/* Title row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '26px', fontWeight: 900, color: '#ff5252', letterSpacing: '-0.5px' }}>Pannello Admin</span>
+          <div style={{
+            width: 150, height: 34,
+            backgroundColor: '#ff5252',
+            WebkitMaskImage: "url('/oxygen-logo.png')",
+            maskImage: "url('/oxygen-logo.png')",
+            WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+            WebkitMaskPosition: 'left center', maskPosition: 'left center',
+            WebkitMaskSize: 'contain', maskSize: 'contain',
+            filter: 'drop-shadow(0 0 10px rgba(229,57,53,0.6))',
+          }} />
         </div>
         <span style={{
           background: 'linear-gradient(180deg, #ef4444, #e53935)',

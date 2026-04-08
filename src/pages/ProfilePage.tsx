@@ -71,6 +71,16 @@ const ProfilePage: React.FC = () => {
         }
       `}</style>
 
+      <div style={{
+        width: 140, height: 32, marginBottom: 14,
+        backgroundColor: '#ef4444',
+        WebkitMaskImage: "url('/oxygen-logo.png')",
+        maskImage: "url('/oxygen-logo.png')",
+        WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'left center', maskPosition: 'left center',
+        WebkitMaskSize: 'contain', maskSize: 'contain',
+        filter: 'drop-shadow(0 0 10px rgba(229,57,53,0.55))',
+      }} />
       <h1 style={title}>Profilo</h1>
 
       {/* Profile Card */}
