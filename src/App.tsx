@@ -234,48 +234,6 @@ const App: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Admin mode thin bar */}
-      {showAdminNav && (
-        <div
-          style={{
-            background: 'linear-gradient(90deg, #e53935, #c62828)',
-            color: 'white',
-            padding: '8px 16px',
-            fontSize: '11px',
-            fontWeight: '700',
-            textAlign: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '12px',
-            letterSpacing: '1px',
-            borderBottom: '1px solid rgba(229,57,53,0.3)',
-          }}
-        >
-          <span>MODALITÀ ADMIN</span>
-          <button
-            onClick={() => navigate('/')}
-            style={{
-              background: 'rgba(255,255,255,0.2)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              color: 'white',
-              padding: '3px 10px',
-              borderRadius: '16px',
-              fontSize: '9px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-              letterSpacing: '0.5px',
-              transition: 'background 0.2s ease',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.3)')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.2)')}
-          >
-            ← Torna Utente
-          </button>
-        </div>
-      )}
-
       {/* Scrollable content area */}
       <div
         style={{

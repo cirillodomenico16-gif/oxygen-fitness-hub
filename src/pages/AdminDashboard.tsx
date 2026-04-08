@@ -1,625 +1,222 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Users,
-  Euro,
-  TrendingUp,
-  Clock,
-  AlertTriangle,
-  Plus,
-  Brain,
-  FileText,
-  Calendar,
-  Settings,
-  CheckCircle,
-  XCircle,
-} from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
 
-export default function AdminDashboard() {
-  const [animatedStats, setAnimatedStats] = useState(false);
+const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setAnimatedStats(true);
-  }, []);
-
-  // Revenue data
-  const revenueData = [
-    { month: 'Gen', revenue: 6200 },
-    { month: 'Feb', revenue: 7100 },
-    { month: 'Mar', revenue: 7800 },
-    { month: 'Apr', revenue: 8400 },
+  const stats = [
+    { label: 'Soci attivi', value: '342' },
+    { label: 'Revenue', value: '€8.4k' },
+    { label: 'Retention', value: '91%' },
+    { label: 'Oggi', value: '28' },
   ];
 
-  // Recent activity data
+  // Monthly revenue (Gen → Lug)
+  const revenue = [3.2, 3.4, 4.1, 5.2, 6.8, 7.9, 8.4];
+  const maxR = 10;
+  const W = 320;
+  const H = 150;
+  const padL = 34;
+  const padR = 8;
+  const padT = 10;
+  const padB = 22;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const pts = revenue.map((v, i) => {
+    const x = padL + (i / (revenue.length - 1)) * plotW;
+    const y = padT + (1 - v / maxR) * plotH;
+    return [x, y] as const;
+  });
+  const path = pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+  const area = path + ` L ${pts[pts.length - 1][0]} ${padT + plotH} L ${pts[0][0]} ${padT + plotH} Z`;
+
   const activities = [
-    {
-      id: 1,
-      name: 'Marco R.',
-      action: 'Check-in palestra',
-      status: 'ATTIVO',
-      statusColor: '#22c55e',
-      initials: 'MR',
-      timeAgo: '2 min fa',
-    },
-    {
-      id: 2,
-      name: 'Anna S.',
-      action: 'Rinnovo abbonamento',
-      status: 'ATTIVO',
-      statusColor: '#22c55e',
-      initials: 'AS',
-      timeAgo: '15 min fa',
-    },
-    {
-      id: 3,
-      name: 'Luigi B.',
-      action: 'Abbonamento scaduto',
-      status: 'SCADUTO',
-      statusColor: '#e53935',
-      initials: 'LB',
-      timeAgo: '1 ora fa',
-    },
-    {
-      id: 4,
-      name: 'Sara M.',
-      action: 'Nuova iscrizione',
-      status: 'ATTIVO',
-      statusColor: '#22c55e',
-      initials: 'SM',
-      timeAgo: '3 ore fa',
-    },
-    {
-      id: 5,
-      name: 'Paolo F.',
-      action: 'Sospeso pagamento',
-      status: 'SCADUTO',
-      statusColor: '#e53935',
-      initials: 'PF',
-      timeAgo: '5 ore fa',
-    },
+    { name: 'Marco Rossi', plan: 'Annuale', date: '20/1/2023', status: 'ATTIVO', color: '#22c55e', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop' },
+    { name: 'Elena Bianchi', plan: 'Mensile', date: '19/1/2023', status: 'ATTIVO', color: '#22c55e', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop' },
+    { name: 'Marca Rossi', plan: 'Mensile', date: '18/1/2023', status: 'SCADUTO', color: '#ef4444', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
   ];
 
-  const nav = useNavigate();
-
-  // Quick actions
-  const quickActions = [
-    {
-      id: 1,
-      label: 'Nuovo Socio',
-      icon: Plus,
-      color: '#3b82f6',
-      bgColor: 'rgba(59, 130, 246, 0.1)',
-      route: '/admin/settings',
-    },
-    {
-      id: 2,
-      label: 'Scheda AI',
-      icon: Brain,
-      color: '#e53935',
-      bgColor: 'rgba(229, 57, 53, 0.1)',
-      route: '/admin/schede-ai',
-    },
-    {
-      id: 3,
-      label: 'Report',
-      icon: FileText,
-      color: '#22c55e',
-      bgColor: 'rgba(34, 197, 94, 0.1)',
-      route: '/admin',
-    },
-    {
-      id: 4,
-      label: 'Corsi',
-      icon: Calendar,
-      color: '#a855f7',
-      bgColor: 'rgba(168, 85, 247, 0.1)',
-      route: '/admin/calendario',
-    },
+  const quick = [
+    { icon: '+', label: 'Nuovo Socio', path: '/admin' },
+    { icon: '📋', label: 'Scheda AI', path: '/admin/schede-ai' },
+    { icon: '📊', label: 'Report', path: '/admin' },
+    { icon: '🗓', label: 'Corsi', path: '/admin/calendario' },
   ];
-
-  // Stat card component
-  const StatCard = ({ icon: Icon, label, value, color, delay }: { icon: any; label: string; value: string; color: string; delay: number }) => (
-    <div
-      style={{
-        animation: animatedStats ? `slideUp 0.6s ease-out ${delay}s forwards` : 'none',
-        opacity: animatedStats ? 1 : 0,
-        transform: animatedStats ? 'translateY(0)' : 'translateY(20px)',
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: 'rgba(17, 24, 39, 0.85)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
-          borderRadius: '16px',
-          padding: '24px',
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '16px',
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          transition: 'all 0.3s ease',
-          cursor: 'pointer',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = `${color}40`;
-          e.currentTarget.style.boxShadow = `0 0 20px ${color}20`;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
-          e.currentTarget.style.boxShadow = 'none';
-        }}
-      >
-        <div
-          style={{
-            width: '48px',
-            height: '48px',
-            borderRadius: '12px',
-            backgroundColor: `${color}20`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <Icon size={24} color={color} />
-        </div>
-        <div style={{ flex: 1 }}>
-          <div
-            style={{
-              fontSize: '28px',
-              fontWeight: 'bold',
-              color: '#ffffff',
-              marginBottom: '4px',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
-          >
-            {value}
-          </div>
-          <div
-            style={{
-              fontSize: '13px',
-              color: 'rgba(255, 255, 255, 0.6)',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
-          >
-            {label}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
-    <div
-      style={{
-        backgroundColor: '#0a0e1a',
-        minHeight: '100vh',
-        color: '#ffffff',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        overflowY: 'auto',
-        paddingBottom: '100px',
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          padding: '20px 16px 16px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+    <div className="corsi-scroll" style={{
+      minHeight: '100vh',
+      backgroundColor: '#000',
+      padding: '14px 22px 120px 22px',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      color: 'white',
+      overflowY: 'auto',
+    }}>
+      <style>{`
+        @keyframes fadeInUp { from { opacity:0; transform: translateY(16px);} to {opacity:1; transform: translateY(0);} }
+        .corsi-scroll::-webkit-scrollbar { width: 6px; }
+        .corsi-scroll::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#ef4444,#b71c1c); border-radius: 999px; box-shadow:0 0 10px rgba(229,57,53,0.7); }
+      `}</style>
+
+      {/* Title row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '26px' }}>⚙️</span>
+          <span style={{ fontSize: '26px', fontWeight: 900, color: '#ff5252', letterSpacing: '-0.5px' }}>Admin Panel</span>
+        </div>
+        <span style={{
+          background: 'linear-gradient(180deg, #ef4444, #e53935)',
+          padding: '5px 12px',
+          borderRadius: '999px',
+          fontSize: '10px',
+          fontWeight: 800,
+          letterSpacing: '1px',
+          boxShadow: '0 0 14px rgba(229,57,53,0.7)',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
-        }}
-      >
-        <h1
-          style={{
-            fontSize: '26px',
-            fontWeight: 'bold',
-            margin: 0,
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-        >
-          Dashboard
-        </h1>
-        <Settings size={24} color='rgba(255, 255, 255, 0.6)' />
+          gap: '4px',
+        }}>● LIVE</span>
+      </div>
+      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px', marginBottom: '2px' }}>
+        PANNELLO AMMINISTRATORE
+      </div>
+      <h1 style={{ fontSize: '30px', fontWeight: 800, margin: '0 0 18px 0', letterSpacing: '-0.5px' }}>Dashboard</h1>
+
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '22px', animation: 'fadeInUp 0.5s ease-out' }}>
+        {stats.map((s) => (
+          <div key={s.label} style={{
+            background: 'rgba(229,57,53,0.08)',
+            border: '1.5px solid rgba(229,57,53,0.5)',
+            borderRadius: '14px',
+            padding: '14px 4px',
+            textAlign: 'center',
+            boxShadow: '0 0 16px rgba(229,57,53,0.2)',
+          }}>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: '#ff5252', lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.65)', marginTop: '4px' }}>{s.label}</div>
+          </div>
+        ))}
       </div>
 
-      {/* Stats Cards Row */}
-      <div
-        style={{
-          padding: '20px 16px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '20px',
-          maxWidth: '100%',
-        }}
-      >
-        <StatCard
-          icon={Users}
-          label='Soci attivi'
-          value='342'
-          color='#3b82f6'
-          delay={0}
-        />
-        <StatCard
-          icon={Euro}
-          label='Revenue'
-          value='€8.4k'
-          color='#22c55e'
-          delay={0.1}
-        />
-        <StatCard
-          icon={TrendingUp}
-          label='Retention'
-          value='91%'
-          color='#a855f7'
-          delay={0.2}
-        />
-        <StatCard
-          icon={Clock}
-          label='Oggi'
-          value='28'
-          color='#f59e0b'
-          delay={0.3}
-        />
+      {/* Monthly revenue chart */}
+      <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 10px 0' }}>Andamento Entrate Mensili</h3>
+      <div style={{
+        background: 'rgba(229,57,53,0.06)',
+        border: '1.5px solid rgba(229,57,53,0.5)',
+        borderRadius: '16px',
+        padding: '16px',
+        marginBottom: '18px',
+        boxShadow: '0 0 20px rgba(229,57,53,0.2)',
+        animation: 'fadeInUp 0.5s ease-out 0.05s both',
+      }}>
+        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>Monthly Revenue Trend</div>
+        <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
+          <defs>
+            <linearGradient id="revArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ff5252" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#ff5252" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {[0, 5, 10].map((v) => {
+            const y = padT + (1 - v / maxR) * plotH;
+            return <text key={v} x={padL - 4} y={y + 3} fontSize="9" fill="rgba(255,255,255,0.5)" textAnchor="end">€{v}k</text>;
+          })}
+          <path d={area} fill="url(#revArea)" />
+          <path d={path} fill="none" stroke="#ff5252" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          {['Gen','Feb','Mar','Apr','Mag','Giu','Lug'].map((m, i) => (
+            <text key={m} x={padL + (i / 6) * plotW} y={H - 6} fontSize="9" fill="rgba(255,255,255,0.55)" textAnchor="middle">{m}</text>
+          ))}
+        </svg>
       </div>
 
-      {/* Revenue Trend Chart */}
-      <div
-        style={{
-          padding: '20px 16px',
-          paddingTop: '24px',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            marginBottom: '20px',
-            color: '#ffffff',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-        >
-          Trend Revenue Mensile
-        </h2>
-        <div
-          style={{
-            backgroundColor: 'rgba(17, 24, 39, 0.85)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            borderRadius: '16px',
-            padding: '24px',
-          }}
-        >
-          <ResponsiveContainer width='100%' height={300}>
-            <BarChart data={revenueData}>
-              <XAxis
-                dataKey='month'
-                stroke='rgba(255, 255, 255, 0.3)'
-                style={{ fontSize: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              />
-              <YAxis
-                stroke='rgba(255, 255, 255, 0.3)'
-                style={{ fontSize: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '8px',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  color: '#ffffff',
-                }}
-                cursor={{ fill: 'rgba(229, 57, 53, 0.1)' }}
-              />
-              <Bar
-                dataKey='revenue'
-                fill='url(#redGradient)'
-                radius={[8, 8, 0, 0]}
-                isAnimationActive={true}
-              />
-              <defs>
-                <linearGradient id='redGradient' x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='0%' stopColor='#e53935' stopOpacity={0.8} />
-                  <stop offset='100%' stopColor='#e53935' stopOpacity={0.3} />
-                </linearGradient>
-              </defs>
-            </BarChart>
-          </ResponsiveContainer>
+      {/* Alert */}
+      <div style={{
+        background: 'rgba(245, 158, 11, 0.12)',
+        border: '1.5px solid rgba(245, 158, 11, 0.55)',
+        borderRadius: '14px',
+        padding: '14px 16px',
+        marginBottom: '18px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        animation: 'fadeInUp 0.5s ease-out 0.1s both',
+      }}>
+        <span style={{ fontSize: '20px' }}>⚠️</span>
+        <div>
+          <div style={{ fontSize: '12px', fontWeight: 800, color: '#f59e0b', letterSpacing: '0.5px' }}>ATTENZIONE!</div>
+          <div style={{ fontSize: '13px', fontWeight: 700, color: '#fbbf24', marginTop: '2px' }}>
+            3 abbonamenti in scadenza domani
+          </div>
         </div>
       </div>
 
-      {/* Alert Banner */}
-      <div
-        style={{
-          padding: '0 32px',
-          marginTop: '24px',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: 'rgba(245, 158, 11, 0.15)',
-            border: '1px solid rgba(245, 158, 11, 0.3)',
-            borderRadius: '16px',
-            padding: '16px 20px',
+      {/* Recent activity */}
+      <div style={{
+        background: 'rgba(229,57,53,0.06)',
+        border: '1.5px solid rgba(229,57,53,0.5)',
+        borderRadius: '16px',
+        padding: '16px',
+        marginBottom: '20px',
+        boxShadow: '0 0 20px rgba(229,57,53,0.18)',
+        animation: 'fadeInUp 0.5s ease-out 0.15s both',
+      }}>
+        <h3 style={{ fontSize: '15px', fontWeight: 800, margin: '0 0 12px 0' }}>Attività Recenti Soci</h3>
+        {activities.map((a, i) => (
+          <div key={i} style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-          }}
-        >
-          <AlertTriangle size={20} color='#f59e0b' />
-          <div style={{ flex: 1 }}>
-            <p
-              style={{
-                margin: 0,
-                color: '#f59e0b',
-                fontSize: '14px',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}
-            >
-              3 abbonamenti in scadenza domani
-            </p>
-          </div>
-          <a
-            href='#'
-            style={{
-              color: '#f59e0b',
-              textDecoration: 'none',
-              fontSize: '14px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
-            onClick={(e) => e.preventDefault()}
-          >
-            Gestisci →
-          </a>
-        </div>
-      </div>
-
-      {/* Recent Activity */}
-      <div
-        style={{
-          padding: '20px 16px',
-          paddingTop: '24px',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            marginBottom: '20px',
-            color: '#ffffff',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-        >
-          Attività Recenti Membri
-        </h2>
-        <div
-          style={{
-            backgroundColor: 'rgba(17, 24, 39, 0.85)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            borderRadius: '16px',
-            overflow: 'hidden',
-          }}
-        >
-          {activities.map((activity, index) => (
-            <div
-              key={activity.id}
-              style={{
-                padding: '16px 20px',
-                borderBottom:
-                  index !== activities.length - 1
-                    ? '1px solid rgba(255, 255, 255, 0.06)'
-                    : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                transition: 'all 0.2s ease',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
-            >
-              {/* Avatar */}
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#3b82f6',
-                  flexShrink: 0,
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                }}
-              >
-                {activity.initials}
-              </div>
-
-              {/* Content */}
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    marginBottom: '4px',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    }}
-                  >
-                    {activity.name}
-                  </span>
-                </div>
-                <p
-                  style={{
-                    margin: 0,
-                    fontSize: '13px',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  }}
-                >
-                  {activity.action}
-                </p>
-              </div>
-
-              {/* Status Badge */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginRight: '12px',
-                }}
-              >
-                <div
-                  style={{
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    backgroundColor: `${activity.statusColor}20`,
-                    fontSize: '11px',
-                    fontWeight: '600',
-                    color: activity.statusColor,
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  }}
-                >
-                  {activity.status}
-                </div>
-              </div>
-
-              {/* Time */}
-              <span
-                style={{
-                  fontSize: '12px',
-                  color: 'rgba(255, 255, 255, 0.4)',
-                  whiteSpace: 'nowrap',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                }}
-              >
-                {activity.timeAgo}
-              </span>
+            gap: '10px',
+            padding: '10px 0',
+            borderBottom: i < activities.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+          }}>
+            <div style={{
+              width: '34px', height: '34px', borderRadius: '50%',
+              backgroundImage: `url('${a.avatar}')`, backgroundSize: 'cover', backgroundPosition: 'center',
+              border: '1.5px solid rgba(229,57,53,0.5)',
+              flexShrink: 0,
+            }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '13px', fontWeight: 800 }}>{a.name}</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)' }}>{a.plan}</div>
             </div>
-          ))}
-        </div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginRight: '8px' }}>{a.date}</div>
+            <div style={{
+              padding: '4px 10px',
+              borderRadius: '999px',
+              fontSize: '9px',
+              fontWeight: 800,
+              letterSpacing: '0.5px',
+              background: a.status === 'ATTIVO' ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)',
+              color: a.color,
+              border: `1px solid ${a.color}55`,
+            }}>{a.status}</div>
+          </div>
+        ))}
       </div>
 
-      {/* Quick Actions */}
-      <div
-        style={{
-          padding: '20px 16px',
-          paddingTop: '24px',
-        }}
-      >
-        <h2
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            marginBottom: '20px',
-            color: '#ffffff',
+      {/* Quick actions */}
+      <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 10px 0' }}>Quick Actions</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', animation: 'fadeInUp 0.5s ease-out 0.2s both' }}>
+        {quick.map((q) => (
+          <button key={q.label} onClick={() => navigate(q.path)} style={{
+            background: 'rgba(229,57,53,0.08)',
+            border: '1.5px solid rgba(229,57,53,0.5)',
+            borderRadius: '14px',
+            padding: '16px 4px',
+            cursor: 'pointer',
+            color: 'white',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-        >
-          Azioni Rapide
-        </h2>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '20px',
-            maxWidth: '100%',
-          }}
-        >
-          {quickActions.map((action, index) => {
-            const IconComponent = action.icon;
-            return (
-              <div
-                key={action.id}
-                style={{
-                  animation: animatedStats
-                    ? `slideUp 0.6s ease-out ${0.4 + index * 0.1}s forwards`
-                    : 'none',
-                  opacity: animatedStats ? 1 : 0,
-                  transform: animatedStats ? 'translateY(0)' : 'translateY(20px)',
-                }}
-              >
-                <div
-                  onClick={() => (action as any).route && nav((action as any).route)}
-                  style={{
-                    backgroundColor: `${action.bgColor}`,
-                    border: `2px solid ${action.color}40`,
-                    borderRadius: '16px',
-                    padding: '24px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '12px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${action.color}80`;
-                    e.currentTarget.style.backgroundColor = `${action.color}15`;
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${action.color}40`;
-                    e.currentTarget.style.backgroundColor = `${action.bgColor}`;
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  <IconComponent size={32} color={action.color} />
-                  <span
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      textAlign: 'center',
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    }}
-                  >
-                    {action.label}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+            textAlign: 'center',
+            boxShadow: '0 0 16px rgba(229,57,53,0.2)',
+          }}>
+            <div style={{ fontSize: '22px', color: '#ff5252' }}>{q.icon}</div>
+            <div style={{ fontSize: '10px', fontWeight: 700, marginTop: '4px' }}>{q.label}</div>
+          </button>
+        ))}
       </div>
-
-      <style>{`
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
-}
+};
+
+export default AdminDashboard;
