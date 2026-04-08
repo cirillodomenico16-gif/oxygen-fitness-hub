@@ -229,7 +229,8 @@ const App: React.FC = () => {
   return (
     <div
       style={{
-        maxWidth: '430px',
+        maxWidth: '100%',
+        width: '100%',
         margin: '0 auto',
         height: '100dvh',
         minHeight: '100vh',
