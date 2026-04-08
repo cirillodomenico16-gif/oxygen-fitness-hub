@@ -167,6 +167,48 @@ const UserHome: React.FC = () => {
         .start-btn:active { transform: translateY(0); }
       `}</style>
 
+      {/* Header: O2 logo + avatar */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '14px 0 10px 0',
+        animation: 'fadeInUp 0.5s ease-out',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle at 35% 35%, #ff5252, #e53935 60%, #8b0000)',
+            boxShadow: '0 0 20px rgba(229,57,53,0.7), inset 0 0 8px rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 900,
+            fontSize: '20px',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}>O</div>
+          <span style={{
+            fontSize: '14px',
+            fontWeight: 800,
+            color: '#ff5252',
+            marginLeft: '2px',
+          }}>2</span>
+        </div>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          border: '2px solid rgba(229,57,53,0.5)',
+          backgroundImage: "url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          boxShadow: '0 0 12px rgba(229,57,53,0.4)',
+        }} />
+      </div>
+
       {/* Greeting */}
       <h1 style={greetingStyle}>
         Ciao, Marco <span style={{ display: 'inline-block' }}>👋</span>

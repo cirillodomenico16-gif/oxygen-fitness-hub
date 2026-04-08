@@ -9,7 +9,7 @@ const UserBottomNav: React.FC = () => {
     { path: '/', label: 'Home', icon: 'house' },
     { path: '/scheda', label: 'Allenati', icon: 'runner' },
     { path: '/corsi', label: 'Corsi', icon: 'book' },
-    { path: '/dieta', label: 'OXYGEN', icon: 'oxygen' },
+    { path: '/community', label: 'OXYGEN', icon: 'oxygen' },
     { path: '/profilo', label: 'Profilo', icon: 'person' },
   ];
 
