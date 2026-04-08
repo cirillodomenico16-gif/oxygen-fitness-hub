@@ -6,7 +6,10 @@ export const getApiKey = (): string | null => {
 };
 
 export const setApiKey = (key: string) => {
-  try { localStorage.setItem('oxy_api_key', key); } catch {}
+  try {
+    if (key) localStorage.setItem('oxy_api_key', key);
+    else localStorage.removeItem('oxy_api_key');
+  } catch {}
 };
 
 export const hasApiKey = () => !!getApiKey();

@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
+import { getApiKey, setApiKey, hasApiKey } from '../lib/llm';
 
 const AdminSettings: React.FC = () => {
   const [toggles, setToggles] = useState({ backup: true, email: true, maint: false });
+  const [apiKey, setApiKeyInput] = useState<string>(getApiKey() || '');
+  const [showKey, setShowKey] = useState(false);
+  const [keyStatus, setKeyStatus] = useState<string | null>(null);
+
+  const saveKey = () => {
+    setApiKey(apiKey.trim());
+    setKeyStatus(apiKey.trim() ? 'Chiave salvata. Gli agenti AI ora useranno Claude.' : 'Chiave rimossa. Gli agenti useranno il generatore locale.');
+    setTimeout(() => setKeyStatus(null), 3500);
+  };
+  const clearKey = () => {
+    setApiKey('');
+    setApiKeyInput('');
+    setKeyStatus('Chiave rimossa.');
+    setTimeout(() => setKeyStatus(null), 3000);
+  };
 
   const section = (title: string, children: React.ReactNode, delay: number) => (
     <div style={{ marginBottom: '18px', animation: `fadeInUp 0.5s ease-out ${delay}s both` }}>
@@ -82,6 +98,102 @@ const AdminSettings: React.FC = () => {
           {row('In Scadenza', <span style={{ fontSize: '15px', fontWeight: 800, color: '#fbbf24' }}>12</span>, true)}
         </>
       ), 0.05)}
+
+      {section('Intelligenza Artificiale', (
+        <div style={{ padding: '14px' }}>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)', fontWeight: 700, marginBottom: 6 }}>
+            Claude API Key
+          </div>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginBottom: 10, lineHeight: 1.5 }}>
+            Inserisci la tua chiave Anthropic per attivare gli agenti AI (scheda, dieta, programmazione corsi). Senza chiave gli agenti usano il generatore locale di fallback. La chiave viene salvata solo nel browser.
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+            <input
+              type={showKey ? 'text' : 'password'}
+              value={apiKey}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+              placeholder="sk-ant-api03-..."
+              style={{
+                flex: 1,
+                padding: '11px 12px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1.5px solid rgba(229,57,53,0.45)',
+                borderRadius: '10px',
+                color: '#fff',
+                fontSize: '12px',
+                fontFamily: 'ui-monospace, monospace',
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={() => setShowKey(!showKey)}
+              style={{
+                padding: '0 12px',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '10px',
+                color: '#fff',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+            >{showKey ? 'Nascondi' : 'Mostra'}</button>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={saveKey}
+              style={{
+                flex: 2,
+                padding: '11px',
+                background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                border: '1px solid #ff5252',
+                borderRadius: '10px',
+                color: '#fff',
+                fontSize: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                boxShadow: '0 4px 14px rgba(229,57,53,0.4)',
+              }}
+            >Salva Chiave</button>
+            <button
+              onClick={clearKey}
+              style={{
+                flex: 1,
+                padding: '11px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '10px',
+                color: 'rgba(255,255,255,0.75)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+            >Rimuovi</button>
+          </div>
+          <div style={{
+            marginTop: 12,
+            fontSize: 11,
+            fontWeight: 700,
+            color: hasApiKey() ? '#4ade80' : 'rgba(255,255,255,0.45)',
+          }}>
+            Stato agenti AI: {hasApiKey() ? 'Attivi (Claude)' : 'Fallback locale'}
+          </div>
+          {keyStatus && (
+            <div style={{
+              marginTop: 10,
+              padding: '8px 10px',
+              background: 'rgba(74,222,128,0.12)',
+              border: '1px solid rgba(74,222,128,0.4)',
+              borderRadius: 8,
+              fontSize: 11,
+              color: '#86efac',
+            }}>{keyStatus}</div>
+          )}
+        </div>
+      ), 0.08)}
 
       {section('Sistema', (
         <>
