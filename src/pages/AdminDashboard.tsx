@@ -122,7 +122,17 @@ const AdminDashboard: React.FC = () => {
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px', marginBottom: '2px' }}>
         PANNELLO AMMINISTRATORE
       </div>
-      <h1 style={{ fontSize: '30px', fontWeight: 800, margin: '0 0 18px 0', letterSpacing: '-0.5px' }}>Dashboard</h1>
+      <div style={{
+        display: 'inline-block',
+        background: 'linear-gradient(135deg, #ff5252 0%, #e53935 50%, #8b0000 100%)',
+        padding: '10px 22px',
+        borderRadius: '14px',
+        margin: '8px 0 18px 0',
+        boxShadow: '0 0 28px rgba(229,57,53,0.55), 0 8px 20px rgba(229,57,53,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
+        border: '1px solid rgba(255,255,255,0.12)',
+      }}>
+        <h1 style={{ fontSize: '26px', fontWeight: 800, margin: 0, letterSpacing: '-0.5px', color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,0.35)' }}>Dashboard</h1>
+      </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '22px', animation: 'fadeInUp 0.5s ease-out' }}>
