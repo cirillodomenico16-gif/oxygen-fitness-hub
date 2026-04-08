@@ -72,8 +72,8 @@ const AdminDashboard: React.FC = () => {
 
   const quick = [
     { icon: '+', label: 'Nuovo Socio', path: '__new__' },
-    { icon: '📋', label: 'Scheda AI', path: '/admin/schede-ai' },
-    { icon: '📊', label: 'Report', path: '/admin' },
+    { icon: '📣', label: 'Campagna', path: '/admin/campagna' },
+    { icon: '📊', label: 'Report', path: '/admin/report' },
     { icon: '🗓', label: 'Corsi', path: '/admin/calendario' },
   ];
 
