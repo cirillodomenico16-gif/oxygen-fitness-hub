@@ -211,9 +211,6 @@ const App: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Shared Header Component */}
-      <AppHeader isAdminRoute={isAdminRoute} navigate={navigate} />
-
       {/* Admin mode thin bar */}
       {showAdminNav && (
         <div
