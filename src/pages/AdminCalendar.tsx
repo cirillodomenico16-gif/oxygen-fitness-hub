@@ -55,6 +55,20 @@ const AdminCalendar: React.FC = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<CourseBlock[]>(INITIAL_COURSES);
   const [selected, setSelected] = useState<number | null>(1);
+  const [weekOffset, setWeekOffset] = useState(0);
+
+  // Compute Monday of the current week + offset
+  const today = new Date();
+  const monday = new Date(today);
+  const dow = (today.getDay() + 6) % 7; // 0 = Monday
+  monday.setDate(today.getDate() - dow + weekOffset * 7);
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d;
+  });
+  const MONTHS = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  const weekLabel = `${weekDays[0].getDate()} ${MONTHS[weekDays[0].getMonth()]} – ${weekDays[6].getDate()} ${MONTHS[weekDays[6].getMonth()]}`;
   const [showNew, setShowNew] = useState(false);
   const [editCourse, setEditCourse] = useState<CourseBlock | null>(null);
   const [confirmCancel, setConfirmCancel] = useState<CourseBlock | null>(null);
@@ -124,9 +138,18 @@ const AdminCalendar: React.FC = () => {
         padding: '10px 14px',
         marginBottom: '14px',
       }}>
-        <button style={navBtn}>‹</button>
-        <div style={{ fontSize: '14px', fontWeight: 800 }}>Sett. 24 – 30 Mar</div>
-        <button style={navBtn}>›</button>
+        <button onClick={() => setWeekOffset(weekOffset - 1)} style={navBtn}>‹</button>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 800 }}>{weekLabel}</div>
+          {weekOffset !== 0 && (
+            <button onClick={() => setWeekOffset(0)} style={{
+              background: 'transparent', border: 'none', color: '#ff5252',
+              fontSize: '9px', fontWeight: 700, cursor: 'pointer', padding: 0,
+              fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '0.5px',
+            }}>↻ Torna a oggi</button>
+          )}
+        </div>
+        <button onClick={() => setWeekOffset(weekOffset + 1)} style={navBtn}>›</button>
       </div>
 
       {/* Summary stats */}
@@ -151,12 +174,15 @@ const AdminCalendar: React.FC = () => {
 
       {/* Day headers */}
       <div style={{ display: 'flex', marginBottom: '2px', paddingLeft: '52px' }}>
-        {DAYS.map((d) => (
-          <div key={d.lbl} style={{ width: colW, textAlign: 'center' }}>
-            <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>{d.lbl}</div>
-            <div style={{ fontSize: '11px', color: 'white', fontWeight: 800 }}>{d.d}</div>
-          </div>
-        ))}
+        {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].map((lbl, i) => {
+          const isToday = weekDays[i].toDateString() === new Date().toDateString();
+          return (
+            <div key={lbl} style={{ width: colW, textAlign: 'center' }}>
+              <div style={{ fontSize: '10px', color: isToday ? '#ff5252' : 'rgba(255,255,255,0.55)', fontWeight: 700 }}>{lbl}</div>
+              <div style={{ fontSize: '11px', color: isToday ? '#ff5252' : 'white', fontWeight: 800 }}>{weekDays[i].getDate()}</div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Grid */}

@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 interface Msg { from: 'agent' | 'user'; text: string; }
 
 const QUESTIONS = [
-  { key: 'sale',      text: 'Ciao! Sono il tuo Agente Programmazione AI. Quante sale hai disponibili per i corsi?', type: 'choice', choices: ['2 sale', '3 sale', '4 sale', '5 sale'] },
+  { key: 'periodo',   text: 'Che tipo di programmazione vuoi generare?', type: 'choice', choices: ['Settimanale', 'Mensile'] },
+  { key: 'sale',      text: 'Perfetto. Quante sale hai disponibili per i corsi?', type: 'choice', choices: ['2 sale', '3 sale', '4 sale', '5 sale'] },
   { key: 'pt',        text: 'Quanti Personal Trainer hai in organico?', type: 'choice', choices: ['2 PT', '3 PT', '4 PT', '5+ PT'] },
   { key: 'tipologie', text: 'Quali tipologie di corsi eroghi abitualmente?', type: 'choice', choices: ['Fitness classico', 'Mix fitness + yoga', 'Alta intensità', 'Tutto incluso'] },
   { key: 'adesione',  text: 'Dallo storico, qual è l\'adesione media ai corsi?', type: 'choice', choices: ['Bassa (<50%)', 'Media (50-75%)', 'Alta (>75%)'] },
@@ -13,6 +14,7 @@ const QUESTIONS = [
 ];
 
 function generateSchedule(a: Record<string, string>): string {
+  const isMensile = a.periodo === 'Mensile';
   const nSale = parseInt(a.sale);
   const nPT = parseInt(a.pt);
   const giorni = parseInt(a.giorni);
@@ -55,14 +57,18 @@ function generateSchedule(a: Record<string, string>): string {
     });
   });
 
+  const mult = isMensile ? 4 : 1;
   const weeklyCapacity = totalSlots * 15;
+  const periodCapacity = weeklyCapacity * mult;
   const expectedFill = adesione === 'alta' ? 85 : adesione === 'media' ? 65 : 45;
+  const periodLabel = isMensile ? 'MENSILE (4 settimane)' : 'SETTIMANALE';
 
-  return `PROGRAMMAZIONE CORSI SETTIMANALE
+  return `PROGRAMMAZIONE CORSI ${periodLabel}
 Generata da Agente AI specializzato in Gym Scheduling
 
 ═══════════════════════════════
 PARAMETRI
+• Periodo: ${a.periodo}
 • Sale: ${nSale}
 • Personal Trainer: ${nPT}
 • Giorni attivi: ${giorni}
@@ -70,13 +76,14 @@ PARAMETRI
 • Fascia: ${a.fascia}
 • Adesione storica: ${adesione}
 ═══════════════════════════════
+${isMensile ? 'SCHEMA BASE (replicato per 4 settimane)' : ''}
 ${schedule}
 ═══════════════════════════════
-KPI STIMATI
-• Corsi totali a settimana: ${totalSlots}
-• Capacità settimanale: ~${weeklyCapacity} posti
+KPI STIMATI ${isMensile ? '(mese)' : '(settimana)'}
+• Corsi totali: ${totalSlots * mult}
+• Capacità: ~${periodCapacity} posti
 • Fill rate atteso: ${expectedFill}%
-• Presenze stimate: ~${Math.round(weeklyCapacity * expectedFill / 100)}
+• Presenze stimate: ~${Math.round(periodCapacity * expectedFill / 100)}${isMensile ? `\n• Media settimanale: ~${Math.round(weeklyCapacity * expectedFill / 100)} presenze` : ''}
 
 ═══════════════════════════════
 NOTE DELL'AGENTE:
