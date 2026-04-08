@@ -7,7 +7,7 @@ const AdminBottomNav: React.FC = () => {
 
   const tabs = [
     { path: '/admin', label: 'Home', icon: 'home' },
-    { path: '/admin/schede-ai', label: 'Membri', icon: 'users' },
+    { path: '/admin/membri', label: 'Membri', icon: 'users' },
     { path: '/admin/calendario', label: 'Calendario', icon: 'calendar' },
     { path: '/admin/analisi', label: 'Analisi', icon: 'chart' },
     { path: '/admin/settings', label: 'Impostazioni', icon: 'gear' },

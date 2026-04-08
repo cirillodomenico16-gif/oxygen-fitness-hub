@@ -12,6 +12,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminSchedeAI from './pages/AdminSchedeAI';
 import AdminCalendar from './pages/AdminCalendar';
 import AdminSettings from './pages/AdminSettings';
+import AdminMembri from './pages/AdminMembri';
+import AdminMembroDetail from './pages/AdminMembroDetail';
+import AgentChat from './pages/AgentChat';
 import DietaPage from './pages/DietaPage';
 import SchedaPage from './pages/SchedaPage';
 import LoginPage from './pages/LoginPage';
@@ -258,7 +261,12 @@ const App: React.FC = () => {
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/schede-ai" element={<AdminSchedeAI />} />
+          <Route path="/admin/membri" element={<AdminMembri />} />
+          <Route path="/admin/membro/:id" element={<AdminMembroDetail />} />
+          <Route path="/admin/membro/:id/agent-scheda" element={<AgentChat type="scheda" />} />
+          <Route path="/admin/membro/:id/agent-dieta" element={<AgentChat type="dieta" />} />
           <Route path="/admin/calendario" element={<AdminCalendar />} />
+          <Route path="/admin/analisi" element={<AdminDashboard />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
 
           {/* Default redirect */}
