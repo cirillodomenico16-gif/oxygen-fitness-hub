@@ -7,13 +7,13 @@ const UserBottomNav: React.FC = () => {
 
   const tabs = [
     { path: '/', label: 'Home', icon: 'house' },
-    { path: '/corsi', label: 'Corsi', icon: 'calendar' },
-    { path: '/allenamento', label: 'Workout', icon: 'dumbbell' },
-    { path: '/dieta', label: 'Dieta', icon: 'apple' },
-    { path: '/progressi', label: 'Stats', icon: 'chart' },
+    { path: '/allenamento', label: 'Allenati', icon: 'runner' },
+    { path: '/corsi', label: 'Corsi', icon: 'book' },
+    { path: '/dieta', label: 'OXYGEN', icon: 'oxygen' },
+    { path: '/profilo', label: 'Profilo', icon: 'person' },
   ];
 
-  const renderIcon = (iconName: string) => {
+  const renderIcon = (iconName: string, active: boolean) => {
     const iconProps = {
       width: 24,
       height: 24,
@@ -33,34 +33,33 @@ const UserBottomNav: React.FC = () => {
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
         );
-      case 'calendar':
+      case 'runner':
         return (
           <svg {...iconProps}>
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <circle cx="13" cy="4" r="2"></circle>
+            <path d="M4 22l3-8 4-3-2-5 4 2 3 4 4 1"></path>
+            <path d="M11 13l-2 4 3 3"></path>
           </svg>
         );
-      case 'dumbbell':
+      case 'book':
         return (
-          <svg {...iconProps}>
-            <path d="M6 4h1v16H6zM17 4h1v16h-1zM8 6v12M16 6v12M9 4v16M15 4v16"></path>
+          <svg {...iconProps} fill={active ? 'currentColor' : 'none'}>
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
           </svg>
         );
-      case 'chart':
+      case 'oxygen':
         return (
           <svg {...iconProps}>
-            <line x1="12" y1="20" x2="12" y2="10"></line>
-            <line x1="18" y1="20" x2="18" y2="4"></line>
-            <line x1="6" y1="20" x2="6" y2="16"></line>
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 3a9 9 0 0 1 0 18"></path>
           </svg>
         );
-      case 'apple':
+      case 'person':
         return (
           <svg {...iconProps}>
-            <path d="M12 2c-1.5 0-2.5 1-3 2H9c-2 0-4 2-4 5 0 4 2 9 5 11 1 .5 1.5.5 2 0 3-2 5-7 5-11 0-3-2-5-4-5h0c-.5-1-1.5-2-3-2z"></path>
-            <path d="M12 2c.5-1 1.5-2 3-2"></path>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
           </svg>
         );
       default:
@@ -77,19 +76,21 @@ const UserBottomNav: React.FC = () => {
         transform: 'translateX(-50%)',
         width: '100%',
         maxWidth: '430px',
-        height: '72px',
-        backgroundColor: '#0a0e1a',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        height: '78px',
+        backgroundColor: 'rgba(20, 8, 10, 0.92)',
+        backdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(229, 57, 53, 0.15)',
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
         zIndex: 40,
         fontFamily: "'Plus Jakarta Sans', sans-serif",
+        paddingBottom: '8px',
       }}
     >
       {tabs.map((tab) => {
         const isActive = location.pathname === tab.path;
-        const color = isActive ? '#e53935' : 'rgba(255, 255, 255, 0.4)';
+        const color = isActive ? '#ff5252' : 'rgba(255, 255, 255, 0.45)';
 
         return (
           <button
@@ -103,15 +104,15 @@ const UserBottomNav: React.FC = () => {
               alignItems: 'center',
               gap: '4px',
               cursor: 'pointer',
-              padding: '8px 12px',
+              padding: '8px 10px',
               color: color,
               transition: 'color 0.3s ease',
               fontSize: '11px',
-              fontWeight: '500',
+              fontWeight: 600,
             }}
           >
-            <div style={{ color: color, transition: 'color 0.3s ease' }}>
-              {renderIcon(tab.icon)}
+            <div style={{ color: color }}>
+              {renderIcon(tab.icon, isActive)}
             </div>
             <span>{tab.label}</span>
           </button>

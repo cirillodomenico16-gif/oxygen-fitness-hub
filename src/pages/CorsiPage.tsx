@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Clock, MapPin, Zap } from 'lucide-react';
-import { PHOTOS } from '../constants';
+import { useNavigate } from 'react-router-dom';
+
+type Intensity = 'Alta Intensità' | 'Media Intensità' | 'Bassa Intensità';
+type Status = 'available' | 'full' | 'almost_full';
 
 interface Course {
   id: number;
@@ -9,410 +11,334 @@ interface Course {
   duration: string;
   room: string;
   instructor: string;
-  intensity: 'Alta intensità' | 'Media intensità' | 'Bassa intensità';
+  intensity: Intensity;
   current: number;
   capacity: number;
-  type: 'crossfit' | 'yoga' | 'pilates' | 'spinning' | 'boxing';
+  status: Status;
 }
 
-const DAYS = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
-
-const COURSE_COLORS: Record<string, string> = {
-  crossfit: '#e53935',
-  yoga: '#1e88e5',
-  pilates: '#43a047',
-  spinning: '#fb8c00',
-  boxing: '#8e24aa',
-};
+const DAYS = [
+  { label: 'LUN', date: 18 },
+  { label: 'Mar', date: 19 },
+  { label: 'Mer', date: 20 },
+  { label: 'Gio', date: 21 },
+  { label: 'Ven', date: 22 },
+  { label: 'Sab', date: 23 },
+  { label: 'Dom', date: 24 },
+];
 
 const COURSES: Course[] = [
   {
     id: 1,
     name: 'CrossFit Extreme',
-    time: '09:00',
+    time: '07:00',
     duration: '60 min',
-    room: 'Sala CrossFit',
-    instructor: 'Coach Marco',
-    intensity: 'Alta intensità',
-    current: 14,
+    room: 'Sala A',
+    instructor: 'Marco Rossi',
+    intensity: 'Alta Intensità',
+    current: 12,
     capacity: 20,
-    type: 'crossfit',
+    status: 'available',
   },
   {
     id: 2,
-    name: 'Yoga Flow',
+    name: 'Boxing Power',
     time: '10:30',
     duration: '45 min',
-    room: 'Sala Yoga',
-    instructor: 'Sara B.',
-    intensity: 'Media intensità',
+    room: 'Ring',
+    instructor: 'Giulia Bianchi',
+    intensity: 'Media Intensità',
     current: 18,
-    capacity: 20,
-    type: 'yoga',
+    capacity: 18,
+    status: 'full',
   },
   {
     id: 3,
-    name: 'Pilates Core',
-    time: '14:00',
-    duration: '50 min',
-    room: 'Sala 2',
-    instructor: 'Giulia T.',
-    intensity: 'Bassa intensità',
-    current: 8,
+    name: 'HIIT Burn',
+    time: '18:00',
+    duration: '30 min',
+    room: 'Sala B',
+    instructor: 'Luca Verdi',
+    intensity: 'Alta Intensità',
+    current: 15,
     capacity: 20,
-    type: 'pilates',
+    status: 'almost_full',
   },
   {
     id: 4,
-    name: 'Spinning Power',
-    time: '16:00',
-    duration: '45 min',
-    room: 'Sala Spinning',
-    instructor: 'Luca M.',
-    intensity: 'Alta intensità',
-    current: 20,
+    name: 'Functional Training',
+    time: '20:00',
+    duration: '55 min',
+    room: 'Sala C',
+    instructor: 'Sara Esposito',
+    intensity: 'Media Intensità',
+    current: 15,
     capacity: 20,
-    type: 'spinning',
+    status: 'available',
   },
   {
     id: 5,
-    name: 'Boxing Cardio',
-    time: '18:00',
+    name: 'Yoga Flow',
+    time: '21:00',
     duration: '60 min',
-    room: 'Palestra B',
-    instructor: 'Andrea R.',
-    intensity: 'Alta intensità',
-    current: 15,
-    capacity: 20,
-    type: 'boxing',
+    room: 'Sala D',
+    instructor: 'Elena Moretti',
+    intensity: 'Bassa Intensità',
+    current: 22,
+    capacity: 25,
+    status: 'available',
   },
 ];
 
-const CorsiPage: React.FC = () => {
-  const [selectedDay, setSelectedDay] = useState(0);
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString('it-IT', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+const intensityDot = (intensity: Intensity): string => {
+  if (intensity === 'Alta Intensità') return '#ef4444';
+  if (intensity === 'Media Intensità') return '#f59e0b';
+  return '#22c55e';
+};
 
-  const getIntensityIndicator = (intensity: string) => {
-    switch (intensity) {
-      case 'Alta intensità':
-        return '●●●';
-      case 'Media intensità':
-        return '●●○';
-      case 'Bassa intensità':
-        return '●○○';
-      default:
-        return '●●●';
-    }
+const CorsiPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [selectedDay, setSelectedDay] = useState(0);
+
+  const containerStyle: React.CSSProperties = {
+    backgroundColor: '#000000',
+    minHeight: '100vh',
+    padding: '8px 20px 40px 20px',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    color: 'white',
   };
 
-  const isFull = (course: Course) => course.current >= course.capacity;
+  const headerStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px 0 24px 0',
+  };
 
-  return (
-    <div
-      style={{
-        backgroundColor: '#0a0e1a',
-        minHeight: '100vh',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        color: 'white',
-      }}
-    >
-      {/* Header */}
-      <div
+  const iconBtnStyle: React.CSSProperties = {
+    background: 'none',
+    border: 'none',
+    color: 'white',
+    cursor: 'pointer',
+    padding: '6px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
+  const headerTitleStyle: React.CSSProperties = {
+    fontSize: '20px',
+    fontWeight: 700,
+    color: 'white',
+    margin: 0,
+    letterSpacing: '-0.3px',
+  };
+
+  const daySelectorStyle: React.CSSProperties = {
+    display: 'flex',
+    gap: '4px',
+    justifyContent: 'space-between',
+    paddingBottom: '16px',
+    borderBottom: '1px solid rgba(255,255,255,0.06)',
+    marginBottom: '20px',
+    overflowX: 'auto',
+  };
+
+  const renderDay = (d: typeof DAYS[0], idx: number) => {
+    const active = idx === selectedDay;
+    return (
+      <button
+        key={idx}
+        onClick={() => setSelectedDay(idx)}
         style={{
-          padding: '24px 20px',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          background: active ? 'linear-gradient(180deg, #ef4444, #e53935)' : 'transparent',
+          border: 'none',
+          borderRadius: '14px',
+          padding: active ? '10px 14px' : '10px 8px',
+          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '2px',
+          minWidth: '44px',
+          boxShadow: active ? '0 4px 16px rgba(229,57,53,0.5)' : 'none',
+          transition: 'all 0.25s ease',
         }}
       >
-        <h1
-          style={{
-            fontSize: '28px',
-            fontWeight: '700',
-            margin: '0 0 8px 0',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          Corsi di Oggi
-        </h1>
-        <p
-          style={{
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.7)',
-            margin: '0',
-            textTransform: 'capitalize',
-          }}
-        >
-          {formattedDate}
-        </p>
+        <span style={{
+          fontSize: '11px',
+          fontWeight: 700,
+          color: active ? 'white' : 'rgba(255,255,255,0.5)',
+          textTransform: active ? 'uppercase' : 'none',
+          letterSpacing: active ? '0.5px' : 0,
+        }}>{d.label}</span>
+        <span style={{
+          fontSize: '18px',
+          fontWeight: 800,
+          color: active ? 'white' : 'rgba(255,255,255,0.75)',
+          lineHeight: 1,
+        }}>{d.date}</span>
+      </button>
+    );
+  };
+
+  const cardStyle: React.CSSProperties = {
+    position: 'relative',
+    background: 'linear-gradient(135deg, rgba(60, 12, 16, 0.85) 0%, rgba(30, 6, 8, 0.85) 100%)',
+    border: '1px solid rgba(229, 57, 53, 0.25)',
+    borderLeft: '3px solid #ef4444',
+    borderRadius: '16px',
+    padding: '18px 16px',
+    marginBottom: '14px',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '12px',
+    animation: 'fadeInUp 0.5s ease-out both',
+  };
+
+  const buttonBase: React.CSSProperties = {
+    border: 'none',
+    borderRadius: '999px',
+    padding: '10px 18px',
+    fontSize: '12px',
+    fontWeight: 800,
+    letterSpacing: '0.5px',
+    cursor: 'pointer',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    flexShrink: 0,
+  };
+
+  const renderButton = (status: Status) => {
+    if (status === 'full') {
+      return (
+        <button style={{
+          ...buttonBase,
+          background: 'rgba(120, 30, 35, 0.6)',
+          color: 'rgba(255,255,255,0.55)',
+          cursor: 'not-allowed',
+        }}>COMPLETO</button>
+      );
+    }
+    if (status === 'almost_full') {
+      return (
+        <button style={{
+          ...buttonBase,
+          background: 'linear-gradient(180deg, #fb923c, #f97316)',
+          color: 'white',
+          boxShadow: '0 4px 14px rgba(249,115,22,0.4)',
+        }}>PRENOTA</button>
+      );
+    }
+    return (
+      <button style={{
+        ...buttonBase,
+        background: 'linear-gradient(180deg, #ef4444, #e53935)',
+        color: 'white',
+        boxShadow: '0 4px 14px rgba(229,57,53,0.45)',
+      }}>PRENOTA</button>
+    );
+  };
+
+  return (
+    <div style={containerStyle}>
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* Header */}
+      <div style={headerStyle}>
+        <button style={iconBtnStyle} onClick={() => navigate('/')}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h1 style={headerTitleStyle}>Corsi di Oggi</h1>
+        <button style={iconBtnStyle}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="7" y1="12" x2="17" y2="12"></line>
+            <line x1="10" y1="18" x2="14" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       {/* Day Selector */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '8px',
-          padding: '16px 20px',
-          overflowX: 'auto',
-          scrollBehavior: 'smooth',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-        }}
-      >
-        {DAYS.map((day, index) => (
-          <button
-            key={day}
-            onClick={() => setSelectedDay(index)}
-            style={{
-              minWidth: '44px',
-              height: '44px',
-              borderRadius: '50%',
-              border: 'none',
+      <div style={daySelectorStyle}>
+        {DAYS.map(renderDay)}
+      </div>
+
+      {/* Courses */}
+      {COURSES.map((c, idx) => (
+        <div key={c.id} style={{ ...cardStyle, animationDelay: `${idx * 0.06}s` }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h3 style={{
+              fontSize: '17px',
+              fontWeight: 800,
+              color: 'white',
+              margin: '0 0 6px 0',
+              letterSpacing: '-0.2px',
+            }}>{c.name}</h3>
+            <p style={{
+              fontSize: '13px',
+              color: 'rgba(255,255,255,0.78)',
+              margin: '0 0 4px 0',
+            }}>
+              {c.time} · {c.duration} · {c.room}
+            </p>
+            <p style={{
+              fontSize: '13px',
+              color: 'rgba(255,255,255,0.58)',
+              margin: '0 0 10px 0',
+            }}>{c.instructor}</p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              flexWrap: 'wrap',
               fontSize: '12px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              backgroundColor:
-                index === selectedDay
-                  ? '#e53935'
-                  : 'rgba(255,255,255,0.1)',
-              color: index === selectedDay ? 'white' : 'rgba(255,255,255,0.7)',
-            }}
-          >
-            {day}
-          </button>
-        ))}
-      </div>
-
-      {/* Photo Banner */}
-      <div style={{ margin: '0 20px 16px', borderRadius: '16px', height: '120px', backgroundImage: `linear-gradient(to top, rgba(10,14,26,0.85), rgba(10,14,26,0.2)), url(${PHOTOS.sala})`, backgroundSize: 'cover', backgroundPosition: 'center', display: 'flex', alignItems: 'flex-end', padding: '16px' }}>
-        <div style={{ color: 'white', fontSize: '16px', fontWeight: '700' }}>Le nostre sale</div>
-      </div>
-
-      {/* Courses List */}
-      <div
-        style={{
-          padding: '16px 20px 100px 20px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
-        {COURSES.map((course, index) => (
-          <div
-            key={course.id}
-            style={{
-              backgroundColor: 'rgba(17,24,39,0.85)',
-              borderRadius: '16px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderLeft: `3px solid ${COURSE_COLORS[course.type]}`,
-              padding: '16px',
-              animation: `slideIn 0.4s ease ${index * 0.05}s both`,
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-          >
-            <style>{`
-              @keyframes slideIn {
-                from {
-                  opacity: 0;
-                  transform: translateY(16px);
-                }
-                to {
-                  opacity: 1;
-                  transform: translateY(0);
-                }
-              }
-            `}</style>
-
-            {/* Course Name */}
-            <h3
-              style={{
-                fontSize: '16px',
-                fontWeight: '700',
-                margin: '0 0 12px 0',
-                color: 'white',
-              }}
-            >
-              {course.name}
-            </h3>
-
-            {/* Detail Pills */}
-            <div
-              style={{
-                display: 'flex',
-                gap: '12px',
-                marginBottom: '12px',
-                flexWrap: 'wrap',
+            }}>
+              <span style={{
+                display: 'inline-flex',
                 alignItems: 'center',
-              }}
-            >
-              {/* Time */}
-              <div
-                style={{
-                  display: 'flex',
+                gap: '6px',
+                color: 'rgba(255,255,255,0.78)',
+                fontWeight: 500,
+              }}>
+                <span style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: intensityDot(c.intensity),
+                  display: 'inline-block',
+                }}></span>
+                {c.intensity}
+              </span>
+              {c.status === 'almost_full' ? (
+                <span style={{
+                  color: '#f97316',
+                  fontWeight: 600,
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.8)',
-                  backgroundColor: 'rgba(255,255,255,0.08)',
-                  padding: '6px 12px',
-                  borderRadius: '20px',
-                }}
-              >
-                <Clock size={14} style={{ color: '#e53935' }} />
-                <span>{course.time}</span>
-              </div>
-
-              {/* Duration */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.8)',
-                  backgroundColor: 'rgba(255,255,255,0.08)',
-                  padding: '6px 12px',
-                  borderRadius: '20px',
-                }}
-              >
-                <Clock size={14} style={{ opacity: 0.6 }} />
-                <span>{course.duration}</span>
-              </div>
-
-              {/* Room */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.8)',
-                  backgroundColor: 'rgba(255,255,255,0.08)',
-                  padding: '6px 12px',
-                  borderRadius: '20px',
-                }}
-              >
-                <MapPin size={14} style={{ opacity: 0.6 }} />
-                <span>{course.room}</span>
-              </div>
-            </div>
-
-            {/* Instructor & Intensity */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '12px',
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.7)',
-                  margin: '0',
-                }}
-              >
-                {course.instructor}
-              </p>
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: '#e53935',
-                  letterSpacing: '2px',
-                }}
-              >
-                {getIntensityIndicator(course.intensity)}
-              </div>
-            </div>
-
-            {/* Capacity & Button Row */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                gap: '12px',
-              }}
-            >
-              {/* Capacity */}
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    fontSize: '13px',
-                    color: 'rgba(255,255,255,0.8)',
-                    marginBottom: '6px',
-                    fontWeight: '500',
-                  }}
-                >
-                  {course.current}/{course.capacity} posti
-                </div>
-                <div
-                  style={{
-                    height: '4px',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                    borderRadius: '2px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      height: '100%',
-                      backgroundColor: COURSE_COLORS[course.type],
-                      width: `${(course.current / course.capacity) * 100}%`,
-                      borderRadius: '2px',
-                      transition: 'width 0.3s ease',
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Button */}
-              <button
-                style={{
-                  padding: isFull(course) ? '8px 16px' : '8px 20px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  cursor: isFull(course) ? 'not-allowed' : 'pointer',
-                  backgroundColor: isFull(course)
-                    ? 'rgba(255,255,255,0.1)'
-                    : '#e53935',
-                  color: isFull(course)
-                    ? 'rgba(255,255,255,0.5)'
-                    : 'white',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isFull(course)) {
-                    (e.target as HTMLButtonElement).style.backgroundColor =
-                      '#d32f2f';
-                    (e.target as HTMLButtonElement).style.transform =
-                      'scale(1.05)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isFull(course)) {
-                    (e.target as HTMLButtonElement).style.backgroundColor =
-                      '#e53935';
-                    (e.target as HTMLButtonElement).style.transform =
-                      'scale(1)';
-                  }
-                }}
-                disabled={isFull(course)}
-              >
-                {isFull(course) ? 'COMPLETO' : 'PRENOTA'}
-              </button>
+                  gap: '4px',
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#f97316">
+                    <path d="M12 2L1 21h22L12 2zm0 6l7 12H5l7-12zm-1 4v3h2v-3h-2zm0 4v2h2v-2h-2z"/>
+                  </svg>
+                  {c.capacity - c.current} posti rimasti
+                </span>
+              ) : (
+                <span style={{ color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>
+                  {c.current}/{c.capacity} posti
+                </span>
+              )}
             </div>
           </div>
-        ))}
-      </div>
+          {renderButton(c.status)}
+        </div>
+      ))}
     </div>
   );
 };
