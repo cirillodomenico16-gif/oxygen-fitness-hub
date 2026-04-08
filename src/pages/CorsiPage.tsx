@@ -109,8 +109,10 @@ const CorsiPage: React.FC = () => {
     padding: '8px 20px 120px 20px',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     color: 'white',
-    overflowY: 'auto',
+    overflowY: 'scroll',
     WebkitOverflowScrolling: 'touch',
+    scrollbarWidth: 'thin',
+    scrollbarColor: '#e53935 rgba(255,255,255,0.05)',
   };
 
   const headerStyle: React.CSSProperties = {
@@ -259,7 +261,7 @@ const CorsiPage: React.FC = () => {
   };
 
   return (
-    <div style={containerStyle}>
+    <div className="corsi-scroll" style={containerStyle}>
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(16px); }
@@ -272,6 +274,22 @@ const CorsiPage: React.FC = () => {
         @keyframes slideUp {
           from { transform: translateY(100%); }
           to { transform: translateY(0); }
+        }
+        .corsi-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        .corsi-scroll::-webkit-scrollbar-track {
+          background: rgba(255,255,255,0.04);
+          border-radius: 999px;
+          margin: 8px 0;
+        }
+        .corsi-scroll::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #ef4444, #e53935);
+          border-radius: 999px;
+          box-shadow: 0 0 12px rgba(229,57,53,0.5);
+        }
+        .corsi-scroll::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #ff5252, #ef4444);
         }
       `}</style>
 
