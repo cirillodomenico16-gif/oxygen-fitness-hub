@@ -9,31 +9,35 @@ interface Exercise {
   image?: string;
 }
 
+// Real exercise photos from yuhonas/free-exercise-db (CC0 public domain)
+const FE = (slug: string) =>
+  `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${slug}/0.jpg`;
+
 const EX_IMG: Record<string, string> = {
-  'Bench Press': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop',
-  'Shoulder Press': 'https://images.unsplash.com/photo-1584863231364-2edc166de576?w=200&h=200&fit=crop',
-  'Lat Pulldown': 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=200&h=200&fit=crop',
-  'Bicep Curl': 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&h=200&fit=crop',
-  'Tricep Pushdown': 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop',
-  'Squat': 'https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?w=200&h=200&fit=crop',
-  'Leg Press': 'https://images.unsplash.com/photo-1434596922112-19c563067271?w=200&h=200&fit=crop',
-  'Romanian Deadlift': 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200&h=200&fit=crop',
-  'Leg Curl': 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=200&h=200&fit=crop',
-  'Calf Raises': 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=200&h=200&fit=crop',
-  'Incline Bench Press': 'https://images.unsplash.com/photo-1581122584612-713f89daa8eb?w=200&h=200&fit=crop',
-  'Arnold Press': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop',
-  'Cable Fly': 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=200&h=200&fit=crop',
-  'Front Raises': 'https://images.unsplash.com/photo-1583454122114-40ffbfd01cd9?w=200&h=200&fit=crop',
-  'Overhead Tricep Ext.': 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=200&h=200&fit=crop',
-  'Deadlift': 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=200&h=200&fit=crop',
-  'Pull-ups': 'https://images.unsplash.com/photo-1598971639058-bb2e5a35bdf9?w=200&h=200&fit=crop',
-  'Barbell Row': 'https://images.unsplash.com/photo-1581009137042-c552e485697a?w=200&h=200&fit=crop',
-  'Face Pull': 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&h=200&fit=crop',
-  'Barbell Curl': 'https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=200&h=200&fit=crop',
-  'Burpees': 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop',
-  'Mountain Climbers': 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=200&h=200&fit=crop',
-  'Box Jumps': 'https://images.unsplash.com/photo-1520975916090-3105956dac38?w=200&h=200&fit=crop',
-  'Battle Ropes 30s': 'https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?w=200&h=200&fit=crop',
+  'Bench Press': FE('Barbell_Bench_Press_-_Medium_Grip'),
+  'Shoulder Press': FE('Dumbbell_Shoulder_Press'),
+  'Lat Pulldown': FE('Wide-Grip_Lat_Pulldown'),
+  'Bicep Curl': FE('Dumbbell_Bicep_Curl'),
+  'Tricep Pushdown': FE('Tricep_Dumbbell_Kickback'),
+  'Squat': FE('Barbell_Squat'),
+  'Leg Press': FE('Leg_Press'),
+  'Romanian Deadlift': FE('Romanian_Deadlift'),
+  'Leg Curl': FE('Lying_Leg_Curls'),
+  'Calf Raises': FE('Standing_Calf_Raises'),
+  'Incline Bench Press': FE('Barbell_Incline_Bench_Press_-_Medium_Grip'),
+  'Arnold Press': FE('Dumbbell_Arnold_Press'),
+  'Cable Fly': FE('Cable_Crossover'),
+  'Front Raises': FE('Front_Dumbbell_Raise'),
+  'Overhead Tricep Ext.': FE('Seated_Dumbbell_Triceps_Extension'),
+  'Deadlift': FE('Barbell_Deadlift'),
+  'Pull-ups': FE('Pullups'),
+  'Barbell Row': FE('Bent_Over_Barbell_Row'),
+  'Face Pull': FE('Face_Pull'),
+  'Barbell Curl': FE('Barbell_Curl'),
+  'Burpees': FE('Burpee'),
+  'Mountain Climbers': FE('Mountain_Climbers'),
+  'Box Jumps': FE('Box_Jump'),
+  'Battle Ropes 30s': FE('Battling_Ropes'),
 };
 
 interface DayWorkout {

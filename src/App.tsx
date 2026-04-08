@@ -14,6 +14,7 @@ import AdminCalendar from './pages/AdminCalendar';
 import AdminSettings from './pages/AdminSettings';
 import DietaPage from './pages/DietaPage';
 import SchedaPage from './pages/SchedaPage';
+import LoginPage from './pages/LoginPage';
 
 // Component imports
 import UserBottomNav from './components/UserBottomNav';
@@ -192,6 +193,28 @@ const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  const [currentUser, setCurrentUser] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem('oxygen_auth') || 'null'); } catch { return null; }
+  });
+
+  if (!currentUser) {
+    return (
+      <div style={{ maxWidth: '430px', margin: '0 auto', minHeight: '100vh', backgroundColor: '#000' }}>
+        <LoginPage onLogin={() => {
+          try { setCurrentUser(JSON.parse(localStorage.getItem('oxygen_auth') || 'null')); } catch {}
+          navigate(JSON.parse(localStorage.getItem('oxygen_auth') || 'null')?.role === 'admin' ? '/admin' : '/');
+        }} />
+      </div>
+    );
+  }
+
+  // expose logout handler globally for ProfilePage
+  (window as any).__oxygenLogout = () => {
+    localStorage.removeItem('oxygen_auth');
+    setCurrentUser(null);
+    navigate('/');
+  };
 
   const userRoutes = ['/', '/corsi', '/allenamento', '/progressi', '/community', '/profilo', '/dieta', '/scheda'];
   const showUserNav = userRoutes.includes(location.pathname);

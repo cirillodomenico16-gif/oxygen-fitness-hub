@@ -263,6 +263,7 @@ const ProfilePage: React.FC = () => {
 
         {/* Logout */}
         <button
+          onClick={() => (window as any).__oxygenLogout?.()}
           className="logout-row"
           style={{
             ...rowButton,
