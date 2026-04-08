@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import NotificationBell from '../components/NotificationBell';
+import { getNotifications } from '../lib/llm';
 
 interface Food {
   name: string;
@@ -225,11 +227,22 @@ const WEEK: DayDiet[] = [
 
 const DietaPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
   const validated = (() => {
     try { return JSON.parse(localStorage.getItem('oxy_dieta_1') || 'null'); }
     catch { return null; }
   })();
+  const hasUnread = getNotifications('1').some((n) => n.type === 'dieta' && !n.read);
+  const forceShow = new URLSearchParams(location.search).get('show') === '1';
+  const [overlayOpen, setOverlayOpen] = useState(!!validated && (hasUnread || forceShow));
+  const dismissOverlay = () => {
+    setOverlayOpen(false);
+    try {
+      const list = getNotifications('1').map((n) => n.type === 'dieta' ? { ...n, read: true } : n);
+      localStorage.setItem('oxy_notif_1', JSON.stringify(list));
+    } catch {}
+  };
 
   const containerStyle: React.CSSProperties = {
     backgroundColor: '#000000',
@@ -266,23 +279,73 @@ const DietaPage: React.FC = () => {
         }
       `}</style>
 
-      {validated && (
-        <div style={{
-          margin: '12px 0 18px', padding: '14px',
-          background: 'rgba(34,197,94,0.08)',
-          border: '1.5px solid rgba(34,197,94,0.55)',
-          borderRadius: 14,
-          boxShadow: '0 0 18px rgba(34,197,94,0.2)',
-          animation: 'fadeInUp 0.4s ease-out',
-        }}>
-          <div style={{ fontSize: 11, letterSpacing: 1.3, color: '#86efac', fontWeight: 800, marginBottom: 6 }}>
-            NUOVA DIETA VALIDATA DAL COACH · {validated.date}
+      {overlayOpen && validated && (
+        <div
+          onClick={dismissOverlay}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 200,
+            background: 'rgba(0,0,0,0.78)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%', maxWidth: 430,
+              maxHeight: '88dvh',
+              background: 'linear-gradient(180deg, #041207 0%, #000500 100%)',
+              borderTop: '2px solid #22c55e',
+              borderRadius: '22px 22px 0 0',
+              boxShadow: '0 -20px 60px rgba(34,197,94,0.3)',
+              display: 'flex', flexDirection: 'column',
+            }}
+          >
+            <div style={{
+              padding: '18px 20px 14px',
+              borderBottom: '1px solid rgba(34,197,94,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+            }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 10, letterSpacing: '0.12em', color: '#86efac', fontWeight: 800 }}>
+                  NUOVA DIETA · {validated.date}
+                </div>
+                <div className="oxy-display" style={{ fontSize: 22, lineHeight: 1.05, marginTop: 4, color: '#fff' }}>
+                  Il nutrizionista ti ha aggiornato
+                </div>
+              </div>
+              <button onClick={dismissOverlay} style={{
+                width: 38, height: 38, borderRadius: 12,
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.18)',
+                color: '#fff', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <pre style={{
+              flex: 1,
+              whiteSpace: 'pre-wrap', fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: 12.5, lineHeight: 1.62, margin: 0,
+              padding: '18px 22px',
+              color: 'rgba(255,255,255,0.92)',
+              overflowY: 'auto',
+            }}>{validated.plan}</pre>
+            <div style={{ padding: '12px 16px 20px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <button
+                onClick={dismissOverlay}
+                style={{
+                  width: '100%', padding: '14px',
+                  background: 'linear-gradient(180deg, #22c55e, #15803d)',
+                  border: 'none', borderRadius: 14,
+                  color: '#fff', fontSize: 13, fontWeight: 800, letterSpacing: '0.08em',
+                  cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  boxShadow: '0 8px 28px rgba(34,197,94,0.4)',
+                }}
+              >USA LA NUOVA DIETA</button>
+            </div>
           </div>
-          <pre style={{
-            whiteSpace: 'pre-wrap', fontFamily: 'inherit',
-            fontSize: 11.5, lineHeight: 1.55, margin: 0,
-            color: 'rgba(255,255,255,0.92)', maxHeight: 340, overflowY: 'auto',
-          }}>{validated.plan}</pre>
         </div>
       )}
 
@@ -315,7 +378,7 @@ const DietaPage: React.FC = () => {
           margin: 0,
           letterSpacing: '-0.3px',
         }}>La Tua Dieta</h1>
-        <div style={{ width: '22px' }} />
+        <NotificationBell onOpenPlan={(t) => { if (t === 'dieta') setOverlayOpen(true); else navigate('/scheda?show=1'); }} />
       </div>
 
       {/* Week summary card */}

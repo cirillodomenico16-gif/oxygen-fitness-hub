@@ -5,18 +5,18 @@ interface ExerciseDef {
   name: string;
   sets: number;
   reps: number;
-  weight?: number;
+  rest?: number;
 }
 
 const DEFAULT_EXERCISES: ExerciseDef[] = [
-  { name: 'Bench Press', sets: 4, reps: 10, weight: 80 },
-  { name: 'Shoulder Press', sets: 4, reps: 10, weight: 50 },
-  { name: 'Lat Pulldown', sets: 3, reps: 12, weight: 60 },
-  { name: 'Bicep Curl', sets: 3, reps: 12, weight: 18 },
-  { name: 'Tricep Pushdown', sets: 3, reps: 15, weight: 25 },
+  { name: 'Bench Press', sets: 4, reps: 10, rest: 90 },
+  { name: 'Shoulder Press', sets: 4, reps: 10, rest: 75 },
+  { name: 'Lat Pulldown', sets: 3, reps: 12, rest: 75 },
+  { name: 'Bicep Curl', sets: 3, reps: 12, rest: 60 },
+  { name: 'Tricep Pushdown', sets: 3, reps: 15, rest: 60 },
 ];
 
-const REST_SECONDS = 120;
+const DEFAULT_REST = 90;
 
 const WorkoutActivePage: React.FC = () => {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const WorkoutActivePage: React.FC = () => {
       }
       setActiveIdx(nextIdx);
     }
-    setSecondsLeft(REST_SECONDS);
+    setSecondsLeft(currentExercise.rest || DEFAULT_REST);
     setIsResting(true);
   };
 
@@ -89,7 +89,7 @@ const WorkoutActivePage: React.FC = () => {
 
   const radius = 110;
   const circumference = 2 * Math.PI * radius;
-  const progress = isResting ? (secondsLeft / REST_SECONDS) : (currentCompleted / currentExercise.sets);
+  const progress = isResting ? (secondsLeft / (currentExercise.rest || DEFAULT_REST)) : (currentCompleted / currentExercise.sets);
   const offset = circumference * (1 - progress);
 
   return (
@@ -281,7 +281,7 @@ const WorkoutActivePage: React.FC = () => {
             fontSize: '14px',
             color: 'rgba(255,255,255,0.75)',
             margin: '0 0 14px 0',
-          }}>{currentExercise.reps} reps{currentExercise.weight ? ` · ${currentExercise.weight}kg` : ''}</p>
+          }}>{currentExercise.reps} reps · rec {currentExercise.rest || DEFAULT_REST}s</p>
 
           {/* Series dots */}
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -445,7 +445,7 @@ const WorkoutActivePage: React.FC = () => {
                 color: 'rgba(255,255,255,0.55)',
                 margin: '0 0 6px 24px',
               }}>
-                {ex.sets}×{ex.reps}{ex.weight ? ` · ${ex.weight}kg` : ''} · {done}/{ex.sets} fatte
+                {ex.sets}×{ex.reps} · rec {ex.rest || DEFAULT_REST}s · {done}/{ex.sets} fatte
               </p>
               {/* mini progress bar */}
               <div style={{

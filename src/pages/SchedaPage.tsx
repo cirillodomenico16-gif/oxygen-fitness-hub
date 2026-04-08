@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import NotificationBell from '../components/NotificationBell';
+import { getNotifications } from '../lib/llm';
 
 interface Exercise {
   name: string;
   sets: number;
   reps: number;
-  weight?: number;
+  rest?: number; // recovery time in seconds
   image?: string;
 }
 
@@ -58,11 +60,11 @@ const WORKOUTS: DayWorkout[] = [
     subtitle: 'Petto · Spalle · Tricipiti',
     duration: '55 min',
     exercises: [
-      { name: 'Bench Press', sets: 4, reps: 10, weight: 80 },
-      { name: 'Shoulder Press', sets: 4, reps: 10, weight: 50 },
-      { name: 'Lat Pulldown', sets: 3, reps: 12, weight: 60 },
-      { name: 'Bicep Curl', sets: 3, reps: 12, weight: 18 },
-      { name: 'Tricep Pushdown', sets: 3, reps: 15, weight: 25 },
+      { name: 'Bench Press', sets: 4, reps: 10, rest: 90 },
+      { name: 'Shoulder Press', sets: 4, reps: 10, rest: 75 },
+      { name: 'Lat Pulldown', sets: 3, reps: 12, rest: 75 },
+      { name: 'Bicep Curl', sets: 3, reps: 12, rest: 60 },
+      { name: 'Tricep Pushdown', sets: 3, reps: 15, rest: 60 },
     ],
   },
   {
@@ -72,11 +74,11 @@ const WORKOUTS: DayWorkout[] = [
     subtitle: 'Gambe · Glutei',
     duration: '60 min',
     exercises: [
-      { name: 'Squat', sets: 4, reps: 8, weight: 100 },
-      { name: 'Leg Press', sets: 4, reps: 12, weight: 150 },
-      { name: 'Romanian Deadlift', sets: 3, reps: 10, weight: 80 },
-      { name: 'Leg Curl', sets: 3, reps: 12, weight: 40 },
-      { name: 'Calf Raises', sets: 4, reps: 15, weight: 60 },
+      { name: 'Squat', sets: 4, reps: 8, rest: 120 },
+      { name: 'Leg Press', sets: 4, reps: 12, rest: 90 },
+      { name: 'Romanian Deadlift', sets: 3, reps: 10, rest: 90 },
+      { name: 'Leg Curl', sets: 3, reps: 12, rest: 60 },
+      { name: 'Calf Raises', sets: 4, reps: 15, rest: 45 },
     ],
   },
   {
@@ -95,11 +97,11 @@ const WORKOUTS: DayWorkout[] = [
     subtitle: 'Petto · Spalle · Tricipiti',
     duration: '50 min',
     exercises: [
-      { name: 'Incline Bench Press', sets: 4, reps: 10, weight: 70 },
-      { name: 'Arnold Press', sets: 3, reps: 10, weight: 16 },
-      { name: 'Cable Fly', sets: 3, reps: 12, weight: 15 },
-      { name: 'Front Raises', sets: 3, reps: 12, weight: 10 },
-      { name: 'Overhead Tricep Ext.', sets: 3, reps: 12, weight: 20 },
+      { name: 'Incline Bench Press', sets: 4, reps: 10, rest: 90 },
+      { name: 'Arnold Press', sets: 3, reps: 10, rest: 75 },
+      { name: 'Cable Fly', sets: 3, reps: 12, rest: 60 },
+      { name: 'Front Raises', sets: 3, reps: 12, rest: 45 },
+      { name: 'Overhead Tricep Ext.', sets: 3, reps: 12, rest: 60 },
     ],
   },
   {
@@ -109,11 +111,11 @@ const WORKOUTS: DayWorkout[] = [
     subtitle: 'Schiena · Bicipiti',
     duration: '55 min',
     exercises: [
-      { name: 'Deadlift', sets: 4, reps: 6, weight: 120 },
-      { name: 'Pull-ups', sets: 4, reps: 8 },
-      { name: 'Barbell Row', sets: 3, reps: 10, weight: 70 },
-      { name: 'Face Pull', sets: 3, reps: 15, weight: 15 },
-      { name: 'Barbell Curl', sets: 3, reps: 12, weight: 30 },
+      { name: 'Deadlift', sets: 4, reps: 6, rest: 150 },
+      { name: 'Pull-ups', sets: 4, reps: 8, rest: 90 },
+      { name: 'Barbell Row', sets: 3, reps: 10, rest: 90 },
+      { name: 'Face Pull', sets: 3, reps: 15, rest: 45 },
+      { name: 'Barbell Curl', sets: 3, reps: 12, rest: 60 },
     ],
   },
   {
@@ -123,10 +125,10 @@ const WORKOUTS: DayWorkout[] = [
     subtitle: 'Alta Intensità',
     duration: '30 min',
     exercises: [
-      { name: 'Burpees', sets: 4, reps: 10 },
-      { name: 'Mountain Climbers', sets: 4, reps: 20 },
-      { name: 'Box Jumps', sets: 4, reps: 15 },
-      { name: 'Battle Ropes 30s', sets: 4, reps: 1 },
+      { name: 'Burpees', sets: 4, reps: 10, rest: 30 },
+      { name: 'Mountain Climbers', sets: 4, reps: 20, rest: 30 },
+      { name: 'Box Jumps', sets: 4, reps: 15, rest: 45 },
+      { name: 'Battle Ropes 30s', sets: 4, reps: 1, rest: 30 },
     ],
   },
   {
@@ -142,11 +144,23 @@ const WORKOUTS: DayWorkout[] = [
 
 const SchedaPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
   const validated = (() => {
     try { return JSON.parse(localStorage.getItem('oxy_scheda_1') || 'null'); }
     catch { return null; }
   })();
+  const hasUnread = getNotifications('1').some((n) => n.type === 'scheda' && !n.read);
+  const forceShow = new URLSearchParams(location.search).get('show') === '1';
+  const [overlayOpen, setOverlayOpen] = useState(!!validated && (hasUnread || forceShow));
+
+  const dismissOverlay = () => {
+    setOverlayOpen(false);
+    try {
+      const list = getNotifications('1').map((n) => n.type === 'scheda' ? { ...n, read: true } : n);
+      localStorage.setItem('oxy_notif_1', JSON.stringify(list));
+    } catch {}
+  };
 
   const handleStart = (w: DayWorkout) => {
     if (w.isRest) return;
@@ -185,23 +199,75 @@ const SchedaPage: React.FC = () => {
         }
       `}</style>
 
-      {validated && (
-        <div style={{
-          margin: '12px 0 18px', padding: '14px',
-          background: 'rgba(239,68,68,0.08)',
-          border: '1.5px solid rgba(239,68,68,0.55)',
-          borderRadius: 14,
-          boxShadow: '0 0 18px rgba(239,68,68,0.2)',
-          animation: 'fadeInUp 0.4s ease-out',
-        }}>
-          <div style={{ fontSize: 11, letterSpacing: 1.3, color: '#fca5a5', fontWeight: 800, marginBottom: 6 }}>
-            NUOVA SCHEDA VALIDATA DAL COACH · {validated.date}
+      {overlayOpen && validated && (
+        <div
+          onClick={dismissOverlay}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 200,
+            background: 'rgba(0,0,0,0.78)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            animation: 'oxy-fade-up 0.25s ease-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%', maxWidth: 430,
+              maxHeight: '88dvh',
+              background: 'linear-gradient(180deg, #120405 0%, #050000 100%)',
+              borderTop: '2px solid #ef4444',
+              borderRadius: '22px 22px 0 0',
+              boxShadow: '0 -20px 60px rgba(239,68,68,0.35)',
+              display: 'flex', flexDirection: 'column',
+              animation: 'oxy-fade-up 0.35s ease-out',
+            }}
+          >
+            <div style={{
+              padding: '18px 20px 14px',
+              borderBottom: '1px solid rgba(239,68,68,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+            }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 10, letterSpacing: '0.12em', color: '#fca5a5', fontWeight: 800 }}>
+                  NUOVA SCHEDA · {validated.date}
+                </div>
+                <div className="oxy-display" style={{ fontSize: 22, lineHeight: 1.05, marginTop: 4, color: '#fff' }}>
+                  Il coach ti ha aggiornato
+                </div>
+              </div>
+              <button onClick={dismissOverlay} style={{
+                width: 38, height: 38, borderRadius: 12,
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.18)',
+                color: '#fff', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <pre style={{
+              flex: 1,
+              whiteSpace: 'pre-wrap', fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: 12.5, lineHeight: 1.62, margin: 0,
+              padding: '18px 22px',
+              color: 'rgba(255,255,255,0.92)',
+              overflowY: 'auto',
+            }}>{validated.plan}</pre>
+            <div style={{ padding: '12px 16px 20px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <button
+                onClick={dismissOverlay}
+                style={{
+                  width: '100%', padding: '14px',
+                  background: 'linear-gradient(180deg, #ef4444, #b71c1c)',
+                  border: 'none', borderRadius: 14,
+                  color: '#fff', fontSize: 13, fontWeight: 800, letterSpacing: '0.08em',
+                  cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  boxShadow: '0 8px 28px rgba(239,68,68,0.4)',
+                }}
+              >INIZIA CON LA NUOVA SCHEDA</button>
+            </div>
           </div>
-          <pre style={{
-            whiteSpace: 'pre-wrap', fontFamily: 'inherit',
-            fontSize: 11.5, lineHeight: 1.55, margin: 0,
-            color: 'rgba(255,255,255,0.92)', maxHeight: 340, overflowY: 'auto',
-          }}>{validated.plan}</pre>
         </div>
       )}
 
@@ -234,7 +300,7 @@ const SchedaPage: React.FC = () => {
           margin: 0,
           letterSpacing: '-0.3px',
         }}>La Tua Scheda</h1>
-        <div style={{ width: '22px' }} />
+        <NotificationBell onOpenPlan={(t) => { if (t === 'scheda') setOverlayOpen(true); else navigate('/dieta?show=1'); }} />
       </div>
 
       {/* Week summary card */}
@@ -393,7 +459,7 @@ const SchedaPage: React.FC = () => {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '14px', color: 'white', fontWeight: 700 }}>{ex.name}</div>
                         <div style={{ fontSize: '11px', color: '#ff8a80', fontWeight: 600, marginTop: '2px' }}>
-                          {ex.sets}×{ex.reps}{ex.weight ? ` · ${ex.weight}kg` : ''}
+                          {ex.sets}×{ex.reps} · rec {ex.rest}s
                         </div>
                       </div>
                     </div>

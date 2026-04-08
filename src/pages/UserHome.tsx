@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import NotificationBell from '../components/NotificationBell';
 
 const UserHome: React.FC = () => {
   const navigate = useNavigate();
@@ -211,6 +212,11 @@ const UserHome: React.FC = () => {
             cursor: 'pointer',
           }}
         />
+      </div>
+
+      {/* Notification Bell */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+        <NotificationBell />
       </div>
 
       {/* Greeting */}

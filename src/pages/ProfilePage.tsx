@@ -142,13 +142,12 @@ const ProfilePage: React.FC = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
+            gridTemplateColumns: '1fr',
             gap: '10px',
           }}
         >
           {[
             { label: 'Allenamenti', value: '42' },
-            { label: 'Streak', value: '8gg' },
           ].map((s) => (
             <div
               key={s.label}
