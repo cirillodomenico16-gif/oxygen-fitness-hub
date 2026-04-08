@@ -20,10 +20,10 @@ const AdminMembri: React.FC = () => {
       `}</style>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>PANNELLO AMMINISTRATORE</div>
-      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 16px', letterSpacing: '-0.5px' }}>👥 Membri</h1>
+      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 16px', letterSpacing: '-0.5px' }}> Membri</h1>
 
       <input
-        placeholder="🔍 Cerca socio..."
+        placeholder=" Cerca socio..."
         value={q}
         onChange={(e) => setQ(e.target.value)}
         style={{

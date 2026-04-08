@@ -226,6 +226,10 @@ const WEEK: DayDiet[] = [
 const DietaPage: React.FC = () => {
   const navigate = useNavigate();
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
+  const validated = (() => {
+    try { return JSON.parse(localStorage.getItem('oxy_dieta_1') || 'null'); }
+    catch { return null; }
+  })();
 
   const containerStyle: React.CSSProperties = {
     backgroundColor: '#000000',
@@ -261,6 +265,26 @@ const DietaPage: React.FC = () => {
           box-shadow: 0 0 12px rgba(229,57,53,0.5);
         }
       `}</style>
+
+      {validated && (
+        <div style={{
+          margin: '12px 0 18px', padding: '14px',
+          background: 'rgba(34,197,94,0.08)',
+          border: '1.5px solid rgba(34,197,94,0.55)',
+          borderRadius: 14,
+          boxShadow: '0 0 18px rgba(34,197,94,0.2)',
+          animation: 'fadeInUp 0.4s ease-out',
+        }}>
+          <div style={{ fontSize: 11, letterSpacing: 1.3, color: '#86efac', fontWeight: 800, marginBottom: 6 }}>
+            NUOVA DIETA VALIDATA DAL COACH · {validated.date}
+          </div>
+          <pre style={{
+            whiteSpace: 'pre-wrap', fontFamily: 'inherit',
+            fontSize: 11.5, lineHeight: 1.55, margin: 0,
+            color: 'rgba(255,255,255,0.92)', maxHeight: 340, overflowY: 'auto',
+          }}>{validated.plan}</pre>
+        </div>
+      )}
 
       {/* Header */}
       <div style={{

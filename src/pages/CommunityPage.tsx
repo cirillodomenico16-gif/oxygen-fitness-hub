@@ -38,7 +38,7 @@ const CHALLENGES: Challenge[] = [
   {
     id: 1,
     title: 'Monthly Challenge',
-    emoji: '💪',
+    emoji: '',
     days: 30,
     completed: 18,
     participants: 124,
@@ -49,7 +49,7 @@ const CHALLENGES: Challenge[] = [
   {
     id: 2,
     title: 'Weekly Challenge',
-    emoji: '🔥',
+    emoji: '',
     days: 7,
     completed: 4,
     participants: 89,
@@ -66,11 +66,11 @@ const PODIUM: Podium[] = [
 ];
 
 const BADGES: Badge[] = [
-  { id: 1, name: 'Settimana Perfetta', emoji: '🔥' },
-  { id: 2, name: '100 Allenamenti', emoji: '💎' },
-  { id: 3, name: 'Iron Warrior', emoji: '⚔️' },
-  { id: 4, name: 'Monk Warrior', emoji: '🏆', locked: true },
-  { id: 5, name: 'Champion', emoji: '👑', locked: true },
+  { id: 1, name: 'Settimana Perfetta', emoji: '' },
+  { id: 2, name: '100 Allenamenti', emoji: '' },
+  { id: 3, name: 'Iron Warrior', emoji: '' },
+  { id: 4, name: 'Monk Warrior', emoji: '', locked: true },
+  { id: 5, name: 'Champion', emoji: '', locked: true },
 ];
 
 const ACTIVITIES: Activity[] = [
@@ -225,7 +225,7 @@ const CommunityPage: React.FC = () => {
                 fontSize: '12px',
                 color: 'rgba(255,255,255,0.85)',
                 fontWeight: 600,
-              }}>👥 {ch.participants} iscritti</span>
+              }}> {ch.participants} iscritti</span>
               <button
                 onClick={(e) => { e.stopPropagation(); setDetailChallenge(ch); }}
                 style={{
@@ -330,7 +330,7 @@ const CommunityPage: React.FC = () => {
                     fontSize: '11px',
                     color: '#ff5252',
                     fontWeight: 700,
-                  }}>🏅 {p.xp}XP</div>
+                  }}> {p.xp}XP</div>
                 </div>
               </div>
             );
@@ -377,7 +377,7 @@ const CommunityPage: React.FC = () => {
               marginBottom: '8px',
               boxShadow: b.locked ? 'none' : '0 0 16px rgba(229,57,53,0.35)',
             }}>
-              {b.locked ? '🔒' : b.emoji}
+              {b.locked ? '' : b.emoji}
             </div>
             <div style={{
               fontSize: '11px',
@@ -588,7 +588,7 @@ const CommunityPage: React.FC = () => {
                 alignItems: 'center',
                 gap: '12px',
               }}>
-                <div style={{ fontSize: '24px' }}>🏆</div>
+                <div style={{ fontSize: '24px' }}></div>
                 <div>
                   <div style={{ fontSize: '11px', color: 'rgba(234,179,8,1)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Ricompensa</div>
                   <div style={{ fontSize: '14px', color: 'white', fontWeight: 700, marginTop: '2px' }}>{detailChallenge.reward}</div>
@@ -673,7 +673,7 @@ const CommunityPage: React.FC = () => {
           boxShadow: '0 10px 30px rgba(34,197,94,0.4)',
           animation: 'fadeIn 0.3s ease-out',
         }}>
-          🎉 {toast}
+           {toast}
         </div>
       )}
     </div>

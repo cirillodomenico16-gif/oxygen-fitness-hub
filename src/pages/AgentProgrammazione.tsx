@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 interface Msg { from: 'agent' | 'user'; text: string; }
 
 const QUESTIONS = [
-  { key: 'periodo',   text: 'Che tipo di programmazione vuoi generare?', type: 'choice', choices: ['Settimanale', 'Mensile'] },
-  { key: 'sale',      text: 'Perfetto. Quante sale hai disponibili per i corsi?', type: 'choice', choices: ['2 sale', '3 sale', '4 sale', '5 sale'] },
-  { key: 'pt',        text: 'Quanti Personal Trainer hai in organico?', type: 'choice', choices: ['2 PT', '3 PT', '4 PT', '5+ PT'] },
+  { key: 'periodo', text: 'Che tipo di programmazione vuoi generare?', type: 'choice', choices: ['Settimanale', 'Mensile'] },
+  { key: 'sale', text: 'Perfetto. Quante sale hai disponibili per i corsi?', type: 'choice', choices: ['2 sale', '3 sale', '4 sale', '5 sale'] },
+  { key: 'pt', text: 'Quanti Personal Trainer hai in organico?', type: 'choice', choices: ['2 PT', '3 PT', '4 PT', '5+ PT'] },
   { key: 'tipologie', text: 'Quali tipologie di corsi eroghi abitualmente?', type: 'choice', choices: ['Fitness classico', 'Mix fitness + yoga', 'Alta intensità', 'Tutto incluso'] },
-  { key: 'adesione',  text: 'Dallo storico, qual è l\'adesione media ai corsi?', type: 'choice', choices: ['Bassa (<50%)', 'Media (50-75%)', 'Alta (>75%)'] },
-  { key: 'fascia',    text: 'Quali fasce orarie vuoi coprire?', type: 'choice', choices: ['Solo mattina', 'Solo sera', 'Mattina + sera', 'Tutto il giorno'] },
-  { key: 'giorni',    text: 'Quanti giorni a settimana deve essere attiva la programmazione?', type: 'choice', choices: ['5 giorni', '6 giorni', '7 giorni'] },
+  { key: 'adesione', text: 'Dallo storico, qual è l\'adesione media ai corsi?', type: 'choice', choices: ['Bassa (<50%)', 'Media (50-75%)', 'Alta (>75%)'] },
+  { key: 'fascia', text: 'Quali fasce orarie vuoi coprire?', type: 'choice', choices: ['Solo mattina', 'Solo sera', 'Mattina + sera', 'Tutto il giorno'] },
+  { key: 'giorni', text: 'Quanti giorni a settimana deve essere attiva la programmazione?', type: 'choice', choices: ['5 giorni', '6 giorni', '7 giorni'] },
 ];
 
 function generateSchedule(a: Record<string, string>): string {
@@ -30,7 +30,7 @@ function generateSchedule(a: Record<string, string>): string {
   const pool = coursesByType[tipologie] || coursesByType['Tutto incluso'];
 
   const timeSlots = a.fascia === 'Solo mattina' ? ['07:00', '09:00', '10:30', '12:00']
-                  : a.fascia === 'Solo sera'    ? ['17:00', '18:30', '20:00', '21:00']
+                  : a.fascia === 'Solo sera' ? ['17:00', '18:30', '20:00', '21:00']
                   : a.fascia === 'Mattina + sera' ? ['07:00', '09:30', '18:00', '19:30', '21:00']
                   : ['07:00', '09:00', '10:30', '12:00', '17:00', '18:30', '20:00'];
 
@@ -50,7 +50,7 @@ function generateSchedule(a: Record<string, string>): string {
         const course = pool[idx % pool.length];
         const room = rooms[r];
         const trainer = trainers[idx % trainers.length];
-        schedule += `${slot}  ${course.padEnd(16)} · ${room} · ${trainer}\n`;
+        schedule += `${slot} ${course.padEnd(16)} · ${room} · ${trainer}\n`;
         idx++;
         totalSlots++;
       }
@@ -126,10 +126,10 @@ const AgentProgrammazione: React.FC = () => {
         setMessages((m) => [...m, { from: 'agent', text: QUESTIONS[next].text }]);
         setStep(next);
       } else {
-        setMessages((m) => [...m, { from: 'agent', text: '🧠 Sto analizzando le risorse disponibili e ottimizzando la programmazione...' }]);
+        setMessages((m) => [...m, { from: 'agent', text: ' Sto analizzando le risorse disponibili e ottimizzando la programmazione...' }]);
         setTimeout(() => {
           setGenerated(generateSchedule(newAnswers));
-          setMessages((m) => [...m, { from: 'agent', text: '✅ Programmazione ottimale generata. Controlla il piano qui sotto.' }]);
+          setMessages((m) => [...m, { from: 'agent', text: ' Programmazione ottimale generata. Controlla il piano qui sotto.' }]);
         }, 1600);
       }
     }, 700);
@@ -165,7 +165,7 @@ const AgentProgrammazione: React.FC = () => {
           fontSize: '12px', cursor: 'pointer', fontWeight: 700,
         }}>←</button>
         <div>
-          <div style={{ fontSize: '14px', fontWeight: 800 }}>🤖 Agente Programmazione AI</div>
+          <div style={{ fontSize: '14px', fontWeight: 800 }}> Agente Programmazione AI</div>
           <div style={{ fontSize: '10px', opacity: 0.85, marginTop: '2px' }}>Gym Scheduling Specialist</div>
         </div>
       </div>
@@ -214,7 +214,7 @@ const AgentProgrammazione: React.FC = () => {
             boxShadow: '0 4px 20px rgba(139,92,246,0.55)',
           }}>
             <div style={{ fontSize: '12px', fontWeight: 800, color: '#a78bfa', marginBottom: '8px' }}>
-              📄 PROGRAMMAZIONE GENERATA
+               PROGRAMMAZIONE GENERATA
             </div>
             <pre style={{
               whiteSpace: 'pre-wrap', fontFamily: 'inherit',
@@ -227,7 +227,7 @@ const AgentProgrammazione: React.FC = () => {
               border: '1px solid #a78bfa', borderRadius: '10px',
               color: '#fff', fontWeight: 800, fontSize: '12px', cursor: 'pointer',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}>✓ APPLICA AL CALENDARIO</button>
+            }}> APPLICA AL CALENDARIO</button>
           </div>
         )}
       </div>
@@ -265,7 +265,7 @@ const AgentProgrammazione: React.FC = () => {
               border: '1px solid #a78bfa', borderRadius: '12px',
               color: '#fff', fontSize: '14px', fontWeight: 800, cursor: 'pointer',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}>➤</button>
+            }}></button>
           </form>
         </div>
       )}

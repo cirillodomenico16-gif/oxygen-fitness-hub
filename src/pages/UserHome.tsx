@@ -215,7 +215,7 @@ const UserHome: React.FC = () => {
 
       {/* Greeting */}
       <h1 style={greetingStyle}>
-        Ciao, Marco <span style={{ display: 'inline-block' }}>👋</span>
+        Ciao, Marco <span style={{ display: 'inline-block' }}></span>
       </h1>
 
       {/* Workout Card */}
@@ -237,7 +237,7 @@ const UserHome: React.FC = () => {
       <div style={statsRowStyle}>
         <div style={statCardStyle}>
           <p style={statValueStyle}>
-            <span style={{ fontSize: '22px' }}>💪</span>18
+            <span style={{ fontSize: '22px' }}></span>18
           </p>
           <p style={statLabelStyle}>All. Mensili</p>
         </div>

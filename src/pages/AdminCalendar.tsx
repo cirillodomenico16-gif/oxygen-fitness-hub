@@ -79,7 +79,7 @@ const AdminCalendar: React.FC = () => {
     e.preventDefault();
     if (!editCourse) return;
     setCourses(courses.map((c) => c.id === editCourse.id ? editCourse : c));
-    setToast(`✅ Corso "${editCourse.name}" modificato`);
+    setToast(` Corso "${editCourse.name}" modificato`);
     setEditCourse(null);
     setTimeout(() => setToast(null), 3000);
   };
@@ -87,7 +87,7 @@ const AdminCalendar: React.FC = () => {
   const cancelLesson = () => {
     if (!confirmCancel) return;
     setCourses(courses.filter((c) => c.id !== confirmCancel.id));
-    setToast(`❌ Lezione "${confirmCancel.name}" annullata`);
+    setToast(` Lezione "${confirmCancel.name}" annullata`);
     if (selected === confirmCancel.id) setSelected(null);
     setConfirmCancel(null);
     setTimeout(() => setToast(null), 3000);
@@ -96,7 +96,7 @@ const AdminCalendar: React.FC = () => {
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     setShowNew(false);
-    setToast(`✅ Corso "${form.tipo}" creato per ${form.giorno} ${form.orario}`);
+    setToast(` Corso "${form.tipo}" creato per ${form.giorno} ${form.orario}`);
     setTimeout(() => setToast(null), 3500);
   };
 
@@ -123,7 +123,7 @@ const AdminCalendar: React.FC = () => {
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', padding: '6px 6px 0 6px' }}>
-        <span style={{ fontSize: '22px' }}>📅</span>
+        <span style={{ fontSize: '22px' }}></span>
         <h1 style={{ fontSize: '22px', fontWeight: 800, margin: 0, letterSpacing: '-0.3px' }}>Calendario Corsi</h1>
       </div>
 
@@ -275,7 +275,7 @@ const AdminCalendar: React.FC = () => {
         boxShadow: '0 0 26px rgba(139,92,246,0.55)',
         fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '16px',
         letterSpacing: '0.3px',
-      }}>🤖 GENERA PROGRAMMAZIONE AI</button>
+      }}> GENERA PROGRAMMAZIONE AI</button>
 
       {/* Course detail modal/card */}
       {course && (
@@ -294,7 +294,7 @@ const AdminCalendar: React.FC = () => {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '18px',
               boxShadow: '0 0 10px rgba(229,57,53,0.6)',
-            }}>🏋️</div>
+            }}></div>
             <h3 style={{ fontSize: '18px', fontWeight: 800, margin: 0 }}>{course.name}</h3>
           </div>
           <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginBottom: '12px' }}>
@@ -332,7 +332,7 @@ const AdminCalendar: React.FC = () => {
           </div>
           {course.waiting > 0 && (
             <div style={{ textAlign: 'right', fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
-              👥 {course.waiting} in lista d'attesa
+               {course.waiting} in lista d'attesa
             </div>
           )}
           <button onClick={() => setEditCourse({ ...course })} style={{
@@ -342,13 +342,13 @@ const AdminCalendar: React.FC = () => {
             borderRadius: '10px', color: 'white',
             fontSize: '13px', fontWeight: 700, cursor: 'pointer',
             marginBottom: '8px', fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>✏️ Modifica Corso</button>
+          }}> Modifica Corso</button>
           <button onClick={() => setConfirmCancel(course)} style={{
             width: '100%', padding: '8px',
             background: 'transparent', border: 'none',
             color: '#ff5252', fontSize: '13px', fontWeight: 800, cursor: 'pointer',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>❌ Annulla Lezione</button>
+          }}> Annulla Lezione</button>
         </div>
       )}
 
@@ -380,7 +380,7 @@ const AdminCalendar: React.FC = () => {
             maxHeight: '85vh', overflowY: 'auto',
           }}>
             <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '999px', margin: '0 auto 14px' }} />
-            <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px', color: '#ff5252' }}>✏️ Modifica Corso</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px', color: '#ff5252' }}> Modifica Corso</h2>
             <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', margin: '0 0 18px' }}>{editCourse.name}</p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
@@ -439,7 +439,7 @@ const AdminCalendar: React.FC = () => {
                 color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
                 cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}>💾 SALVA MODIFICHE</button>
+              }}> SALVA MODIFICHE</button>
             </div>
           </form>
         </div>
@@ -459,7 +459,7 @@ const AdminCalendar: React.FC = () => {
             boxShadow: '0 0 40px rgba(239,68,68,0.5)',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}>
-            <div style={{ fontSize: '36px', marginBottom: '6px' }}>⚠️</div>
+            <div style={{ fontSize: '36px', marginBottom: '6px' }}></div>
             <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 8px', color: '#ff5252' }}>Annullare la lezione?</h3>
             <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', margin: '0 0 18px', lineHeight: 1.5 }}>
               Stai per annullare <b>{confirmCancel.name}</b> del giorno {DAYS[confirmCancel.day].lbl} {String(confirmCancel.startHour).padStart(2,'0')}:00. {confirmCancel.enrolled} soci verranno notificati.
@@ -567,7 +567,7 @@ const AdminCalendar: React.FC = () => {
                 color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
                 cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}>✅ CREA CORSO</button>
+              }}> CREA CORSO</button>
             </div>
           </form>
         </div>

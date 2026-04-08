@@ -378,7 +378,7 @@ const WorkoutActivePage: React.FC = () => {
             marginBottom: '22px',
           }}
         >
-          🏆 TORNA ALLA HOME
+           TORNA ALLA HOME
         </button>
       )}
 

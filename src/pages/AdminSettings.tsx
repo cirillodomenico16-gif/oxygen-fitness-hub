@@ -62,7 +62,7 @@ const AdminSettings: React.FC = () => {
       `}</style>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>PANNELLO AMMINISTRATORE</div>
-      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}>⚙️ Impostazioni</h1>
+      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}> Impostazioni</h1>
       <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.55)', margin: '0 0 22px' }}>
         Gestisci le impostazioni amministrative
       </p>
@@ -99,7 +99,7 @@ const AdminSettings: React.FC = () => {
           color: '#fff', fontSize: '13px', fontWeight: 800, letterSpacing: '0.5px',
           cursor: 'pointer', boxShadow: '0 6px 20px rgba(229,57,53,0.5)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}>💾 SALVA IMPOSTAZIONI</button>
+        }}> SALVA IMPOSTAZIONI</button>
         <button style={{
           padding: '14px',
           background: 'rgba(255,255,255,0.04)',
@@ -113,7 +113,7 @@ const AdminSettings: React.FC = () => {
           border: '1px solid rgba(239,68,68,0.5)', borderRadius: '14px',
           color: '#ff5252', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
           cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}>🚪 LOGOUT</button>
+        }}> LOGOUT</button>
       </div>
     </div>
   );

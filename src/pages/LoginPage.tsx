@@ -181,14 +181,14 @@ const LoginPage: React.FC<Props> = ({ onLogin }) => {
           onClick={() => fill('marco@oxygen.com', 'user123')}
           style={demoBtn}
         >
-          👤 Utente · marco@oxygen.com / user123
+           Utente · marco@oxygen.com / user123
         </button>
         <button
           type="button"
           onClick={() => fill('admin@oxygen.com', 'admin123')}
           style={{ ...demoBtn, marginTop: '8px', borderColor: 'rgba(245,158,11,0.5)', color: '#f59e0b' }}
         >
-          ⚙️ Admin · admin@oxygen.com / admin123
+           Admin · admin@oxygen.com / admin123
         </button>
       </div>
     </div>

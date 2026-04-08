@@ -196,9 +196,9 @@ const ProfilePage: React.FC = () => {
         }}
       >
         {[
-          { label: 'Scheda', sub: 'Storico', icon: '📋', path: '/scheda' },
-          { label: 'Dieta', sub: 'Storico', icon: '🥗', path: '/dieta' },
-          { label: 'Progressi', sub: 'Grafici', icon: '📊', path: '/progressi' },
+          { label: 'Scheda', sub: 'Storico', icon: '', path: '/scheda' },
+          { label: 'Dieta', sub: 'Storico', icon: '', path: '/dieta' },
+          { label: 'Progressi', sub: 'Grafici', icon: '', path: '/progressi' },
         ].map((s) => (
           <button
             key={s.label}
@@ -239,11 +239,11 @@ const ProfilePage: React.FC = () => {
         }}
       >
         {[
-          { label: 'Modifica Profilo', icon: '👤' },
-          { label: 'Impostazioni Privacy', icon: '🔒' },
-          { label: 'Password', icon: '🔑' },
-          { label: 'Notifiche', icon: '🔔' },
-          { label: 'Chi Siamo', icon: 'ℹ️' },
+          { label: 'Modifica Profilo', icon: '' },
+          { label: 'Impostazioni Privacy', icon: '' },
+          { label: 'Password', icon: '' },
+          { label: 'Notifiche', icon: '' },
+          { label: 'Chi Siamo', icon: 'ℹ' },
         ].map((item, idx) => (
           <button key={idx} className="profile-row" style={rowButton}>
             <span style={{ fontSize: '18px' }}>{item.icon}</span>

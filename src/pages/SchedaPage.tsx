@@ -143,6 +143,10 @@ const WORKOUTS: DayWorkout[] = [
 const SchedaPage: React.FC = () => {
   const navigate = useNavigate();
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
+  const validated = (() => {
+    try { return JSON.parse(localStorage.getItem('oxy_scheda_1') || 'null'); }
+    catch { return null; }
+  })();
 
   const handleStart = (w: DayWorkout) => {
     if (w.isRest) return;
@@ -180,6 +184,26 @@ const SchedaPage: React.FC = () => {
           box-shadow: 0 0 12px rgba(229,57,53,0.5);
         }
       `}</style>
+
+      {validated && (
+        <div style={{
+          margin: '12px 0 18px', padding: '14px',
+          background: 'rgba(239,68,68,0.08)',
+          border: '1.5px solid rgba(239,68,68,0.55)',
+          borderRadius: 14,
+          boxShadow: '0 0 18px rgba(239,68,68,0.2)',
+          animation: 'fadeInUp 0.4s ease-out',
+        }}>
+          <div style={{ fontSize: 11, letterSpacing: 1.3, color: '#fca5a5', fontWeight: 800, marginBottom: 6 }}>
+            NUOVA SCHEDA VALIDATA DAL COACH · {validated.date}
+          </div>
+          <pre style={{
+            whiteSpace: 'pre-wrap', fontFamily: 'inherit',
+            fontSize: 11.5, lineHeight: 1.55, margin: 0,
+            color: 'rgba(255,255,255,0.92)', maxHeight: 340, overflowY: 'auto',
+          }}>{validated.plan}</pre>
+        </div>
+      )}
 
       {/* Header */}
       <div style={{

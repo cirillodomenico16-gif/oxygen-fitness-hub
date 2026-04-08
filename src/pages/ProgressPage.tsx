@@ -4,27 +4,27 @@ import { useNavigate } from 'react-router-dom';
 type Measure = { label: string; value: string; delta: string; icon: string };
 
 const AVAILABLE_MEASURES: { label: string; icon: string }[] = [
-  { label: 'Vita', icon: '🧍' },
-  { label: 'Petto', icon: '💪' },
-  { label: 'Gambe', icon: '🦵' },
-  { label: 'Braccia', icon: '💪' },
-  { label: 'Spalle', icon: '🤸' },
-  { label: 'Glutei', icon: '🍑' },
-  { label: 'Polpacci', icon: '🦿' },
-  { label: 'Avambraccio', icon: '✊' },
-  { label: 'Collo', icon: '🧞' },
-  { label: 'Fianchi', icon: '🕺' },
-  { label: '% Grasso', icon: '📉' },
-  { label: 'Massa Magra', icon: '⚡' },
+  { label: 'Vita', icon: '' },
+  { label: 'Petto', icon: '' },
+  { label: 'Gambe', icon: '' },
+  { label: 'Braccia', icon: '' },
+  { label: 'Spalle', icon: '' },
+  { label: 'Glutei', icon: '' },
+  { label: 'Polpacci', icon: '' },
+  { label: 'Avambraccio', icon: '' },
+  { label: 'Collo', icon: '' },
+  { label: 'Fianchi', icon: '' },
+  { label: '% Grasso', icon: '' },
+  { label: 'Massa Magra', icon: '' },
 ];
 
 const ProgressPage: React.FC = () => {
   const navigate = useNavigate();
   const [compareOpen, setCompareOpen] = useState(false);
   const [measures, setMeasures] = useState<Measure[]>([
-    { label: 'Vita', value: '82cm', delta: '-2', icon: '🧍' },
-    { label: 'Petto', value: '98cm', delta: '+1', icon: '💪' },
-    { label: 'Gambe', value: '54cm', delta: '-1', icon: '🦵' },
+    { label: 'Vita', value: '82cm', delta: '-2', icon: '' },
+    { label: 'Petto', value: '98cm', delta: '+1', icon: '' },
+    { label: 'Gambe', value: '54cm', delta: '-1', icon: '' },
   ]);
   const [addMeasureOpen, setAddMeasureOpen] = useState(false);
   const [newMeasureLabel, setNewMeasureLabel] = useState('Braccia');
@@ -122,7 +122,7 @@ const ProgressPage: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0 16px 0' }}>
         <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '22px', cursor: 'pointer' }}>‹</button>
         <h1 style={{ fontSize: '22px', fontWeight: 800, margin: 0, letterSpacing: '-0.3px' }}>I Miei Progressi</h1>
-        <button style={{ background: 'rgba(229,57,53,0.1)', border: '1px solid rgba(229,57,53,0.35)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px' }}>⚙</button>
+        <button style={{ background: 'rgba(229,57,53,0.1)', border: '1px solid rgba(229,57,53,0.35)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '16px' }}></button>
       </div>
 
       <div style={{ textAlign: 'center', marginBottom: '14px', fontSize: '18px', fontWeight: 800, animation: 'fadeInUp 0.5s ease-out' }}>
@@ -229,7 +229,7 @@ const ProgressPage: React.FC = () => {
             </div>
             <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginTop: '4px' }}>allenamenti completati</div>
           </div>
-          <div style={{ fontSize: '40px' }}>💪</div>
+          <div style={{ fontSize: '40px' }}></div>
         </div>
         <div style={{ width: '100%', height: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', overflow: 'hidden', marginBottom: '14px' }}>
           <div style={{ width: '75%', height: '100%', background: 'linear-gradient(90deg, #ef4444, #ff5252)', boxShadow: '0 0 12px rgba(229,57,53,0.7)' }} />
@@ -281,7 +281,7 @@ const ProgressPage: React.FC = () => {
           <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.6)', color: '#ff5252', fontSize: '10px', padding: '4px 8px', borderRadius: '999px', fontWeight: 800 }}>
             PRIMA
           </div>
-          <div style={{ fontSize: '11px', fontWeight: 700 }}>📷 Inizio (01 Set)</div>
+          <div style={{ fontSize: '11px', fontWeight: 700 }}> Inizio (01 Set)</div>
         </div>
         <div
           onClick={() => afterInputRef.current?.click()}
@@ -303,7 +303,7 @@ const ProgressPage: React.FC = () => {
           <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.6)', color: '#ff5252', fontSize: '10px', padding: '4px 8px', borderRadius: '999px', fontWeight: 800 }}>
             DOPO
           </div>
-          <div style={{ fontSize: '11px', fontWeight: 700 }}>📷 Oggi (19 Set)</div>
+          <div style={{ fontSize: '11px', fontWeight: 700 }}> Oggi (19 Set)</div>
         </div>
       </div>
       <button

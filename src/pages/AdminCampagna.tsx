@@ -8,22 +8,22 @@ const SENDER = `no-reply@${DOMAIN}`;
 const CAMPAIGNS = [
   {
     id: 'spring',
-    label: '🌸 Promo Primavera',
+    label: ' Promo Primavera',
     subject: 'Torna in forma per l\'estate — 30% di sconto',
   },
   {
     id: 'renewal',
-    label: '🔁 Rinnovo Abbonamento',
+    label: ' Rinnovo Abbonamento',
     subject: 'Rinnova ora e ricevi 1 mese gratis',
   },
   {
     id: 'pt',
-    label: '💪 Personal Trainer',
+    label: ' Personal Trainer',
     subject: 'Prova gratuita con il Personal Trainer',
   },
   {
     id: 'nutrition',
-    label: '🥗 Consulenza Nutrizionale',
+    label: ' Consulenza Nutrizionale',
     subject: 'Consulenza nutrizionale gratuita per i soci Oxygen',
   },
 ];
@@ -31,12 +31,12 @@ const CAMPAIGNS = [
 const TEMPLATES: Record<string, (name: string) => string> = {
   spring: (name) => `Ciao ${name},
 
-L'estate è più vicina di quanto pensi! 🌞
+L'estate è più vicina di quanto pensi! 
 
 Da Oxygen Fitness Hub lanciamo una promo esclusiva per i nostri soci:
-✅ 30% di sconto sul rinnovo annuale
-✅ 2 sessioni di Personal Trainer incluse
-✅ Accesso illimitato ai corsi di gruppo
+ 30% di sconto sul rinnovo annuale
+ 2 sessioni di Personal Trainer incluse
+ Accesso illimitato ai corsi di gruppo
 
 L'offerta è valida solo per i prossimi 7 giorni.
 
@@ -44,16 +44,16 @@ Prenota subito la tua consulenza gratuita rispondendo a questa mail o passando i
 
 Ti aspettiamo,
 Il team di Oxygen Fitness Hub
-📍 Via dello Sport 12 · ${DOMAIN}`,
+ Via dello Sport 12 · ${DOMAIN}`,
 
   renewal: (name) => `Ciao ${name},
 
 Il tuo abbonamento Oxygen sta per scadere.
 
 Rinnovalo entro il 30/04 e ricevi in regalo:
-🎁 1 mese di abbonamento in più
-🎁 1 sessione PT personalizzata
-🎁 Ingresso SPA per un amico
+ 1 mese di abbonamento in più
+ 1 sessione PT personalizzata
+ Ingresso SPA per un amico
 
 Non perdere questa occasione esclusiva dedicata ai nostri soci storici.
 
@@ -61,37 +61,37 @@ Rispondi a questa mail per confermare il rinnovo o passa in segreteria.
 
 A presto,
 Il team di Oxygen Fitness Hub
-📍 ${DOMAIN}`,
+ ${DOMAIN}`,
 
   pt: (name) => `Ciao ${name},
 
 Stai cercando risultati più rapidi e un percorso davvero su misura?
 
 I nostri Personal Trainer certificati ti offrono:
-🔥 Scheda allenamento personalizzata (AI + expertise umana)
-🔥 Monitoraggio progressi settimanale
-🔥 Correzione tecnica e motivazione costante
+ Scheda allenamento personalizzata (AI + expertise umana)
+ Monitoraggio progressi settimanale
+ Correzione tecnica e motivazione costante
 
 Ti regaliamo una prima sessione di prova GRATUITA.
 
 Rispondi a questa mail per prenotare il tuo slot.
 
 Il team di Oxygen Fitness Hub
-📍 ${DOMAIN}`,
+ ${DOMAIN}`,
 
   nutrition: (name) => `Ciao ${name},
 
 L'allenamento da solo non basta: il 70% dei risultati dipende dall'alimentazione.
 
 Per i soci Oxygen offriamo una consulenza nutrizionale GRATUITA con il nostro biologo nutrizionista:
-🥗 Analisi composizione corporea
-🥗 Piano alimentare personalizzato
-🥗 Follow-up mensile
+ Analisi composizione corporea
+ Piano alimentare personalizzato
+ Follow-up mensile
 
 Prenota il tuo appuntamento rispondendo a questa mail.
 
 Il team di Oxygen Fitness Hub
-📍 ${DOMAIN}`,
+ ${DOMAIN}`,
 };
 
 const AdminCampagna: React.FC = () => {
@@ -144,7 +144,7 @@ const AdminCampagna: React.FC = () => {
       }}>← Indietro</button>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>MARKETING AUTOMATION</div>
-      <h1 style={{ fontSize: '26px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}>📣 Campagna Promo</h1>
+      <h1 style={{ fontSize: '26px', fontWeight: 800, margin: '2px 0 4px', letterSpacing: '-0.5px' }}> Campagna Promo</h1>
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginBottom: '18px' }}>
         Agente AI Marketing · invia da <b style={{ color: '#ff5252' }}>{SENDER}</b>
       </div>
@@ -265,7 +265,7 @@ const AdminCampagna: React.FC = () => {
         fontFamily: "'Plus Jakarta Sans', sans-serif",
         opacity: sending ? 0.7 : 1,
       }}>
-        {sending ? '⏳ INVIO IN CORSO...' : sent ? `✅ CAMPAGNA INVIATA A ${recipients.length} SOCI` : `🚀 INVIA CAMPAGNA (${recipients.length} soci)`}
+        {sending ? '⏳ INVIO IN CORSO...' : sent ? ` CAMPAGNA INVIATA A ${recipients.length} SOCI` : ` INVIA CAMPAGNA (${recipients.length} soci)`}
       </button>
     </div>
   );

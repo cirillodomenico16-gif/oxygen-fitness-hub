@@ -49,7 +49,7 @@ const AdminReport: React.FC = () => {
       }}>← Indietro</button>
 
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px' }}>PANNELLO AMMINISTRATORE</div>
-      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 18px', letterSpacing: '-0.5px' }}>📊 Report</h1>
+      <h1 style={{ fontSize: '28px', fontWeight: 800, margin: '2px 0 18px', letterSpacing: '-0.5px' }}> Report</h1>
 
       {/* Revenue chart */}
       <div style={{
@@ -59,7 +59,7 @@ const AdminReport: React.FC = () => {
         boxShadow: '0 0 20px rgba(229,57,53,0.2)',
         animation: 'fadeInUp 0.5s ease-out',
       }}>
-        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px' }}>💰 Entrate Mensili</div>
+        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px' }}> Entrate Mensili</div>
         <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginBottom: '8px' }}>Totale anno: €39.0k</div>
         <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
           <defs>
@@ -91,10 +91,10 @@ const AdminReport: React.FC = () => {
         boxShadow: '0 0 20px rgba(59,130,246,0.2)',
         animation: 'fadeInUp 0.5s ease-out 0.08s both',
       }}>
-        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px' }}>👥 Andamento Soci</div>
+        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px' }}> Andamento Soci</div>
         <div style={{ display: 'flex', gap: '14px', fontSize: '10px', color: 'rgba(255,255,255,0.65)', marginBottom: '8px' }}>
-          <span>🔵 Soci totali: <b style={{ color: '#60a5fa' }}>342</b></span>
-          <span>🟠 In scadenza: <b style={{ color: '#fbbf24' }}>15</b></span>
+          <span> Soci totali: <b style={{ color: '#60a5fa' }}>342</b></span>
+          <span> In scadenza: <b style={{ color: '#fbbf24' }}>15</b></span>
         </div>
         <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
           {[0, 200, 400].map((v) => {

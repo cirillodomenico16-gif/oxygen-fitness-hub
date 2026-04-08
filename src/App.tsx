@@ -129,10 +129,10 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
             {/* Menu Items */}
             <div style={{ padding: '6px 0' }}>
               {[
-                { label: 'Il Mio Profilo', path: '/profilo', icon: '👤' },
-                { label: isAdminRoute ? 'Torna Utente' : 'Pannello Admin', path: isAdminRoute ? '/' : '/admin', icon: isAdminRoute ? '🏠' : '⚙️' },
-                { label: 'La Mia Scheda', path: '/scheda', icon: '📋' },
-                { label: 'La Mia Dieta', path: '/dieta', icon: '🥗' },
+                { label: 'Il Mio Profilo', path: '/profilo', icon: '' },
+                { label: isAdminRoute ? 'Torna Utente' : 'Pannello Admin', path: isAdminRoute ? '/' : '/admin', icon: isAdminRoute ? '' : '' },
+                { label: 'La Mia Scheda', path: '/scheda', icon: '' },
+                { label: 'La Mia Dieta', path: '/dieta', icon: '' },
               ].map((item) => (
                 <button
                   key={item.path}
@@ -184,7 +184,7 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
                 onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.06)')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
-                <span style={{ fontSize: '16px', width: '20px', textAlign: 'center' }}>🚪</span>
+                <span style={{ fontSize: '16px', width: '20px', textAlign: 'center' }}></span>
                 Esci
               </button>
             </div>

@@ -20,7 +20,7 @@ const AdminDashboard: React.FC = () => {
       `Ciao,\n\nIl tuo abbonamento presso Oxygen Fitness Hub è in scadenza.\nTi proponiamo un'offerta esclusiva per il rinnovo del tuo piano.\n\nContattaci in palestra o rispondi a questa mail per attivare la promo.\n\nA presto,\nIl team Oxygen`
     );
     window.location.href = `mailto:?bcc=${bcc}&subject=${subject}&body=${body}`;
-    setToast('📧 Email di rinnovo inviate a ' + EXPIRING.length + ' soci');
+    setToast('Email di rinnovo inviate a ' + EXPIRING.length + ' soci');
     setTimeout(() => setToast(null), 3000);
   };
 
@@ -34,7 +34,7 @@ const AdminDashboard: React.FC = () => {
     window.location.href = `mailto:${form.email}?subject=${subject}&body=${body}`;
     setShowNewMember(false);
     setForm({ nome: '', cognome: '', email: '', telefono: '', piano: 'Mensile' });
-    setToast('✅ Socio creato e mail di attivazione inviata');
+    setToast('Socio creato e mail di attivazione inviata');
     setTimeout(() => setToast(null), 3000);
   };
 
@@ -72,9 +72,9 @@ const AdminDashboard: React.FC = () => {
 
   const quick = [
     { icon: '+', label: 'Nuovo Socio', path: '__new__' },
-    { icon: '📣', label: 'Campagna', path: '/admin/campagna' },
-    { icon: '📊', label: 'Report', path: '/admin/report' },
-    { icon: '🗓', label: 'Corsi', path: '/admin/calendario' },
+    { icon: 'C', label: 'Campagna', path: '/admin/campagna' },
+    { icon: 'R', label: 'Report', path: '/admin/report' },
+    { icon: 'K', label: 'Corsi', path: '/admin/calendario' },
   ];
 
   return (
@@ -95,8 +95,7 @@ const AdminDashboard: React.FC = () => {
       {/* Title row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '26px' }}>⚙️</span>
-          <span style={{ fontSize: '26px', fontWeight: 900, color: '#ff5252', letterSpacing: '-0.5px' }}>Admin Panel</span>
+          <span style={{ fontSize: '26px', fontWeight: 900, color: '#ff5252', letterSpacing: '-0.5px' }}>Pannello Admin</span>
         </div>
         <span style={{
           background: 'linear-gradient(180deg, #ef4444, #e53935)',
@@ -109,7 +108,7 @@ const AdminDashboard: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: '4px',
-        }}>● LIVE</span>
+        }}>LIVE</span>
       </div>
       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', letterSpacing: '1.5px', marginBottom: '2px' }}>
         PANNELLO AMMINISTRATORE
@@ -144,7 +143,7 @@ const AdminDashboard: React.FC = () => {
         boxShadow: '0 0 20px rgba(229,57,53,0.2)',
         animation: 'fadeInUp 0.5s ease-out 0.05s both',
       }}>
-        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>Monthly Revenue Trend</div>
+        <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>Andamento Entrate Mensili</div>
         <svg width="100%" viewBox={`0 0 ${W} ${H}`}>
           <defs>
             <linearGradient id="revArea" x1="0" y1="0" x2="0" y2="1">
@@ -176,7 +175,7 @@ const AdminDashboard: React.FC = () => {
         gap: '12px',
         animation: 'fadeInUp 0.5s ease-out 0.1s both',
       }}>
-        <span style={{ fontSize: '20px' }}>⚠️</span>
+        <span style={{ fontSize: '20px' }}></span>
         <div>
           <div style={{ fontSize: '12px', fontWeight: 800, color: '#f59e0b', letterSpacing: '0.5px' }}>ATTENZIONE!</div>
           <div style={{ fontSize: '13px', fontWeight: 700, color: '#fbbf24', marginTop: '2px' }}>
@@ -222,7 +221,7 @@ const AdminDashboard: React.FC = () => {
           color: '#fff', fontSize: '13px', fontWeight: 800, letterSpacing: '0.5px',
           cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}>✉️ INVIA OFFERTA RINNOVO AI SOCI</button>
+        }}> INVIA OFFERTA RINNOVO AI SOCI</button>
       </div>
 
       {/* Recent activity */}
@@ -372,7 +371,7 @@ const AdminDashboard: React.FC = () => {
                 color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
                 cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}>✅ CREA & INVIA MAIL</button>
+              }}> CREA & INVIA MAIL</button>
             </div>
           </form>
         </div>

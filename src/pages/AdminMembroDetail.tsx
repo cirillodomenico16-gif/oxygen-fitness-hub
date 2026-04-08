@@ -57,8 +57,8 @@ const AdminMembroDetail: React.FC = () => {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: '18px', fontWeight: 800 }}>{member.name}</div>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginTop: '3px' }}>{member.age} anni · {member.plan}</div>
-          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '3px' }}>✉ {member.email}</div>
-          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>📞 {member.phone}</div>
+          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '3px' }}> {member.email}</div>
+          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}> {member.phone}</div>
         </div>
       </div>
 
@@ -70,7 +70,7 @@ const AdminMembroDetail: React.FC = () => {
           borderRadius: '14px', padding: '12px 14px',
         }}>
           <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700 }}>ISCRITTO DAL</div>
-          <div style={{ fontSize: '15px', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>📅 {member.joined}</div>
+          <div style={{ fontSize: '15px', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}> {member.joined}</div>
         </div>
         <div style={{
           background: daysLeft < 15 ? 'rgba(245,158,11,0.08)' : 'rgba(239,68,68,0.06)',
@@ -95,7 +95,7 @@ const AdminMembroDetail: React.FC = () => {
             borderRadius: '12px', color: '#fff', fontSize: '12px', fontWeight: 800, cursor: 'pointer',
             letterSpacing: '0.5px', fontFamily: "'Plus Jakarta Sans', sans-serif",
             boxShadow: tab === t ? '0 4px 14px rgba(229,57,53,0.5)' : 'none',
-          }}>{t === 'scheda' ? '🏋️ SCHEDA' : '🥗 DIETA'}</button>
+          }}>{t === 'scheda' ? ' SCHEDA' : ' DIETA'}</button>
         ))}
       </div>
 
@@ -107,7 +107,7 @@ const AdminMembroDetail: React.FC = () => {
       }}>
         {tab === 'scheda' ? (
           <>
-            <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#ff5252' }}>📋 Dettaglio Scheda</div>
+            <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#ff5252' }}> Dettaglio Scheda</div>
             <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
               {scheda ? `Generata il ${scheda.date} dal Coach AI` : 'Scheda base attiva · non ancora personalizzata'}
             </div>
@@ -129,14 +129,14 @@ const AdminMembroDetail: React.FC = () => {
                   Military · Alzate · Plank · Crunch
                 </div>
                 <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(239,68,68,0.08)', borderRadius: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>
-                  💡 Genera una scheda personalizzata con il Coach AI per risultati ottimali.
+                   Genera una scheda personalizzata con il Coach AI per risultati ottimali.
                 </div>
               </div>
             )}
           </>
         ) : (
           <>
-            <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#4ade80' }}>🥗 Dettaglio Dieta</div>
+            <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#4ade80' }}> Dettaglio Dieta</div>
             <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
               {dieta ? `Generata il ${dieta.date} dal Nutrizionista AI` : 'Piano alimentare base · non ancora personalizzato'}
             </div>
@@ -161,7 +161,7 @@ const AdminMembroDetail: React.FC = () => {
           color: '#fff', fontSize: '12px', fontWeight: 800,
           cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}>🤖 GENERA SCHEDA</button>
+        }}> GENERA SCHEDA</button>
         <button onClick={() => navigate(`/admin/membro/${member.id}/agent-dieta`)} style={{
           padding: '16px 8px',
           background: 'linear-gradient(135deg,#22c55e,#15803d)',
@@ -169,7 +169,7 @@ const AdminMembroDetail: React.FC = () => {
           color: '#fff', fontSize: '12px', fontWeight: 800,
           cursor: 'pointer', boxShadow: '0 6px 18px rgba(34,197,94,0.5)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}>🥗 GENERA DIETA</button>
+        }}> GENERA DIETA</button>
       </div>
     </div>
   );

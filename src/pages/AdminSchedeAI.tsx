@@ -126,7 +126,7 @@ const AdminSchedeAI: React.FC = () => {
           fontFamily: "'Plus Jakarta Sans', sans-serif",
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
         }}>
-          ⚡ GENERA NUOVA SCHEDA AI
+           GENERA NUOVA SCHEDA AI
         </button>
       </div>
 
@@ -189,7 +189,7 @@ const AdminSchedeAI: React.FC = () => {
           boxShadow: '0 0 22px rgba(229,57,53,0.45)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}>
-          🥗 GENERA DIETA AI
+           GENERA DIETA AI
         </button>
       </div>
 
@@ -203,7 +203,7 @@ const AdminSchedeAI: React.FC = () => {
         border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: '999px',
       }}>
-        SOLO ADMIN 🔒
+        SOLO ADMIN 
       </div>
     </div>
   );

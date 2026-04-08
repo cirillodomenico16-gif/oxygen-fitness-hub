@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MEMBERS } from '../data/members';
+import { callClaude, hasApiKey, getHistory, saveToHistory, pushNotification, PlanRecord } from '../lib/llm';
+import { getProgressSummary } from '../data/progress';
 
 type AgentType = 'scheda' | 'dieta';
 
@@ -14,130 +16,128 @@ interface Question {
 }
 
 const SCHEDA_AGENT = {
-  title: '🤖 Coach AI — Scheda Allenamento',
+  title: 'Coach AI — Scheda Allenamento',
   subtitle: 'Personal Trainer Certificato NASM',
   accent: '#ef4444',
   accent2: '#b71c1c',
-  intro: 'Ciao! Sono il tuo Coach AI specializzato in programmazione dell\'allenamento. Ti farò alcune domande per costruire una scheda personalizzata, scientificamente validata e adatta al socio.',
+  intro: 'Ciao, sono il Coach AI specializzato in programmazione dell\'allenamento. Ti farò alcune domande per costruire una scheda personalizzata, scientificamente validata e adatta al socio.',
   questions: [
-    { key: 'peso',      text: 'Qual è il peso attuale del socio? (kg)', type: 'number' as const },
-    { key: 'altezza',   text: 'Qual è l\'altezza? (cm)', type: 'number' as const },
+    { key: 'peso', text: 'Qual è il peso attuale del socio in kg?', type: 'number' as const },
+    { key: 'altezza', text: 'Qual è l\'altezza in cm?', type: 'number' as const },
     { key: 'obiettivo', text: 'Qual è l\'obiettivo principale?', type: 'choice' as const,
       choices: ['Ipertrofia', 'Dimagrimento', 'Forza', 'Tonificazione', 'Resistenza'] },
-    { key: 'livello',   text: 'Qual è il livello di esperienza del socio?', type: 'choice' as const,
+    { key: 'livello', text: 'Qual è il livello di esperienza del socio?', type: 'choice' as const,
       choices: ['Principiante', 'Intermedio', 'Avanzato'] },
     { key: 'frequenza', text: 'Quanti giorni a settimana può allenarsi?', type: 'choice' as const,
       choices: ['3 giorni', '4 giorni', '5 giorni', '6 giorni'] },
-    { key: 'infortuni', text: 'Ci sono infortuni o limitazioni fisiche? (scrivi "nessuno" se non ci sono)', type: 'text' as const },
-    { key: 'attrezzi',  text: 'Ha accesso a una palestra attrezzata?', type: 'choice' as const, choices: ['Sì, palestra completa', 'Solo manubri', 'Solo corpo libero'] },
+    { key: 'infortuni', text: 'Ci sono infortuni o limitazioni fisiche? Scrivi "nessuno" se non ce ne sono.', type: 'text' as const },
+    { key: 'attrezzi', text: 'Ha accesso a una palestra attrezzata?', type: 'choice' as const, choices: ['Sì, palestra completa', 'Solo manubri', 'Solo corpo libero'] },
   ] as Question[],
 };
 
 const DIETA_AGENT = {
-  title: '🥗 Nutrizionista AI — Piano Alimentare',
-  subtitle: 'Biologo Nutrizionista - Specializzato in Sport Nutrition',
+  title: 'Nutrizionista AI — Piano Alimentare',
+  subtitle: 'Biologo Nutrizionista specializzato in Sport Nutrition',
   accent: '#22c55e',
   accent2: '#15803d',
-  intro: 'Ciao! Sono il tuo Nutrizionista AI. Progetterò un piano alimentare bilanciato e su misura. Ti servono alcune informazioni sul socio per procedere.',
+  intro: 'Ciao, sono il Nutrizionista AI. Progetterò un piano alimentare bilanciato e su misura. Mi servono alcune informazioni sul socio per procedere.',
   questions: [
-    { key: 'peso',      text: 'Peso attuale del socio? (kg)', type: 'number' as const },
-    { key: 'altezza',   text: 'Altezza? (cm)', type: 'number' as const },
-    { key: 'attivita',  text: 'Livello di attività giornaliera?', type: 'choice' as const,
+    { key: 'peso', text: 'Peso attuale del socio in kg?', type: 'number' as const },
+    { key: 'altezza', text: 'Altezza in cm?', type: 'number' as const },
+    { key: 'attivita', text: 'Livello di attività giornaliera?', type: 'choice' as const,
       choices: ['Sedentario', 'Leggero', 'Moderato', 'Attivo', 'Molto attivo'] },
     { key: 'obiettivo', text: 'Obiettivo nutrizionale?', type: 'choice' as const,
       choices: ['Definizione (deficit)', 'Mantenimento', 'Massa (surplus)'] },
     { key: 'preferenze', text: 'Preferenze alimentari?', type: 'choice' as const,
       choices: ['Onnivoro', 'Vegetariano', 'Vegano', 'Pesco-vegetariano'] },
-    { key: 'allergie',  text: 'Allergie o intolleranze? (scrivi "nessuna" se non ce ne sono)', type: 'text' as const },
-    { key: 'pasti',     text: 'Quanti pasti preferisce al giorno?', type: 'choice' as const,
+    { key: 'allergie', text: 'Allergie o intolleranze? Scrivi "nessuna" se non ce ne sono.', type: 'text' as const },
+    { key: 'pasti', text: 'Quanti pasti preferisce al giorno?', type: 'choice' as const,
       choices: ['3 pasti', '4 pasti', '5 pasti'] },
   ] as Question[],
 };
 
-// ----------- Plan generators -----------
+// ----------- Plan generators (fallback deterministic) -----------
 function generateScheda(a: Record<string, string>, memberName: string): string {
-  const split4 = `GIORNO 1 — PETTO & TRICIPITI
-- Panca piana con bilanciere: 4×8-10 (90s rec)
-- Panca inclinata manubri: 3×10-12
-- Croci ai cavi: 3×12-15
-- Dips alle parallele: 3×max
-- Pushdown al cavo: 3×12
-- Estensioni sopra la testa: 3×12
+  const split4 = `GIORNO 1 — PETTO E TRICIPITI
+- Panca piana con bilanciere: 4x8-10 (recupero 90s)
+- Panca inclinata con manubri: 3x10-12
+- Croci ai cavi: 3x12-15
+- Dips alle parallele: 3xmax
+- Pushdown al cavo: 3x12
+- Estensioni sopra la testa: 3x12
 
-GIORNO 2 — SCHIENA & BICIPITI
-- Trazioni alla sbarra: 4×max
-- Rematore bilanciere: 4×8-10
-- Lat machine presa larga: 3×10-12
-- Pulley basso: 3×12
-- Curl bilanciere: 3×10
-- Curl panca Scott: 3×12
+GIORNO 2 — SCHIENA E BICIPITI
+- Trazioni alla sbarra: 4xmax
+- Rematore con bilanciere: 4x8-10
+- Lat machine presa larga: 3x10-12
+- Pulley basso: 3x12
+- Curl con bilanciere: 3x10
+- Curl su panca Scott: 3x12
 
-GIORNO 3 — GAMBE & ADDOME
-- Squat con bilanciere: 4×8-10 (120s rec)
-- Leg press: 4×12
-- Affondi con manubri: 3×12 per gamba
-- Stacco rumeno: 3×10
-- Leg curl: 3×12
-- Crunch alla panca: 3×20
+GIORNO 3 — GAMBE E ADDOME
+- Squat con bilanciere: 4x8-10 (recupero 120s)
+- Leg press: 4x12
+- Affondi con manubri: 3x12 per gamba
+- Stacco rumeno: 3x10
+- Leg curl: 3x12
+- Crunch alla panca: 3x20
 
-GIORNO 4 — SPALLE & CORE
-- Military press: 4×8-10
-- Alzate laterali: 4×12-15
-- Alzate posteriori: 3×15
-- Shrugs: 3×12
-- Plank: 3×60s
-- Russian twist: 3×20`;
+GIORNO 4 — SPALLE E CORE
+- Military press: 4x8-10
+- Alzate laterali: 4x12-15
+- Alzate posteriori: 3x15
+- Shrugs: 3x12
+- Plank: 3x60s
+- Russian twist: 3x20`;
 
   const split3 = `GIORNO 1 — UPPER BODY
-- Panca piana: 4×8
-- Rematore bilanciere: 4×8
-- Military press: 3×10
-- Trazioni: 3×max
-- Curl bilanciere: 3×10
-- French press: 3×10
+- Panca piana: 4x8
+- Rematore con bilanciere: 4x8
+- Military press: 3x10
+- Trazioni: 3xmax
+- Curl con bilanciere: 3x10
+- French press: 3x10
 
 GIORNO 2 — LOWER BODY
-- Squat: 4×8
-- Stacco rumeno: 4×8
-- Affondi: 3×12 per gamba
-- Leg press: 3×12
-- Leg curl: 3×15
-- Calf raises: 4×15
+- Squat: 4x8
+- Stacco rumeno: 4x8
+- Affondi: 3x12 per gamba
+- Leg press: 3x12
+- Leg curl: 3x15
+- Calf raises: 4x15
 
 GIORNO 3 — FULL BODY HIIT
 - Circuito: 5 giri
-  • Goblet squat: 15
-  • Push-up: 12
-  • Rematore manubrio: 12 per lato
-  • Burpees: 10
-  • Plank: 45s`;
+  - Goblet squat: 15
+  - Push-up: 12
+  - Rematore con manubrio: 12 per lato
+  - Burpees: 10
+  - Plank: 45s`;
 
   const freq = parseInt(a.frequenza || '4');
   const base = freq >= 4 ? split4 : split3;
 
   return `SCHEDA PERSONALIZZATA — ${memberName}
-Obiettivo: ${a.obiettivo} · Livello: ${a.livello} · Frequenza: ${a.frequenza}
-Peso: ${a.peso}kg · Altezza: ${a.altezza}cm
+Obiettivo: ${a.obiettivo} - Livello: ${a.livello} - Frequenza: ${a.frequenza}
+Peso: ${a.peso}kg - Altezza: ${a.altezza}cm
 Limitazioni: ${a.infortuni}
 Setting: ${a.attrezzi}
 
-══════════════════════════════
 ${base}
 
-══════════════════════════════
-NOTE DEL COACH AI:
-• Riscaldamento 8-10 min cardio leggero prima di ogni seduta
-• Stretching finale 5 min
-• Progressione carichi: +2.5kg appena completi tutte le serie
-• Recupero 48-72h per gruppo muscolare
-• Scheda da mantenere 6-8 settimane, poi rivalutare
-${a.infortuni !== 'nessuno' ? `• ⚠ Attenzione a: ${a.infortuni}` : ''}`;
+NOTE DEL COACH:
+- Riscaldamento 8-10 minuti di cardio leggero prima di ogni seduta
+- Stretching finale di 5 minuti
+- Progressione carichi: aggiungere 2.5kg appena completi tutte le serie
+- Recupero di 48-72 ore per gruppo muscolare
+- Scheda da mantenere 6-8 settimane, poi rivalutare
+${a.infortuni !== 'nessuno' ? `- Attenzione a: ${a.infortuni}` : ''}`;
 }
 
 function generateDieta(a: Record<string, string>, memberName: string): string {
   const peso = parseFloat(a.peso) || 75;
   const altezza = parseFloat(a.altezza) || 175;
-  const bmr = 10 * peso + 6.25 * altezza - 5 * 30 + 5; // simplified Mifflin
+  const bmr = 10 * peso + 6.25 * altezza - 5 * 30 + 5;
   const actMap: Record<string, number> = {
     'Sedentario': 1.2, 'Leggero': 1.375, 'Moderato': 1.55, 'Attivo': 1.725, 'Molto attivo': 1.9,
   };
@@ -150,57 +150,84 @@ function generateDieta(a: Record<string, string>, memberName: string): string {
 
   return `PIANO ALIMENTARE — ${memberName}
 Obiettivo: ${a.obiettivo}
-Peso: ${peso}kg · Altezza: ${altezza}cm
-Attività: ${a.attivita} · Preferenze: ${a.preferenze}
+Peso: ${peso}kg - Altezza: ${altezza}cm
+Attività: ${a.attivita} - Preferenze: ${a.preferenze}
 Allergie: ${a.allergie}
 
-══════════════════════════════
 MACRONUTRIENTI CALCOLATI
-• Calorie giornaliere: ${tdee} kcal
-• Proteine: ${prot}g (${Math.round(prot*4/tdee*100)}%)
-• Carboidrati: ${carbo}g (${Math.round(carbo*4/tdee*100)}%)
-• Grassi: ${grassi}g (${Math.round(grassi*9/tdee*100)}%)
+- Calorie giornaliere: ${tdee} kcal
+- Proteine: ${prot}g
+- Carboidrati: ${carbo}g
+- Grassi: ${grassi}g
 
-══════════════════════════════
 SCHEMA TIPO — ${a.pasti}
 
-🌅 COLAZIONE (${Math.round(tdee*0.25)} kcal)
+COLAZIONE (${Math.round(tdee*0.25)} kcal)
 - Avena 70g
 - Latte parzialmente scremato 250ml
 - Frutti di bosco 100g
 - Mandorle 15g
 
-🍎 SPUNTINO (${Math.round(tdee*0.10)} kcal)
+SPUNTINO (${Math.round(tdee*0.10)} kcal)
 - Yogurt greco 0% 150g
 - Miele 10g
 - 1 frutto
 
-🍽 PRANZO (${Math.round(tdee*0.30)} kcal)
-- Petto di pollo 150g (o tofu 200g se vegetariano)
-- Riso basmati 80g (peso crudo)
+PRANZO (${Math.round(tdee*0.30)} kcal)
+- Petto di pollo 150g (oppure tofu 200g se vegetariano)
+- Riso basmati 80g peso crudo
 - Verdure grigliate 200g
-- Olio EVO 10g
+- Olio extravergine 10g
 
-🥪 SPUNTINO (${Math.round(tdee*0.10)} kcal)
+SPUNTINO (${Math.round(tdee*0.10)} kcal)
 - Pane integrale 40g
-- Bresaola 50g (o hummus 50g)
+- Bresaola 50g (oppure hummus 50g)
 - 1 frutto
 
-🌙 CENA (${Math.round(tdee*0.25)} kcal)
-- Salmone 150g (o legumi 80g secchi)
+CENA (${Math.round(tdee*0.25)} kcal)
+- Salmone 150g (oppure legumi 80g secchi)
 - Patate dolci 200g
 - Insalata mista 150g
-- Olio EVO 10g
+- Olio extravergine 10g
 
-══════════════════════════════
-NOTE DEL NUTRIZIONISTA AI:
-• Bere almeno 2.5L di acqua al giorno
-• Ridurre zuccheri raffinati e alcolici
-• 1 pasto libero a settimana concesso
-• Consumare verdure ad ogni pasto principale
-${a.allergie !== 'nessuna' ? `• ⚠ Evitare: ${a.allergie}` : ''}
-• Rivalutazione raccomandata ogni 4 settimane`;
+NOTE DEL NUTRIZIONISTA:
+- Bere almeno 2.5 litri di acqua al giorno
+- Ridurre zuccheri raffinati e alcolici
+- Un pasto libero a settimana concesso
+- Consumare verdure a ogni pasto principale
+${a.allergie !== 'nessuna' ? `- Evitare: ${a.allergie}` : ''}
+- Rivalutazione raccomandata ogni 4 settimane`;
 }
+
+// ----------- LLM system prompts -----------
+const SYSTEM_SCHEDA = `Sei un Personal Trainer certificato NASM con 15 anni di esperienza in sala pesi, specializzato in programmazione dell'allenamento. Stai lavorando nel software gestionale di Oxygen Fitness Hub per generare schede di allenamento altamente personalizzate.
+
+LINEE GUIDA:
+- Basa le scelte sui principi della scienza dell'esercizio: progressive overload, recupero, specificità
+- Adatta volume e intensità al livello del socio
+- Rispetta rigorosamente le limitazioni fisiche e gli infortuni dichiarati
+- Considera lo storico delle schede precedenti e i dati di progresso del socio
+- Se il socio è in plateau su un esercizio, varia stimolo o tecnica
+- Se esiste uno storico di schede, progredisci logicamente: varia alcuni esercizi per stimolo nuovo ma mantieni continuità sui fondamentali
+- Evidenzia in modo chiaro i cambiamenti rispetto alle schede passate
+- Fornisci serie, ripetizioni e recuperi specifici per ogni esercizio
+- Testo in italiano. Nessuna emoticon, nessun preambolo conversazionale
+- Rispondi soltanto con la scheda, pronta da stampare e consegnare al socio`;
+
+const SYSTEM_DIETA = `Sei un Biologo Nutrizionista specializzato in Sport Nutrition con 15 anni di esperienza. Stai lavorando nel software gestionale di Oxygen Fitness Hub per generare piani alimentari altamente personalizzati.
+
+LINEE GUIDA:
+- Calcola BMR e TDEE con la formula Mifflin-St Jeor
+- Distribuisci i macronutrienti in base all'obiettivo: definizione, mantenimento, massa
+- Rispetta rigorosamente allergie, intolleranze e preferenze alimentari
+- Considera lo storico delle diete precedenti e i dati di progresso del socio
+- Se la progressione è stagnante, ricalibra le calorie
+- Varia le fonti alimentari rispetto ai piani precedenti per evitare monotonia
+- Indica esplicitamente le modifiche rispetto ai piani precedenti
+- Fornisci porzioni precise in grammi, ripartite nei pasti richiesti
+- Includi calorie per pasto e totale giornaliero
+- Testo in italiano. Nessuna emoticon, nessun preambolo conversazionale
+- Rispondi soltanto con il piano alimentare, pronto da stampare e consegnare al socio`;
 
 // ----------- Component -----------
 const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
@@ -218,12 +245,66 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [input, setInput] = useState('');
   const [generated, setGenerated] = useState<string | null>(null);
+  const [draft, setDraft] = useState<string>('');
   const [typing, setTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages, typing]);
+
+  const finalizeWithPlan = (plan: string) => {
+    setGenerated(plan);
+    setDraft(plan);
+    setMessages((m) => [...m, { from: 'agent', text: 'Piano generato. Rivedi e modifica il testo, poi clicca "Valida e invia al socio" per renderlo ufficiale.' }]);
+  };
+
+  const runGeneration = async (finalAnswers: Record<string, string>) => {
+    const llmMode = hasApiKey();
+    if (!llmMode) {
+      const plan = type === 'scheda'
+        ? generateScheda(finalAnswers, member.name)
+        : generateDieta(finalAnswers, member.name);
+      setTimeout(() => finalizeWithPlan(plan), 900);
+      return;
+    }
+
+    try {
+      const history = getHistory(type, member.id);
+      const progress = getProgressSummary(member.id);
+      const historyBlock = history.length
+        ? history.slice(0, 3).map((h, i) => `[Storico ${i + 1}] ${h.date}\n${h.plan}`).join('\n\n---\n\n')
+        : 'Nessuna ' + (type === 'scheda' ? 'scheda' : 'dieta') + ' precedente.';
+      const answersBlock = Object.entries(finalAnswers).map(([k, v]) => `- ${k}: ${v}`).join('\n');
+      const userMsg = `Socio: ${member.name}, ${member.age} anni, piano ${member.plan}.
+
+DATI DI PROGRESSO DEL SOCIO:
+${progress}
+
+STORICO PIANI PRECEDENTI (${type}):
+${historyBlock}
+
+RISPOSTE DELL'ADMIN AL QUESTIONARIO:
+${answersBlock}
+
+Genera ora la nuova ${type === 'scheda' ? 'scheda di allenamento' : 'dieta'} tenendo conto di progresso e storico.`;
+
+      const out = await callClaude({
+        system: type === 'scheda' ? SYSTEM_SCHEDA : SYSTEM_DIETA,
+        messages: [{ role: 'user', content: userMsg }],
+        max_tokens: 2500,
+      });
+      finalizeWithPlan(out.trim());
+    } catch (e: any) {
+      setError(e.message || 'Errore chiamata AI');
+      // fallback to deterministic
+      const plan = type === 'scheda'
+        ? generateScheda(finalAnswers, member.name)
+        : generateDieta(finalAnswers, member.name);
+      finalizeWithPlan(plan);
+    }
+  };
 
   const send = (value: string) => {
     if (!value.trim()) return;
@@ -241,19 +322,31 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
         setMessages((m) => [...m, { from: 'agent', text: cfg.questions[next].text }]);
         setStep(next);
       } else {
-        // finish — generate plan
-        setMessages((m) => [...m, { from: 'agent', text: 'Perfetto, ho tutte le informazioni necessarie. Sto elaborando il piano personalizzato... 🧠' }]);
-        setTimeout(() => {
-          const plan = type === 'scheda'
-            ? generateScheda(newAnswers, member.name)
-            : generateDieta(newAnswers, member.name);
-          const date = new Date().toLocaleDateString('it-IT');
-          localStorage.setItem(`oxy_${type}_${member.id}`, JSON.stringify({ plan, date, answers: newAnswers }));
-          setGenerated(plan);
-          setMessages((m) => [...m, { from: 'agent', text: '✅ Piano generato e salvato nel profilo del socio.' }]);
-        }, 1400);
+        setMessages((m) => [...m, { from: 'agent', text: 'Perfetto, ho tutte le informazioni. Sto elaborando il piano personalizzato...' }]);
+        runGeneration(newAnswers);
       }
-    }, 700);
+    }, 600);
+  };
+
+  const validateAndSend = () => {
+    const planToSave = draft.trim();
+    if (!planToSave) return;
+    const date = new Date().toLocaleDateString('it-IT');
+    const record: PlanRecord = {
+      date,
+      timestamp: Date.now(),
+      plan: planToSave,
+      answers,
+      source: hasApiKey() ? 'ai' : 'template',
+    };
+    saveToHistory(type, member.id, record);
+    pushNotification(member.id, {
+      type,
+      title: type === 'scheda' ? 'Nuova scheda disponibile' : 'Nuova dieta disponibile',
+      body: `Il tuo coach ha pubblicato una nuova ${type === 'scheda' ? 'scheda di allenamento' : 'dieta'}. Aprila per consultarla.`,
+      date,
+    });
+    navigate(`/admin/membro/${member.id}`);
   };
 
   const q = cfg.questions[step];
@@ -286,7 +379,7 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
           background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.3)',
           borderRadius: '10px', padding: '6px 10px', color: '#fff',
           fontSize: '12px', cursor: 'pointer', fontWeight: 700,
-        }}>←</button>
+        }}>Indietro</button>
         <div>
           <div style={{ fontSize: '14px', fontWeight: 800 }}>{cfg.title}</div>
           <div style={{ fontSize: '10px', opacity: 0.85, marginTop: '2px' }}>{cfg.subtitle}</div>
@@ -331,6 +424,12 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
           </div>
         )}
 
+        {error && (
+          <div style={{ fontSize: '11px', color: '#fca5a5', padding: '8px 12px', border: '1px solid #7f1d1d', borderRadius: 8, margin: '8px 0' }}>
+            Avviso: {error}. È stato utilizzato il generatore locale di fallback.
+          </div>
+        )}
+
         {generated && (
           <div style={{
             marginTop: '16px',
@@ -340,20 +439,43 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
             boxShadow: `0 4px 20px ${cfg.accent}55`,
           }}>
             <div style={{ fontSize: '12px', fontWeight: 800, color: cfg.accent, marginBottom: '8px' }}>
-              📄 PIANO GENERATO
+              PIANO GENERATO — MODIFICABILE
             </div>
-            <pre style={{
-              whiteSpace: 'pre-wrap', fontFamily: 'inherit',
-              fontSize: '11px', lineHeight: 1.55, margin: 0,
-              color: 'rgba(255,255,255,0.9)',
-            }}>{generated}</pre>
-            <button onClick={() => navigate(`/admin/membro/${member.id}`)} style={{
-              marginTop: '14px', width: '100%', padding: '12px',
-              background: `linear-gradient(135deg, ${cfg.accent}, ${cfg.accent2})`,
-              border: `1px solid ${cfg.accent}`, borderRadius: '10px',
-              color: '#fff', fontWeight: 800, fontSize: '12px', cursor: 'pointer',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}>✓ TORNA AL PROFILO</button>
+            <textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              spellCheck={false}
+              style={{
+                width: '100%',
+                minHeight: '320px',
+                background: 'rgba(255,255,255,0.04)',
+                border: `1px solid ${cfg.accent}55`,
+                borderRadius: '10px',
+                padding: '12px',
+                color: 'rgba(255,255,255,0.95)',
+                fontSize: '11px',
+                lineHeight: 1.55,
+                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                outline: 'none',
+                resize: 'vertical',
+              }}
+            />
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <button onClick={() => navigate(`/admin/membro/${member.id}`)} style={{
+                flex: 1, padding: '12px',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.2)', borderRadius: '10px',
+                color: '#fff', fontWeight: 700, fontSize: '12px', cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>Annulla</button>
+              <button onClick={validateAndSend} style={{
+                flex: 2, padding: '12px',
+                background: `linear-gradient(135deg, ${cfg.accent}, ${cfg.accent2})`,
+                border: `1px solid ${cfg.accent}`, borderRadius: '10px',
+                color: '#fff', fontWeight: 800, fontSize: '12px', cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>Valida e invia al socio</button>
+            </div>
           </div>
         )}
       </div>
@@ -397,9 +519,9 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
                 padding: '12px 18px',
                 background: `linear-gradient(135deg, ${cfg.accent}, ${cfg.accent2})`,
                 border: `1px solid ${cfg.accent}`, borderRadius: '12px',
-                color: '#fff', fontSize: '14px', fontWeight: 800, cursor: 'pointer',
+                color: '#fff', fontSize: '13px', fontWeight: 800, cursor: 'pointer',
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}>➤</button>
+              }}>Invia</button>
             </form>
           )}
         </div>
