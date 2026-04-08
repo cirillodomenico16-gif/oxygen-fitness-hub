@@ -249,7 +249,7 @@ const UserHome: React.FC = () => {
         </div>
         <div style={statCardStyle}>
           <p style={statValueStyle}>87%</p>
-          <p style={statLabelStyle}>Ob. Mensile</p>
+          <p style={statLabelStyle}>Ob. Settimanale</p>
         </div>
         <div style={statCardStyle}>
           <p style={statValueStyle}>4.2<span style={{ fontSize: '18px' }}>k</span></p>
