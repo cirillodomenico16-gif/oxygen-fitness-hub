@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PHOTOS } from '../constants';
 
 interface Exercise {
@@ -20,7 +21,13 @@ interface DayWorkout {
 }
 
 const SchedaPage: React.FC = () => {
+  const navigate = useNavigate();
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
+
+  const handleWorkoutClick = (workout: DayWorkout) => {
+    if (workout.isRest) return;
+    navigate('/allenamento', { state: { workoutType: workout.type, day: workout.day } });
+  };
 
   const getWeekDates = (offset: number) => {
     const today = new Date(2026, 3, 3); // April 3, 2026
@@ -331,6 +338,7 @@ const SchedaPage: React.FC = () => {
         {workouts.map((workout, index) => (
           <div
             key={index}
+            onClick={() => handleWorkoutClick(workout)}
             style={{
               background: 'rgba(17,24,39,0.85)',
               borderRadius: '16px',
@@ -338,7 +346,7 @@ const SchedaPage: React.FC = () => {
               border: '1px solid rgba(107,114,128,0.2)',
               borderLeft: `4px solid ${workout.borderColor}`,
               transition: 'all 0.3s',
-              cursor: 'pointer',
+              cursor: workout.isRest ? 'default' : 'pointer',
             }}
             onMouseOver={(e) => {
               (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';

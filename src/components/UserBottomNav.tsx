@@ -7,7 +7,7 @@ const UserBottomNav: React.FC = () => {
 
   const tabs = [
     { path: '/', label: 'Home', icon: 'house' },
-    { path: '/allenamento', label: 'Allenati', icon: 'runner' },
+    { path: '/scheda', label: 'Allenati', icon: 'runner' },
     { path: '/corsi', label: 'Corsi', icon: 'book' },
     { path: '/dieta', label: 'OXYGEN', icon: 'oxygen' },
     { path: '/profilo', label: 'Profilo', icon: 'person' },
