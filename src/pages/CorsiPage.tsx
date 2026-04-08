@@ -99,13 +99,18 @@ const intensityDot = (intensity: Intensity): string => {
 const CorsiPage: React.FC = () => {
   const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(0);
+  const [confirmCourse, setConfirmCourse] = useState<Course | null>(null);
+  const [booked, setBooked] = useState<number[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const containerStyle: React.CSSProperties = {
     backgroundColor: '#000000',
-    minHeight: '100vh',
-    padding: '8px 20px 40px 20px',
+    height: '100%',
+    padding: '8px 20px 120px 20px',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     color: 'white',
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
   };
 
   const headerStyle: React.CSSProperties = {
@@ -208,8 +213,20 @@ const CorsiPage: React.FC = () => {
     flexShrink: 0,
   };
 
-  const renderButton = (status: Status) => {
-    if (status === 'full') {
+  const renderButton = (course: Course) => {
+    const isBooked = booked.includes(course.id);
+    if (isBooked) {
+      return (
+        <button style={{
+          ...buttonBase,
+          background: 'rgba(34,197,94,0.18)',
+          color: '#22c55e',
+          border: '1px solid rgba(34,197,94,0.4)',
+          cursor: 'default',
+        }}>PRENOTATO</button>
+      );
+    }
+    if (course.status === 'full') {
       return (
         <button style={{
           ...buttonBase,
@@ -219,24 +236,26 @@ const CorsiPage: React.FC = () => {
         }}>COMPLETO</button>
       );
     }
-    if (status === 'almost_full') {
-      return (
-        <button style={{
-          ...buttonBase,
-          background: 'linear-gradient(180deg, #fb923c, #f97316)',
-          color: 'white',
-          boxShadow: '0 4px 14px rgba(249,115,22,0.4)',
-        }}>PRENOTA</button>
-      );
-    }
+    const isAlmostFull = course.status === 'almost_full';
     return (
-      <button style={{
-        ...buttonBase,
-        background: 'linear-gradient(180deg, #ef4444, #e53935)',
-        color: 'white',
-        boxShadow: '0 4px 14px rgba(229,57,53,0.45)',
-      }}>PRENOTA</button>
+      <button
+        onClick={() => setConfirmCourse(course)}
+        style={{
+          ...buttonBase,
+          background: isAlmostFull ? 'linear-gradient(180deg, #fb923c, #f97316)' : 'linear-gradient(180deg, #ef4444, #e53935)',
+          color: 'white',
+          boxShadow: isAlmostFull ? '0 4px 14px rgba(249,115,22,0.4)' : '0 4px 14px rgba(229,57,53,0.45)',
+        }}
+      >PRENOTA</button>
     );
+  };
+
+  const handleConfirm = () => {
+    if (!confirmCourse) return;
+    setBooked((prev) => [...prev, confirmCourse.id]);
+    setConfirmCourse(null);
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 2200);
   };
 
   return (
@@ -245,6 +264,14 @@ const CorsiPage: React.FC = () => {
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
         }
       `}</style>
 
@@ -336,9 +363,157 @@ const CorsiPage: React.FC = () => {
               )}
             </div>
           </div>
-          {renderButton(c.status)}
+          {renderButton(c)}
         </div>
       ))}
+
+      {/* Confirm Modal */}
+      {confirmCourse && (
+        <div
+          onClick={() => setConfirmCourse(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            animation: 'fadeIn 0.25s ease-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%',
+              maxWidth: '430px',
+              background: 'linear-gradient(180deg, #1a0608 0%, #0a0203 100%)',
+              borderTop: '1px solid rgba(229,57,53,0.35)',
+              borderRadius: '28px 28px 0 0',
+              padding: '24px 22px 32px 22px',
+              animation: 'slideUp 0.35s cubic-bezier(.2,.8,.2,1)',
+              boxShadow: '0 -20px 60px rgba(229,57,53,0.25)',
+            }}
+          >
+            <div style={{
+              width: '44px',
+              height: '4px',
+              background: 'rgba(255,255,255,0.2)',
+              borderRadius: '999px',
+              margin: '0 auto 20px auto',
+            }} />
+
+            <p style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              color: '#ff5252',
+              textTransform: 'uppercase',
+              letterSpacing: '1.5px',
+              margin: '0 0 8px 0',
+              textAlign: 'center',
+            }}>Conferma Prenotazione</p>
+
+            <h2 style={{
+              fontSize: '26px',
+              fontWeight: 800,
+              color: 'white',
+              margin: '0 0 22px 0',
+              textAlign: 'center',
+              letterSpacing: '-0.5px',
+            }}>{confirmCourse.name}</h2>
+
+            <div style={{
+              backgroundColor: 'rgba(229,57,53,0.08)',
+              border: '1px solid rgba(229,57,53,0.25)',
+              borderRadius: '16px',
+              padding: '18px 16px',
+              marginBottom: '22px',
+            }}>
+              {[
+                { label: 'Orario', value: `${confirmCourse.time} · ${confirmCourse.duration}` },
+                { label: 'Sala', value: confirmCourse.room },
+                { label: 'Istruttore', value: confirmCourse.instructor },
+                { label: 'Intensità', value: confirmCourse.intensity },
+                { label: 'Posti', value: `${confirmCourse.current}/${confirmCourse.capacity}` },
+              ].map((row, idx, arr) => (
+                <div key={row.label} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '10px 0',
+                  borderBottom: idx < arr.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                }}>
+                  <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>{row.label}</span>
+                  <span style={{ fontSize: '14px', color: 'white', fontWeight: 700 }}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setConfirmCourse(null)}
+                style={{
+                  flex: 1,
+                  padding: '16px',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: 'white',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '14px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >Annulla</button>
+              <button
+                onClick={handleConfirm}
+                style={{
+                  flex: 1.4,
+                  padding: '16px',
+                  background: 'linear-gradient(180deg, #ef4444, #e53935)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '14px',
+                  fontSize: '14px',
+                  fontWeight: 800,
+                  letterSpacing: '0.5px',
+                  cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  boxShadow: '0 8px 24px rgba(229,57,53,0.5)',
+                }}
+              >CONFERMA</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success toast */}
+      {showSuccess && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'linear-gradient(180deg, #22c55e, #16a34a)',
+          color: 'white',
+          padding: '14px 22px',
+          borderRadius: '14px',
+          fontSize: '14px',
+          fontWeight: 700,
+          zIndex: 200,
+          boxShadow: '0 10px 30px rgba(34,197,94,0.4)',
+          animation: 'fadeIn 0.3s ease-out',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Prenotazione confermata!
+        </div>
+      )}
     </div>
   );
 };
