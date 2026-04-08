@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const COURSE_TYPES = ['CrossFit Extreme', 'Yoga Flow', 'HIIT Blast', 'Boxing Cardio', 'Pilates', 'Spinning', 'Zumba', 'Functional Training', 'Pump', 'Stretching'];
+const ROOMS = ['Sala A', 'Sala B', 'Sala C', 'Sala Pesi', 'Sala Spin'];
+const TRAINERS = ['Luca Moretti', 'Anna Costa', 'Giulio Ferri', 'Sara Bianchi', 'Matteo Rinaldi'];
+const DURATIONS = ['30 min', '45 min', '60 min', '75 min', '90 min'];
 
 interface CourseBlock {
   id: number;
@@ -14,7 +20,7 @@ interface CourseBlock {
   waiting: number;
 }
 
-const COURSES: CourseBlock[] = [
+const INITIAL_COURSES: CourseBlock[] = [
   { id: 1, day: 0, startHour: 7, duration: 1, name: 'CrossFit Extreme', room: 'Sala A', coach: 'Luca', color: 'red', enrolled: 14, capacity: 20, waiting: 3 },
   { id: 2, day: 0, startHour: 10, duration: 1, name: 'Yoga Flow', room: 'Sala A', coach: 'Coach', color: 'red', enrolled: 12, capacity: 15, waiting: 0 },
   { id: 3, day: 2, startHour: 7, duration: 2, name: 'HIIT Blast', room: 'Sala A', coach: 'Coach', color: 'red', enrolled: 18, capacity: 20, waiting: 2 },
@@ -46,9 +52,41 @@ const AVATARS = [
 ];
 
 const AdminCalendar: React.FC = () => {
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState<CourseBlock[]>(INITIAL_COURSES);
   const [selected, setSelected] = useState<number | null>(1);
+  const [showNew, setShowNew] = useState(false);
+  const [editCourse, setEditCourse] = useState<CourseBlock | null>(null);
+  const [confirmCancel, setConfirmCancel] = useState<CourseBlock | null>(null);
+  const [form, setForm] = useState({ tipo: COURSE_TYPES[0], giorno: 'Lun', orario: '10:00', durata: '60 min', pt: TRAINERS[0], sala: ROOMS[0], capacita: '15' });
+  const [toast, setToast] = useState<string | null>(null);
 
-  const course = COURSES.find((c) => c.id === selected);
+  const saveEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editCourse) return;
+    setCourses(courses.map((c) => c.id === editCourse.id ? editCourse : c));
+    setToast(`✅ Corso "${editCourse.name}" modificato`);
+    setEditCourse(null);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const cancelLesson = () => {
+    if (!confirmCancel) return;
+    setCourses(courses.filter((c) => c.id !== confirmCancel.id));
+    setToast(`❌ Lezione "${confirmCancel.name}" annullata`);
+    if (selected === confirmCancel.id) setSelected(null);
+    setConfirmCancel(null);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowNew(false);
+    setToast(`✅ Corso "${form.tipo}" creato per ${form.giorno} ${form.orario}`);
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const course = courses.find((c) => c.id === selected);
 
   const rowH = 48;
   const colW = `calc((100% - 52px) / 7)`;
@@ -153,7 +191,7 @@ const AdminCalendar: React.FC = () => {
         ))}
 
         {/* Course blocks — absolute positioned inside */}
-        {COURSES.map((c) => {
+        {courses.map((c) => {
           const topOffset = 6 + (c.startHour - 6) * rowH;
           const leftPct = `calc(52px + ${c.day} * ${colW} + 2px)`;
           const widthCalc = `calc(${colW} - 4px)`;
@@ -193,23 +231,25 @@ const AdminCalendar: React.FC = () => {
         })}
       </div>
 
-      {/* New course button */}
-      <button style={{
-        width: '100%',
-        padding: '14px',
+      {/* Action buttons */}
+      <button onClick={() => setShowNew(true)} style={{
+        width: '100%', padding: '14px',
         background: 'linear-gradient(180deg, #ef4444, #e53935)',
-        border: 'none',
-        borderRadius: '999px',
-        color: 'white',
-        fontSize: '14px',
-        fontWeight: 800,
-        cursor: 'pointer',
+        border: 'none', borderRadius: '999px',
+        color: 'white', fontSize: '14px', fontWeight: 800, cursor: 'pointer',
         boxShadow: '0 0 26px rgba(229,57,53,0.6)',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        marginBottom: '16px',
-      }}>
-        + Nuovo Corso
-      </button>
+        fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '10px',
+      }}>+ Nuovo Corso</button>
+
+      <button onClick={() => navigate('/admin/calendario/agent-programmazione')} style={{
+        width: '100%', padding: '14px',
+        background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+        border: '1px solid #a78bfa', borderRadius: '999px',
+        color: 'white', fontSize: '13px', fontWeight: 800, cursor: 'pointer',
+        boxShadow: '0 0 26px rgba(139,92,246,0.55)',
+        fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '16px',
+        letterSpacing: '0.3px',
+      }}>🤖 GENERA PROGRAMMAZIONE AI</button>
 
       {/* Course detail modal/card */}
       {course && (
@@ -269,38 +309,253 @@ const AdminCalendar: React.FC = () => {
               👥 {course.waiting} in lista d'attesa
             </div>
           )}
-          <button style={{
-            width: '100%',
-            padding: '12px',
+          <button onClick={() => setEditCourse({ ...course })} style={{
+            width: '100%', padding: '12px',
             background: 'rgba(255,255,255,0.15)',
             border: '1px solid rgba(255,255,255,0.25)',
-            borderRadius: '10px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            marginBottom: '8px',
+            borderRadius: '10px', color: 'white',
+            fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+            marginBottom: '8px', fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}>✏️ Modifica Corso</button>
+          <button onClick={() => setConfirmCancel(course)} style={{
+            width: '100%', padding: '8px',
+            background: 'transparent', border: 'none',
+            color: '#ff5252', fontSize: '13px', fontWeight: 800, cursor: 'pointer',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}>❌ Annulla Lezione</button>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '100px', left: '50%', transform: 'translateX(-50%)',
+          background: 'linear-gradient(135deg,#ef4444,#b71c1c)', color: '#fff',
+          padding: '12px 20px', borderRadius: '12px', fontSize: '12px', fontWeight: 800,
+          boxShadow: '0 8px 24px rgba(229,57,53,0.6)', zIndex: 300,
+          border: '1px solid #ff5252', maxWidth: '90%', textAlign: 'center',
+        }}>{toast}</div>
+      )}
+
+      {/* Edit Course Modal */}
+      {editCourse && (
+        <div onClick={() => setEditCourse(null)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.78)',
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          zIndex: 220, backdropFilter: 'blur(4px)',
+        }}>
+          <form onClick={(e) => e.stopPropagation()} onSubmit={saveEdit} style={{
+            width: '100%', maxWidth: '430px', background: '#0a0a0a',
+            border: '1.5px solid rgba(229,57,53,0.6)',
+            borderRadius: '24px 24px 0 0', padding: '22px 22px 26px',
+            boxShadow: '0 -10px 40px rgba(229,57,53,0.4)',
+            animation: 'slideUp 0.3s ease-out',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            maxHeight: '85vh', overflowY: 'auto',
+          }}>
+            <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '999px', margin: '0 auto 14px' }} />
+            <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px', color: '#ff5252' }}>✏️ Modifica Corso</h2>
+            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', margin: '0 0 18px' }}>{editCourse.name}</p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+              <div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>GIORNO</div>
+                <select value={editCourse.day} onChange={(e) => setEditCourse({ ...editCourse, day: parseInt(e.target.value) })} style={modalInput}>
+                  {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].map((d, i) => <option key={d} value={i} style={{ background: '#0a0a0a' }}>{d}</option>)}
+                </select>
+              </div>
+              <div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>ORARIO</div>
+                <select value={editCourse.startHour} onChange={(e) => setEditCourse({ ...editCourse, startHour: parseInt(e.target.value) })} style={modalInput}>
+                  {Array.from({length:16},(_,i)=>i+6).map((h) => <option key={h} value={h} style={{ background: '#0a0a0a' }}>{String(h).padStart(2,'0')}:00</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>SALA</div>
+              <select value={editCourse.room} onChange={(e) => setEditCourse({ ...editCourse, room: e.target.value })} style={modalInput}>
+                {ROOMS.map((r) => <option key={r} style={{ background: '#0a0a0a' }}>{r}</option>)}
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '12px' }}>
+              <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>PERSONAL TRAINER</div>
+              <select value={editCourse.coach} onChange={(e) => setEditCourse({ ...editCourse, coach: e.target.value })} style={modalInput}>
+                {TRAINERS.map((t) => <option key={t} style={{ background: '#0a0a0a' }}>{t}</option>)}
+              </select>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
+              <div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>DURATA (ore)</div>
+                <select value={editCourse.duration} onChange={(e) => setEditCourse({ ...editCourse, duration: parseInt(e.target.value) })} style={modalInput}>
+                  {[1,2,3].map((d) => <option key={d} value={d} style={{ background: '#0a0a0a' }}>{d}h</option>)}
+                </select>
+              </div>
+              <div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>CAPACITÀ</div>
+                <input type="number" min="1" value={editCourse.capacity} onChange={(e) => setEditCourse({ ...editCourse, capacity: parseInt(e.target.value) || 1 })} style={modalInput} />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="button" onClick={() => setEditCourse(null)} style={{
+                flex: 1, padding: '13px', background: 'transparent',
+                border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>Annulla</button>
+              <button type="submit" style={{
+                flex: 2, padding: '13px',
+                background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                border: '1px solid #ff5252', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
+                cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>💾 SALVA MODIFICHE</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Confirm Cancel */}
+      {confirmCancel && (
+        <div onClick={() => setConfirmCancel(null)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.82)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 230, backdropFilter: 'blur(4px)', padding: '20px',
+        }}>
+          <div onClick={(e) => e.stopPropagation()} style={{
+            width: '100%', maxWidth: '360px', background: '#0a0a0a',
+            border: '1.5px solid rgba(239,68,68,0.6)', borderRadius: '18px',
+            padding: '22px', textAlign: 'center',
+            boxShadow: '0 0 40px rgba(239,68,68,0.5)',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}>
-            Modifica Corso
-          </button>
-          <button style={{
-            width: '100%',
-            padding: '8px',
-            background: 'transparent',
-            border: 'none',
-            color: '#ff5252',
-            fontSize: '13px',
-            fontWeight: 800,
-            cursor: 'pointer',
+            <div style={{ fontSize: '36px', marginBottom: '6px' }}>⚠️</div>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 8px', color: '#ff5252' }}>Annullare la lezione?</h3>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', margin: '0 0 18px', lineHeight: 1.5 }}>
+              Stai per annullare <b>{confirmCancel.name}</b> del giorno {DAYS[confirmCancel.day].lbl} {String(confirmCancel.startHour).padStart(2,'0')}:00. {confirmCancel.enrolled} soci verranno notificati.
+            </p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => setConfirmCancel(null)} style={{
+                flex: 1, padding: '12px', background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.2)', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>No, torna indietro</button>
+              <button onClick={cancelLesson} style={{
+                flex: 1, padding: '12px',
+                background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                border: '1px solid #ff5252', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 800, cursor: 'pointer',
+                boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>Sì, annulla</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Course Modal */}
+      {showNew && (
+        <div onClick={() => setShowNew(false)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.78)',
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          zIndex: 200, backdropFilter: 'blur(4px)',
+        }}>
+          <form onClick={(e) => e.stopPropagation()} onSubmit={handleCreate} style={{
+            width: '100%', maxWidth: '430px',
+            background: '#0a0a0a',
+            border: '1.5px solid rgba(229,57,53,0.6)',
+            borderRadius: '24px 24px 0 0',
+            padding: '22px 22px 26px',
+            boxShadow: '0 -10px 40px rgba(229,57,53,0.4)',
+            animation: 'slideUp 0.3s ease-out',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
+            maxHeight: '85vh', overflowY: 'auto',
           }}>
-            Annulla Lezione
-          </button>
+            <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '999px', margin: '0 auto 14px' }} />
+            <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px', color: '#ff5252' }}>+ Nuovo Corso</h2>
+            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', margin: '0 0 18px' }}>Compila i dati per pianificare il corso</p>
+
+            {[
+              { k: 'tipo', l: 'TIPO CORSO', opts: COURSE_TYPES },
+              { k: 'giorno', l: 'GIORNO', opts: ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'] },
+              { k: 'durata', l: 'DURATA', opts: DURATIONS },
+              { k: 'pt', l: 'PERSONAL TRAINER', opts: TRAINERS },
+              { k: 'sala', l: 'SALA', opts: ROOMS },
+            ].map((f) => (
+              <div key={f.k} style={{ marginBottom: '12px' }}>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>{f.l}</div>
+                <select
+                  value={(form as any)[f.k]}
+                  onChange={(e) => setForm({ ...form, [f.k]: e.target.value })}
+                  style={{
+                    width: '100%', padding: '12px 14px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1.5px solid rgba(229,57,53,0.4)', borderRadius: '12px',
+                    color: '#fff', fontSize: '13px', outline: 'none',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif", boxSizing: 'border-box',
+                  }}>
+                  {f.opts.map((o) => <option key={o} style={{ background: '#0a0a0a' }}>{o}</option>)}
+                </select>
+              </div>
+            ))}
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
+              <div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>ORARIO</div>
+                <input type="time" value={form.orario} onChange={(e) => setForm({ ...form, orario: e.target.value })} style={{
+                  width: '100%', padding: '12px 14px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1.5px solid rgba(229,57,53,0.4)', borderRadius: '12px',
+                  color: '#fff', fontSize: '13px', outline: 'none',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", boxSizing: 'border-box',
+                }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.55)', letterSpacing: '1px', fontWeight: 700, marginBottom: '4px' }}>CAPACITÀ</div>
+                <input type="number" min="1" value={form.capacita} onChange={(e) => setForm({ ...form, capacita: e.target.value })} style={{
+                  width: '100%', padding: '12px 14px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1.5px solid rgba(229,57,53,0.4)', borderRadius: '12px',
+                  color: '#fff', fontSize: '13px', outline: 'none',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", boxSizing: 'border-box',
+                }} />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="button" onClick={() => setShowNew(false)} style={{
+                flex: 1, padding: '13px', background: 'transparent',
+                border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>Annulla</button>
+              <button type="submit" style={{
+                flex: 2, padding: '13px',
+                background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                border: '1px solid #ff5252', borderRadius: '12px',
+                color: '#fff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.5px',
+                cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>✅ CREA CORSO</button>
+            </div>
+          </form>
         </div>
       )}
     </div>
   );
+};
+
+const modalInput: React.CSSProperties = {
+  width: '100%', padding: '12px 14px',
+  background: 'rgba(255,255,255,0.04)',
+  border: '1.5px solid rgba(229,57,53,0.4)', borderRadius: '12px',
+  color: '#fff', fontSize: '13px', outline: 'none',
+  fontFamily: "'Plus Jakarta Sans', sans-serif", boxSizing: 'border-box',
 };
 
 const navBtn: React.CSSProperties = {

@@ -143,25 +143,9 @@ const AdminMembroDetail: React.FC = () => {
             {dieta ? (
               <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{dieta.plan}</pre>
             ) : (
-              <div style={{ fontSize: '12px', lineHeight: 1.7, color: 'rgba(255,255,255,0.85)' }}>
-                <div style={{ marginBottom: '10px' }}><b style={{ color: '#4ade80' }}>Target calorico:</b> 2200 kcal</div>
-                <div style={{ marginBottom: '10px' }}><b style={{ color: '#4ade80' }}>Macro:</b> P 150g · C 240g · G 70g</div>
-                <div style={{ marginBottom: '10px' }}><b style={{ color: '#4ade80' }}>Pasti:</b> 5 al giorno</div>
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', marginTop: '6px' }}>
-                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🌅 Colazione</b><br />
-                  Avena 60g · Latte 250ml · Frutti di bosco · Mandorle<br /><br />
-                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🍎 Spuntino</b><br />
-                  Yogurt greco · Miele · 1 frutto<br /><br />
-                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🍽 Pranzo</b><br />
-                  Pollo 150g · Riso 80g · Verdure grigliate<br /><br />
-                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🥪 Merenda</b><br />
-                  Pane integrale · Bresaola · 1 frutto<br /><br />
-                  <b style={{ color: '#4ade80', fontSize: '11px' }}>🌙 Cena</b><br />
-                  Salmone 150g · Patate dolci · Insalata
-                </div>
-                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(34,197,94,0.08)', borderRadius: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>
-                  💡 Genera una dieta personalizzata con il Nutrizionista AI.
-                </div>
+              <div style={{ textAlign: 'center', padding: '28px 0', color: 'rgba(255,255,255,0.55)', fontSize: '13px' }}>
+                Nessuna dieta generata.<br />
+                <span style={{ fontSize: '11px', opacity: 0.7 }}>Clicca "GENERA DIETA" per crearne una personalizzata.</span>
               </div>
             )}
           </>
