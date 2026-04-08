@@ -176,28 +176,20 @@ const UserHome: React.FC = () => {
         padding: '14px 0 10px 0',
         animation: 'fadeInUp 0.5s ease-out',
       }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-          <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 35%, #ff5252, #e53935 60%, #8b0000)',
-            boxShadow: '0 0 20px rgba(229,57,53,0.7), inset 0 0 8px rgba(0,0,0,0.4)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 900,
-            fontSize: '20px',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>O</div>
-          <span style={{
-            fontSize: '14px',
-            fontWeight: 800,
-            color: '#ff5252',
-            marginLeft: '2px',
-          }}>2</span>
-        </div>
+        <div style={{
+          width: 140,
+          height: 36,
+          backgroundColor: '#ef4444',
+          WebkitMaskImage: "url('https://oxygenfitness.co.uk/storage/2025/09/Oxygen-Full-White-Grey-scaled.png')",
+          maskImage: "url('https://oxygenfitness.co.uk/storage/2025/09/Oxygen-Full-White-Grey-scaled.png')",
+          WebkitMaskRepeat: 'no-repeat',
+          maskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'left center',
+          maskPosition: 'left center',
+          WebkitMaskSize: 'contain',
+          maskSize: 'contain',
+          filter: 'drop-shadow(0 0 10px rgba(229,57,53,0.55))',
+        }} />
         <div
           onClick={() => navigate('/profilo')}
           style={{

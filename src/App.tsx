@@ -66,10 +66,21 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
       {/* Left: O2 Logo */}
       <div
         onClick={() => navigate(isAdminRoute ? '/admin' : '/')}
-        style={{ fontSize: '24px', fontWeight: '700', color: '#e53935', letterSpacing: '-1px', cursor: 'pointer' }}
-      >
-        O<span style={{ fontSize: '16px', verticalAlign: 'sub' }}>2</span>
-      </div>
+        style={{
+          width: 130,
+          height: 32,
+          cursor: 'pointer',
+          backgroundColor: '#e53935',
+          WebkitMaskImage: "url('https://oxygenfitness.co.uk/storage/2025/09/Oxygen-Full-White-Grey-scaled.png')",
+          maskImage: "url('https://oxygenfitness.co.uk/storage/2025/09/Oxygen-Full-White-Grey-scaled.png')",
+          WebkitMaskRepeat: 'no-repeat',
+          maskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'left center',
+          maskPosition: 'left center',
+          WebkitMaskSize: 'contain',
+          maskSize: 'contain',
+        }}
+      />
 
       {/* Right: User Avatar with dropdown */}
       <div ref={wrapperRef} style={{ position: 'relative' }}>
