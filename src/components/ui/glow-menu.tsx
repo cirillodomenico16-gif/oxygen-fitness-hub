@@ -15,7 +15,7 @@ export interface GlowMenuItem {
   iconColor: string;
 }
 
-interface MenuBarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+interface MenuBarProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration' | 'onDrag' | 'onDragStart' | 'onDragEnd'> {
   items: GlowMenuItem[];
   activeItem?: string;
   onItemClick?: (label: string) => void;
