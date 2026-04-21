@@ -23,6 +23,49 @@ const AdminMembroDetail: React.FC = () => {
   const scheda = loadPlan(`oxy_scheda_${member.id}`);
   const dieta = loadPlan(`oxy_dieta_${member.id}`);
 
+  // Parse free-text AI plan into structured days+exercises
+  type ParsedExercise = { name: string; sets?: string; reps?: string; rest?: string; raw: string };
+  type ParsedDay = { title: string; exercises: ParsedExercise[] };
+  type ParsedPlan = { meta: { label: string; value: string }[]; days: ParsedDay[] };
+
+  const parsePlanText = (text: string): ParsedPlan => {
+    const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+    const meta: { label: string; value: string }[] = [];
+    const days: ParsedDay[] = [];
+    let current: ParsedDay | null = null;
+    const dayRegex = /^(GIORNO\s*\d+|LUN(?:EDÌ)?|MAR(?:TEDÌ)?|MER(?:COLEDÌ)?|GIO(?:VEDÌ)?|VEN(?:ERDÌ)?|SAB(?:ATO)?|DOM(?:ENICA)?)/i;
+    const exerciseRegex = /^[-•·*]\s*(.+)/;
+    const metaRegex = /^([A-Za-zÀ-ÿ ]{2,30}):\s*(.+)$/;
+    const headerSkip = /^(SCHEDA|━+|─+|═+|---+|ESERCIZI)/i;
+
+    for (const line of lines) {
+      if (headerSkip.test(line)) continue;
+      if (dayRegex.test(line)) {
+        current = { title: line.replace(/^[-•·*]\s*/, ''), exercises: [] };
+        days.push(current);
+        continue;
+      }
+      const exMatch = line.match(exerciseRegex);
+      if (exMatch && current) {
+        const raw = exMatch[1];
+        // try patterns like "Name: 4x8-10 (90s rec)" or "Name 4x8-10"
+        const m = raw.match(/^(.+?)[:\s]+(\d+)\s*[x×]\s*([\w\-–]+)(?:\s*\(([^)]+)\))?\s*$/i);
+        if (m) {
+          current.exercises.push({ name: m[1].trim().replace(/[:.,]$/, ''), sets: m[2], reps: m[3], rest: m[4], raw });
+        } else {
+          current.exercises.push({ name: raw, raw });
+        }
+        continue;
+      }
+      if (current) continue; // ignore stray text inside a day
+      const metaMatch = line.match(metaRegex);
+      if (metaMatch && days.length === 0) {
+        meta.push({ label: metaMatch[1].trim(), value: metaMatch[2].trim() });
+      }
+    }
+    return { meta, days };
+  };
+
   return (
     <div className="corsi-scroll" style={{
       minHeight: '100vh', backgroundColor: '#000',
