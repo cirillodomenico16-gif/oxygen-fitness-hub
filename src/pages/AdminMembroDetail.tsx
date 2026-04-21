@@ -108,11 +108,86 @@ const AdminMembroDetail: React.FC = () => {
         {tab === 'scheda' ? (
           <>
             <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px', color: '#ff5252' }}> Dettaglio Scheda</div>
-            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
-              {scheda ? `Generata il ${scheda.date} dal Coach AI` : 'Scheda base attiva · non ancora personalizzata'}
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '14px' }}>
+              {scheda
+                ? `Generata il ${scheda.date} · ${scheda.source === 'manuale' ? 'Scheda manuale' : 'Coach AI'}`
+                : 'Scheda base attiva · non ancora personalizzata'}
             </div>
             {scheda ? (
-              <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{scheda.plan}</pre>
+              scheda.exercises && Array.isArray(scheda.exercises) ? (
+                <>
+                  {/* Header info: titolo / obiettivo / frequenza */}
+                  <div style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1px solid rgba(229,57,53,0.25)',
+                    borderRadius: '12px', padding: '12px 14px', marginBottom: '12px',
+                  }}>
+                    {scheda.title && <div style={{ fontSize: '13px', fontWeight: 800, marginBottom: '8px' }}>{scheda.title}</div>}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      {scheda.objective && (
+                        <div>
+                          <div style={{ fontSize: '9px', letterSpacing: '1px', color: 'rgba(255,255,255,0.5)', fontWeight: 700 }}>OBIETTIVO</div>
+                          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>{scheda.objective}</div>
+                        </div>
+                      )}
+                      {scheda.frequency && (
+                        <div>
+                          <div style={{ fontSize: '9px', letterSpacing: '1px', color: 'rgba(255,255,255,0.5)', fontWeight: 700 }}>FREQUENZA</div>
+                          <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>{scheda.frequency} giorni / sett.</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Exercise cards */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {scheda.exercises.map((ex: any, i: number) => (
+                      <div key={ex.id || i} style={{
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(229,57,53,0.3)',
+                        borderRadius: '12px', padding: '12px 14px',
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                          <div style={{
+                            width: '24px', height: '24px', borderRadius: '8px',
+                            background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '11px', fontWeight: 800,
+                          }}>{i + 1}</div>
+                          <div style={{ fontSize: '13px', fontWeight: 800, flex: 1 }}>{ex.name}</div>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                          <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '8px', padding: '6px 8px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '8px', letterSpacing: '1px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>SERIE</div>
+                            <div style={{ fontSize: '14px', fontWeight: 800, color: '#ff5252', marginTop: '2px' }}>{ex.sets}</div>
+                          </div>
+                          <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '8px', padding: '6px 8px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '8px', letterSpacing: '1px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>RIPETIZIONI</div>
+                            <div style={{ fontSize: '14px', fontWeight: 800, color: '#ff5252', marginTop: '2px' }}>{ex.reps}</div>
+                          </div>
+                          <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '8px', padding: '6px 8px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '8px', letterSpacing: '1px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>RECUPERO</div>
+                            <div style={{ fontSize: '14px', fontWeight: 800, color: '#ff5252', marginTop: '2px' }}>{ex.rest}</div>
+                          </div>
+                        </div>
+                        {ex.notes && (
+                          <div style={{
+                            marginTop: '8px', padding: '8px 10px',
+                            background: 'rgba(255,255,255,0.04)',
+                            borderLeft: '3px solid #ff5252',
+                            borderRadius: '6px', fontSize: '11px',
+                            color: 'rgba(255,255,255,0.75)', fontStyle: 'italic',
+                          }}>
+                            <b style={{ color: '#ff5252', fontStyle: 'normal' }}>Note:</b> {ex.notes}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{scheda.plan}</pre>
+              )
             ) : (
               <div style={{ fontSize: '12px', lineHeight: 1.7, color: 'rgba(255,255,255,0.85)' }}>
                 <div style={{ marginBottom: '10px' }}><b style={{ color: '#ff5252' }}>Obiettivo:</b> Ipertrofia generale</div>
@@ -129,7 +204,7 @@ const AdminMembroDetail: React.FC = () => {
                   Military · Alzate · Plank · Crunch
                 </div>
                 <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(239,68,68,0.08)', borderRadius: '10px', fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>
-                   Genera una scheda personalizzata con il Coach AI per risultati ottimali.
+                   Genera una scheda personalizzata con il Coach AI o crea manualmente.
                 </div>
               </div>
             )}

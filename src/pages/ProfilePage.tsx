@@ -209,19 +209,32 @@ const ProfilePage: React.FC = () => {
         }}
       >
         {[
+          { label: 'Abbonamento', icon: '💳', path: '/abbonamento', highlight: true },
           { label: 'Modifica Profilo', icon: '' },
           { label: 'Impostazioni Privacy', icon: '' },
           { label: 'Password', icon: '' },
           { label: 'Notifiche', icon: '' },
           { label: 'Chi Siamo', icon: 'ℹ' },
-        ].map((item, idx) => (
-          <button key={idx} className="profile-row" style={rowButton}>
+        ].map((item: any, idx) => (
+          <button
+            key={idx}
+            className="profile-row"
+            onClick={() => item.path && navigate(item.path)}
+            style={{
+              ...rowButton,
+              ...(item.highlight ? {
+                background: 'linear-gradient(135deg, rgba(99,91,255,0.18), rgba(229,57,53,0.12))',
+                border: '1.5px solid rgba(99,91,255,0.55)',
+                boxShadow: '0 0 20px rgba(99,91,255,0.25)',
+              } : {}),
+            }}
+          >
             <span style={{ fontSize: '18px' }}>{item.icon}</span>
             <span>{item.label}</span>
             <span
               style={{
                 marginLeft: 'auto',
-                color: '#ff5252',
+                color: item.highlight ? '#a78bfa' : '#ff5252',
                 fontSize: '18px',
                 fontWeight: 700,
               }}
