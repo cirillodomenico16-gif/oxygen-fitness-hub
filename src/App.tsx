@@ -22,6 +22,7 @@ import AgentProgrammazione from './pages/AgentProgrammazione';
 import DietaPage from './pages/DietaPage';
 import SchedaPage from './pages/SchedaPage';
 import LoginPage from './pages/LoginPage';
+import SubscriptionPage from './pages/SubscriptionPage';
 
 // Component imports
 import UserBottomNav from './components/UserBottomNav';
@@ -234,7 +235,7 @@ const App: React.FC = () => {
     navigate('/');
   };
 
-  const userRoutes = ['/', '/corsi', '/allenamento', '/progressi', '/community', '/profilo', '/dieta', '/scheda'];
+  const userRoutes = ['/', '/corsi', '/allenamento', '/progressi', '/community', '/profilo', '/dieta', '/scheda', '/abbonamento'];
   const showUserNav = userRoutes.includes(location.pathname);
   const showAdminNav = isAdminRoute;
 
@@ -275,6 +276,7 @@ const App: React.FC = () => {
           <Route path="/profilo" element={<ProfilePage />} />
           <Route path="/dieta" element={<DietaPage />} />
           <Route path="/scheda" element={<SchedaPage />} />
+          <Route path="/abbonamento" element={<SubscriptionPage />} />
 
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />
