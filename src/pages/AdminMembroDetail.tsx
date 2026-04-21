@@ -153,7 +153,7 @@ const AdminMembroDetail: React.FC = () => {
       </div>
 
       {/* Action buttons */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
         <button onClick={() => navigate(`/admin/membro/${member.id}/agent-scheda`)} style={{
           padding: '16px 8px',
           background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
@@ -161,7 +161,7 @@ const AdminMembroDetail: React.FC = () => {
           color: '#fff', fontSize: '12px', fontWeight: 800,
           cursor: 'pointer', boxShadow: '0 6px 18px rgba(229,57,53,0.5)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}> GENERA SCHEDA</button>
+        }}> SCHEDA AI</button>
         <button onClick={() => navigate(`/admin/membro/${member.id}/agent-dieta`)} style={{
           padding: '16px 8px',
           background: 'linear-gradient(135deg,#22c55e,#15803d)',
@@ -171,6 +171,17 @@ const AdminMembroDetail: React.FC = () => {
           fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}> GENERA DIETA</button>
       </div>
+      <button onClick={() => navigate(`/admin/membro/${member.id}/scheda-manuale`)} style={{
+        width: '100%',
+        padding: '14px',
+        background: 'rgba(255,255,255,0.04)',
+        border: '1.5px solid rgba(229,57,53,0.55)',
+        borderRadius: '14px',
+        color: '#fff', fontSize: '12px', fontWeight: 800,
+        cursor: 'pointer',
+        letterSpacing: '0.5px',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+      }}>✎ CREA SCHEDA MANUALE</button>
     </div>
   );
 };
