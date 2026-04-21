@@ -23,6 +23,49 @@ const AdminMembroDetail: React.FC = () => {
   const scheda = loadPlan(`oxy_scheda_${member.id}`);
   const dieta = loadPlan(`oxy_dieta_${member.id}`);
 
+  // Parse free-text AI plan into structured days+exercises
+  type ParsedExercise = { name: string; sets?: string; reps?: string; rest?: string; raw: string };
+  type ParsedDay = { title: string; exercises: ParsedExercise[] };
+  type ParsedPlan = { meta: { label: string; value: string }[]; days: ParsedDay[] };
+
+  const parsePlanText = (text: string): ParsedPlan => {
+    const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+    const meta: { label: string; value: string }[] = [];
+    const days: ParsedDay[] = [];
+    let current: ParsedDay | null = null;
+    const dayRegex = /^(GIORNO\s*\d+|LUN(?:EDÌ)?|MAR(?:TEDÌ)?|MER(?:COLEDÌ)?|GIO(?:VEDÌ)?|VEN(?:ERDÌ)?|SAB(?:ATO)?|DOM(?:ENICA)?)/i;
+    const exerciseRegex = /^[-•·*]\s*(.+)/;
+    const metaRegex = /^([A-Za-zÀ-ÿ ]{2,30}):\s*(.+)$/;
+    const headerSkip = /^(SCHEDA|━+|─+|═+|---+|ESERCIZI)/i;
+
+    for (const line of lines) {
+      if (headerSkip.test(line)) continue;
+      if (dayRegex.test(line)) {
+        current = { title: line.replace(/^[-•·*]\s*/, ''), exercises: [] };
+        days.push(current);
+        continue;
+      }
+      const exMatch = line.match(exerciseRegex);
+      if (exMatch && current) {
+        const raw = exMatch[1];
+        // try patterns like "Name: 4x8-10 (90s rec)" or "Name 4x8-10"
+        const m = raw.match(/^(.+?)[:\s]+(\d+)\s*[x×]\s*([\w\-–]+)(?:\s*\(([^)]+)\))?\s*$/i);
+        if (m) {
+          current.exercises.push({ name: m[1].trim().replace(/[:.,]$/, ''), sets: m[2], reps: m[3], rest: m[4], raw });
+        } else {
+          current.exercises.push({ name: raw, raw });
+        }
+        continue;
+      }
+      if (current) continue; // ignore stray text inside a day
+      const metaMatch = line.match(metaRegex);
+      if (metaMatch && days.length === 0) {
+        meta.push({ label: metaMatch[1].trim(), value: metaMatch[2].trim() });
+      }
+    }
+    return { meta, days };
+  };
+
   return (
     <div className="corsi-scroll" style={{
       minHeight: '100vh', backgroundColor: '#000',
@@ -185,9 +228,80 @@ const AdminMembroDetail: React.FC = () => {
                     ))}
                   </div>
                 </>
-              ) : (
-                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{scheda.plan}</pre>
-              )
+              ) : (() => {
+                const parsed = parsePlanText(String(scheda.plan || ''));
+                if (parsed.days.length === 0) {
+                  return <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', margin: 0 }}>{scheda.plan}</pre>;
+                }
+                return (
+                  <>
+                    {/* Meta header */}
+                    {parsed.meta.length > 0 && (
+                      <div style={{
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(229,57,53,0.25)',
+                        borderRadius: '12px', padding: '12px 14px', marginBottom: '12px',
+                        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px',
+                      }}>
+                        {parsed.meta.map((m, i) => (
+                          <div key={i}>
+                            <div style={{ fontSize: '9px', letterSpacing: '1px', color: 'rgba(255,255,255,0.5)', fontWeight: 700, textTransform: 'uppercase' }}>{m.label}</div>
+                            <div style={{ fontSize: '12px', fontWeight: 700, marginTop: '2px' }}>{m.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Days */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                      {parsed.days.map((d, di) => (
+                        <div key={di}>
+                          <div style={{
+                            fontSize: '11px', fontWeight: 800, color: '#ff5252',
+                            letterSpacing: '1px', marginBottom: '8px',
+                            textTransform: 'uppercase',
+                          }}>▸ {d.title}</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {d.exercises.map((ex, ei) => (
+                              <div key={ei} style={{
+                                background: 'rgba(0,0,0,0.3)',
+                                border: '1px solid rgba(229,57,53,0.3)',
+                                borderRadius: '12px', padding: '10px 12px',
+                              }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: ex.sets ? '8px' : 0 }}>
+                                  <div style={{
+                                    width: '22px', height: '22px', borderRadius: '7px',
+                                    background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: '10px', fontWeight: 800, flexShrink: 0,
+                                  }}>{ei + 1}</div>
+                                  <div style={{ fontSize: '12px', fontWeight: 700, flex: 1 }}>{ex.name}</div>
+                                </div>
+                                {(ex.sets || ex.reps || ex.rest) && (
+                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                                    <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '7px', padding: '5px 6px', textAlign: 'center' }}>
+                                      <div style={{ fontSize: '8px', letterSpacing: '1px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>SERIE</div>
+                                      <div style={{ fontSize: '13px', fontWeight: 800, color: '#ff5252' }}>{ex.sets || '—'}</div>
+                                    </div>
+                                    <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '7px', padding: '5px 6px', textAlign: 'center' }}>
+                                      <div style={{ fontSize: '8px', letterSpacing: '1px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>RIPS</div>
+                                      <div style={{ fontSize: '13px', fontWeight: 800, color: '#ff5252' }}>{ex.reps || '—'}</div>
+                                    </div>
+                                    <div style={{ background: 'rgba(229,57,53,0.08)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: '7px', padding: '5px 6px', textAlign: 'center' }}>
+                                      <div style={{ fontSize: '8px', letterSpacing: '1px', color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>REC.</div>
+                                      <div style={{ fontSize: '13px', fontWeight: 800, color: '#ff5252' }}>{ex.rest || '—'}</div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                );
+              })()
             ) : (
               <div style={{ fontSize: '12px', lineHeight: 1.7, color: 'rgba(255,255,255,0.85)' }}>
                 <div style={{ marginBottom: '10px' }}><b style={{ color: '#ff5252' }}>Obiettivo:</b> Ipertrofia generale</div>
