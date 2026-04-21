@@ -14,6 +14,7 @@ import AdminCalendar from './pages/AdminCalendar';
 import AdminSettings from './pages/AdminSettings';
 import AdminMembri from './pages/AdminMembri';
 import AdminMembroDetail from './pages/AdminMembroDetail';
+import AdminSchedaManuale from './pages/AdminSchedaManuale';
 import AgentChat from './pages/AgentChat';
 import AdminReport from './pages/AdminReport';
 import AdminCampagna from './pages/AdminCampagna';
@@ -281,6 +282,7 @@ const App: React.FC = () => {
           <Route path="/admin/membri" element={<AdminMembri />} />
           <Route path="/admin/membro/:id" element={<AdminMembroDetail />} />
           <Route path="/admin/membro/:id/agent-scheda" element={<AgentChat type="scheda" />} />
+          <Route path="/admin/membro/:id/scheda-manuale" element={<AdminSchedaManuale />} />
           <Route path="/admin/membro/:id/agent-dieta" element={<AgentChat type="dieta" />} />
           <Route path="/admin/calendario" element={<AdminCalendar />} />
           <Route path="/admin/calendario/agent-programmazione" element={<AgentProgrammazione />} />
