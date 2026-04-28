@@ -1,24 +1,9 @@
 import React, { useState } from 'react';
-import { getApiKey, setApiKey, hasApiKey } from '../lib/llm';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
 
 const AdminSettings: React.FC = () => {
   const [toggles, setToggles] = useState({ backup: true, email: true, maint: false });
-  const [apiKey, setApiKeyInput] = useState<string>(getApiKey() || '');
-  const [showKey, setShowKey] = useState(false);
-  const [keyStatus, setKeyStatus] = useState<string | null>(null);
 
-  const saveKey = () => {
-    setApiKey(apiKey.trim());
-    setKeyStatus(apiKey.trim() ? 'Chiave salvata. Gli agenti AI ora useranno Claude.' : 'Chiave rimossa. Gli agenti useranno il generatore locale.');
-    setTimeout(() => setKeyStatus(null), 3500);
-  };
-  const clearKey = () => {
-    setApiKey('');
-    setApiKeyInput('');
-    setKeyStatus('Chiave rimossa.');
-    setTimeout(() => setKeyStatus(null), 3000);
-  };
 
   const section = (title: string, children: React.ReactNode, delay: number) => (
     <div style={{ marginBottom: '18px', animation: `fadeInUp 0.5s ease-out ${delay}s both` }}>
