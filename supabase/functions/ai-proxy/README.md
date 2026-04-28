@@ -1,49 +1,78 @@
-# ai-proxy
+# `ai-proxy` Edge Function
 
-Edge Function that forwards browser requests to the Anthropic Messages API,
-keeping the API key server-side.
+Server-side bridge between the Oxygen Fitness Hub frontend and the
+**Lovable AI Gateway**. Keeps API credentials out of the browser and lets us
+swap models without redeploying the client.
 
-## Setup (via Lovable + Supabase)
+## How it works
 
-1. Connect Supabase to the Lovable project (Cloud panel → Connect Supabase).
-2. In Lovable chat: **"deploy edge function ai-proxy"**.
-3. Add the secret in Supabase dashboard → Project Settings → Edge Functions → Secrets:
-   - `ANTHROPIC_API_KEY` = `sk-ant-...`
-   - (optional) `ALLOWED_ORIGIN` = `https://your-app.lovable.app`
-4. Add the env var to the Lovable project:
-   - `VITE_AI_PROXY_URL` = `https://<project-ref>.functions.supabase.co/ai-proxy`
-
-After step 4 the frontend automatically uses the proxy. No code change needed.
-
-## Setup (via Supabase CLI, alternative)
-
-```bash
-supabase link --project-ref <project-ref>
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
-supabase functions deploy ai-proxy --no-verify-jwt
+```
+React client
+   |
+   | supabase.functions.invoke('ai-proxy', { body })
+   v
+Supabase Edge Function (this folder)
+   |
+   | fetch -> https://ai.gateway.lovable.dev/v1/chat/completions
+   |          Authorization: Bearer ${LOVABLE_API_KEY}
+   v
+Lovable AI Gateway -> google/gemini-2.5-pro
 ```
 
-## Request / Response
+## Request / response shapes
 
-```http
-POST /ai-proxy
-Content-Type: application/json
+The function accepts an **Anthropic-style** body so existing client code keeps
+working, and returns an **Anthropic-style** response so callers can read either
+`data.text` or `data.content[0].text`.
 
+### Request (from the client)
+
+```json
 {
-  "model": "claude-sonnet-4-5-20250929",
+  "system": "You are a helpful coach.",
+  "messages": [
+    { "role": "user", "content": "Genera una scheda settimanale." }
+  ],
   "max_tokens": 2500,
-  "system": "You are a fitness coach...",
-  "messages": [{ "role": "user", "content": "..." }]
+  "model": "google/gemini-2.5-pro"
 }
 ```
 
+`model` is optional — defaults to `google/gemini-2.5-pro`.
+
+### Response
+
 ```json
-{ "text": "...assistant reply...", "usage": { ... } }
+{
+  "text": "...",
+  "content": [{ "type": "text", "text": "..." }],
+  "usage": { "input_tokens": 123, "output_tokens": 456 }
+}
 ```
 
-## Hardening checklist (do before public launch)
+## Configuration
 
-- [ ] Remove `verify_jwt = false` from `supabase/config.toml` and check user role inside the function.
-- [ ] Set `ALLOWED_ORIGIN` to the production domain instead of `*`.
-- [ ] Add per-user rate limiting (Supabase has `Deno.env` + a `kv` you can use, or use Upstash).
-- [ ] Log requests to a Supabase table for auditing / cost tracking.
+| Secret              | Required | Description                                                |
+| ------------------- | -------- | ---------------------------------------------------------- |
+| `LOVABLE_API_KEY`   | yes      | Auto-provisioned by Lovable Cloud. Don't set it manually.  |
+| `ALLOWED_ORIGIN`    | no       | CORS origin lockdown. Defaults to `*`. Recommended in prod. |
+
+## Deploy
+
+Lovable Cloud auto-deploys on every change to this folder pushed to the
+linked branch. Manual deploy:
+
+```bash
+supabase functions deploy ai-proxy --no-verify-jwt
+```
+
+`verify_jwt` is disabled in `supabase/config.toml` because the app's own
+auth is currently client-side. Re-enable it once Supabase Auth is integrated.
+
+## Switching models
+
+Edit `DEFAULT_MODEL` in `index.ts`. Models exposed by the Lovable AI Gateway
+include `google/gemini-2.5-pro` and `openai/gpt-5` (Anthropic models are not
+currently available through the Gateway; if Claude is mandatory, swap this
+function for a direct call to `https://api.anthropic.com/v1/messages` with an
+`ANTHROPIC_API_KEY` secret).
