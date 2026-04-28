@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from '../components/NotificationBell';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
@@ -14,7 +14,8 @@ const UserHome: React.FC = () => {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     color: 'white',
     position: 'relative',
-    overflow: 'hidden',
+    overflowY: 'auto',
+    overflowX: 'hidden',
   };
   const contentStyle: React.CSSProperties = { position: 'relative', zIndex: 1 };
 

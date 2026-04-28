@@ -1,6 +1,5 @@
 ﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isAiConfigured } from '../lib/llm';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -12,9 +11,6 @@ const AdminSettings: React.FC = () => {
     navigate('/');
   };
   const [toggles, setToggles] = useState({ backup: true, email: true, maint: false });
-
-  const aiActive = isAiConfigured();
-
   const section = (title: string, children: React.ReactNode, delay: number) => (
     <div style={{ marginBottom: '18px', animation: `fadeInUp 0.5s ease-out ${delay}s both` }}>
       <h2 style={{
@@ -94,45 +90,6 @@ const AdminSettings: React.FC = () => {
           {row('In Scadenza', <span style={{ fontSize: '15px', fontWeight: 800, color: '#fbbf24' }}>12</span>, true)}
         </>
       ), 0.05)}
-
-      {section('Intelligenza Artificiale', (
-        <div style={{ padding: '14px' }}>
-          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)', fontWeight: 700, marginBottom: 6 }}>
-            Agenti AI
-          </div>
-          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginBottom: 12, lineHeight: 1.5 }}>
-            Powered by Lovable AI Gateway (Gemini 2.5 Pro). Le richieste passano da una Supabase Edge Function server-side. Nessuna chiave AI esposta al browser.
-          </div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '10px 12px',
-            borderRadius: 10,
-            background: aiActive ? 'rgba(74,222,128,0.08)' : 'rgba(251,191,36,0.08)',
-            border: `1px solid ${aiActive ? 'rgba(74,222,128,0.45)' : 'rgba(251,191,36,0.45)'}`,
-          }}>
-            <span
-              aria-hidden="true"
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: aiActive ? '#4ade80' : '#fbbf24',
-                boxShadow: `0 0 8px ${aiActive ? 'rgba(74,222,128,0.8)' : 'rgba(251,191,36,0.7)'}`,
-              }}
-            />
-            <span style={{ fontSize: 12, fontWeight: 700, color: aiActive ? '#86efac' : '#fcd34d' }}>
-              {aiActive ? 'AI: Lovable Gateway (Gemini 2.5 Pro)' : 'AI non configurato (Supabase env mancanti)'}
-            </span>
-          </div>
-          {!aiActive && (
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 10, lineHeight: 1.5 }}>
-              Per attivarli: collega Supabase Cloud da Lovable e verifica che la edge function <code style={{ color: '#ff8a80' }}>ai-proxy</code> sia deployata.
-            </div>
-          )}
-        </div>
-      ), 0.08)}
 
       {section('Sistema', (
         <>

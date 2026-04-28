@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -39,7 +39,18 @@ body {
   overflow-x: hidden;
 }
 #root { height: 100%; display: flex; flex-direction: column; }
-::-webkit-scrollbar { width: 0; height: 0; }
+/* ==== Custom scrollbar (Oxygen red) — globale ==== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.04); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--red), var(--red-bright));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--red-bright), var(--red));
+}
+::-webkit-scrollbar-corner { background: transparent; }
+* { scrollbar-width: thin; scrollbar-color: var(--red) transparent; }
 button, a, nav { user-select: none; }
 input, textarea { font-family: var(--font-main); }
 
