@@ -39,7 +39,14 @@ body {
   overflow-x: hidden;
 }
 #root { height: 100%; display: flex; flex-direction: column; }
-::-webkit-scrollbar { width: 0; height: 0; }
+::-webkit-scrollbar { width: 6px !important; height: 6px !important; display: block !important; }
+::-webkit-scrollbar-track { background: transparent !important; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--red), var(--red-bright)) !important;
+  border-radius: 999px !important;
+  display: block !important;
+}
+* { scrollbar-width: thin !important; scrollbar-color: var(--red) transparent !important; }
 button, a, nav { user-select: none; }
 input, textarea { font-family: var(--font-main); }
 
