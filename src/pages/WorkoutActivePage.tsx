@@ -38,7 +38,7 @@ const EX_IMG: Record<string, string> = {
   'Box Jumps': FE('Box_Jump'),
   'Battle Ropes 30s': FE('Battling_Ropes'),
 };
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop';
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop&auto=format&q=75';
 const imgFor = (name: string) => EX_IMG[name] || FALLBACK_IMG;
 
 const DEFAULT_EXERCISES: ExerciseDef[] = [

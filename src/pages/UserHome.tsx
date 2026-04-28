@@ -204,7 +204,7 @@ const UserHome: React.FC = () => {
             height: '40px',
             borderRadius: '50%',
             border: '2px solid rgba(229,57,53,0.5)',
-            backgroundImage: "url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format&q=75')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             boxShadow: '0 0 12px rgba(229,57,53,0.4)',

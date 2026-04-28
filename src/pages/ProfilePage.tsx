@@ -1,11 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
+import { useAuth } from '../contexts/AuthContext';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
   const avatarUrl =
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop';
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&auto=format&q=75';
 
   const container: React.CSSProperties = {
     minHeight: '100vh',
@@ -246,7 +252,7 @@ const ProfilePage: React.FC = () => {
 
         {/* Logout */}
         <button
-          onClick={() => (window as any).__oxygenLogout?.()}
+          onClick={handleLogout}
           className="logout-row"
           style={{
             ...rowButton,

@@ -31,10 +31,10 @@ const ProgressPage: React.FC = () => {
   const [newMeasureLabel, setNewMeasureLabel] = useState('Braccia');
   const [newMeasureValue, setNewMeasureValue] = useState('');
   const [beforePhoto, setBeforePhoto] = useState<string>(
-    'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=420&fit=crop'
+    'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=420&fit=crop&auto=format&q=75'
   );
   const [afterPhoto, setAfterPhoto] = useState<string>(
-    'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=420&fit=crop'
+    'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=420&fit=crop&auto=format&q=75'
   );
   const beforeInputRef = useRef<HTMLInputElement>(null);
   const afterInputRef = useRef<HTMLInputElement>(null);

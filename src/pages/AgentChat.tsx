@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MEMBERS } from '../data/members';
-import { callClaude, hasApiKey, getHistory, saveToHistory, pushNotification, PlanRecord } from '../lib/llm';
+import { callClaude, isAiConfigured, getHistory, saveToHistory, pushNotification, PlanRecord } from '../lib/llm';
 import { getProgressSummary } from '../data/progress';
 import { AnimatedAIChat } from '../components/ui/animated-ai-chat';
 
@@ -262,7 +262,7 @@ const AgentChat: React.FC<{ type: AgentType }> = ({ type }) => {
   };
 
   const runGeneration = async (finalAnswers: Record<string, string>) => {
-    const llmMode = hasApiKey();
+    const llmMode = isAiConfigured();
     if (!llmMode) {
       const plan = type === 'scheda'
         ? generateScheda(finalAnswers, member.name)
@@ -338,7 +338,7 @@ Genera ora la nuova ${type === 'scheda' ? 'scheda di allenamento' : 'dieta'} ten
       timestamp: Date.now(),
       plan: planToSave,
       answers,
-      source: hasApiKey() ? 'ai' : 'template',
+      source: isAiConfigured() ? 'ai' : 'template',
     };
     saveToHistory(type, member.id, record);
     pushNotification(member.id, {

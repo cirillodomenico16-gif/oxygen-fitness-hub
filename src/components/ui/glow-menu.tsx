@@ -60,6 +60,7 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
     return (
       <motion.nav
         ref={ref}
+        aria-label="Navigazione principale"
         className={cn(
           "p-2 rounded-2xl relative overflow-hidden",
           className
@@ -91,6 +92,8 @@ export const MenuBar = React.forwardRef<HTMLDivElement, MenuBarProps>(
               <motion.li key={item.label} className="relative list-none flex-1">
                 <button
                   onClick={() => onItemClick?.(item.label)}
+                  aria-label={item.label}
+                  aria-current={isActive ? 'page' : undefined}
                   className="block w-full bg-transparent border-none cursor-pointer p-0"
                   style={{ background: 'transparent', border: 'none' }}
                 >

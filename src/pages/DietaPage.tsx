@@ -36,35 +36,35 @@ const WEEK: DayDiet[] = [
         name: 'Colazione',
         time: '08:00',
         foods: [
-          { name: 'Avena', grams: '80g', kcal: 310, image: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=200&h=200&fit=crop' },
-          { name: 'Banana', grams: '120g', kcal: 105, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&h=200&fit=crop' },
-          { name: 'Yogurt greco', grams: '170g', kcal: 100, image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop' },
+          { name: 'Avena', grams: '80g', kcal: 310, image: 'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Banana', grams: '120g', kcal: 105, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Yogurt greco', grams: '170g', kcal: 100, image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Pranzo',
         time: '13:00',
         foods: [
-          { name: 'Petto di pollo', grams: '200g', kcal: 330, image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=200&h=200&fit=crop' },
-          { name: 'Riso integrale', grams: '100g', kcal: 350, image: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=200&h=200&fit=crop' },
-          { name: 'Broccoli', grams: '150g', kcal: 50, image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200&h=200&fit=crop' },
+          { name: 'Petto di pollo', grams: '200g', kcal: 330, image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Riso integrale', grams: '100g', kcal: 350, image: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Broccoli', grams: '150g', kcal: 50, image: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Spuntino',
         time: '17:00',
         foods: [
-          { name: 'Mandorle', grams: '30g', kcal: 170, image: 'https://images.unsplash.com/photo-1508747703725-719777637510?w=200&h=200&fit=crop' },
-          { name: 'Mela', grams: '150g', kcal: 80, image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=200&h=200&fit=crop' },
+          { name: 'Mandorle', grams: '30g', kcal: 170, image: 'https://images.unsplash.com/photo-1508747703725-719777637510?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Mela', grams: '150g', kcal: 80, image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Cena',
         time: '20:00',
         foods: [
-          { name: 'Salmone', grams: '180g', kcal: 370, image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&h=200&fit=crop' },
-          { name: 'Patate dolci', grams: '200g', kcal: 180, image: 'https://images.unsplash.com/photo-1596097635121-14b63b7a0c23?w=200&h=200&fit=crop' },
-          { name: 'Insalata mista', grams: '100g', kcal: 25, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop' },
+          { name: 'Salmone', grams: '180g', kcal: 370, image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Patate dolci', grams: '200g', kcal: 180, image: 'https://images.unsplash.com/photo-1596097635121-14b63b7a0c23?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Insalata mista', grams: '100g', kcal: 25, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -79,25 +79,25 @@ const WEEK: DayDiet[] = [
         name: 'Colazione',
         time: '08:00',
         foods: [
-          { name: 'Pancakes proteici', grams: '2 pezzi', kcal: 320, image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=200&fit=crop' },
-          { name: 'Frutti di bosco', grams: '100g', kcal: 60, image: 'https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=200&h=200&fit=crop' },
+          { name: 'Pancakes proteici', grams: '2 pezzi', kcal: 320, image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Frutti di bosco', grams: '100g', kcal: 60, image: 'https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Pranzo',
         time: '13:00',
         foods: [
-          { name: 'Tacchino', grams: '200g', kcal: 300, image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=200&h=200&fit=crop' },
-          { name: 'Quinoa', grams: '100g', kcal: 370, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200&h=200&fit=crop' },
-          { name: 'Spinaci', grams: '150g', kcal: 35, image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200&h=200&fit=crop' },
+          { name: 'Tacchino', grams: '200g', kcal: 300, image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Quinoa', grams: '100g', kcal: 370, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Spinaci', grams: '150g', kcal: 35, image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Cena',
         time: '20:00',
         foods: [
-          { name: 'Merluzzo', grams: '200g', kcal: 220, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200&h=200&fit=crop' },
-          { name: 'Zucchine grigliate', grams: '200g', kcal: 40, image: 'https://images.unsplash.com/photo-1564834744159-ff0ea41ba4b9?w=200&h=200&fit=crop' },
+          { name: 'Merluzzo', grams: '200g', kcal: 220, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Zucchine grigliate', grams: '200g', kcal: 40, image: 'https://images.unsplash.com/photo-1564834744159-ff0ea41ba4b9?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -112,25 +112,25 @@ const WEEK: DayDiet[] = [
         name: 'Colazione',
         time: '08:00',
         foods: [
-          { name: 'Uova strapazzate', grams: '3 pezzi', kcal: 220, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop' },
-          { name: 'Pane integrale', grams: '80g', kcal: 200, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop' },
-          { name: 'Avocado', grams: '80g', kcal: 130, image: 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=200&h=200&fit=crop' },
+          { name: 'Uova strapazzate', grams: '3 pezzi', kcal: 220, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Pane integrale', grams: '80g', kcal: 200, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Avocado', grams: '80g', kcal: 130, image: 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Pranzo',
         time: '13:00',
         foods: [
-          { name: 'Manzo magro', grams: '200g', kcal: 400, image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=200&h=200&fit=crop' },
-          { name: 'Pasta integrale', grams: '80g', kcal: 280, image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=200&h=200&fit=crop' },
+          { name: 'Manzo magro', grams: '200g', kcal: 400, image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Pasta integrale', grams: '80g', kcal: 280, image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Cena',
         time: '20:00',
         foods: [
-          { name: 'Tonno', grams: '150g', kcal: 200, image: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=200&h=200&fit=crop' },
-          { name: 'Fagioli', grams: '150g', kcal: 200, image: 'https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?w=200&h=200&fit=crop' },
+          { name: 'Tonno', grams: '150g', kcal: 200, image: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Fagioli', grams: '150g', kcal: 200, image: 'https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -145,15 +145,15 @@ const WEEK: DayDiet[] = [
         name: 'Colazione',
         time: '08:00',
         foods: [
-          { name: 'Porridge', grams: '200g', kcal: 300, image: 'https://images.unsplash.com/photo-1571748982800-fa51082c2224?w=200&h=200&fit=crop' },
+          { name: 'Porridge', grams: '200g', kcal: 300, image: 'https://images.unsplash.com/photo-1571748982800-fa51082c2224?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Pranzo',
         time: '13:00',
         foods: [
-          { name: 'Pollo grigliato', grams: '200g', kcal: 330, image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=200&h=200&fit=crop' },
-          { name: 'Cous cous', grams: '100g', kcal: 370, image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop' },
+          { name: 'Pollo grigliato', grams: '200g', kcal: 330, image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=200&h=200&fit=crop&auto=format&q=75' },
+          { name: 'Cous cous', grams: '100g', kcal: 370, image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -168,14 +168,14 @@ const WEEK: DayDiet[] = [
         name: 'Colazione',
         time: '08:00',
         foods: [
-          { name: 'Smoothie proteico', grams: '400ml', kcal: 350, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&h=200&fit=crop' },
+          { name: 'Smoothie proteico', grams: '400ml', kcal: 350, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Pranzo',
         time: '13:00',
         foods: [
-          { name: 'Insalata di pollo', grams: '350g', kcal: 450, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop' },
+          { name: 'Insalata di pollo', grams: '350g', kcal: 450, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -190,14 +190,14 @@ const WEEK: DayDiet[] = [
         name: 'Colazione',
         time: '09:00',
         foods: [
-          { name: 'French toast', grams: '2 pezzi', kcal: 380, image: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=200&h=200&fit=crop' },
+          { name: 'French toast', grams: '2 pezzi', kcal: 380, image: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Pranzo',
         time: '13:30',
         foods: [
-          { name: 'Pizza integrale', grams: '300g', kcal: 700, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop' },
+          { name: 'Pizza integrale', grams: '300g', kcal: 700, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -212,14 +212,14 @@ const WEEK: DayDiet[] = [
         name: 'Brunch',
         time: '11:00',
         foods: [
-          { name: 'Eggs benedict', grams: '2 pezzi', kcal: 500, image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=200&h=200&fit=crop' },
+          { name: 'Eggs benedict', grams: '2 pezzi', kcal: 500, image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
       {
         name: 'Cena',
         time: '20:00',
         foods: [
-          { name: 'Bistecca + verdure', grams: '300g', kcal: 600, image: 'https://images.unsplash.com/photo-1558030006-450675393462?w=200&h=200&fit=crop' },
+          { name: 'Bistecca + verdure', grams: '300g', kcal: 600, image: 'https://images.unsplash.com/photo-1558030006-450675393462?w=200&h=200&fit=crop&auto=format&q=75' },
         ],
       },
     ],
@@ -391,7 +391,7 @@ const DietaPage: React.FC = () => {
         boxShadow: '0 0 28px rgba(229,57,53,0.18)',
         animation: 'fadeInUp 0.5s ease-out',
         minHeight: '180px',
-        backgroundImage: `linear-gradient(180deg, rgba(10,0,2,0.35) 0%, rgba(30,6,8,0.82) 55%, rgba(10,0,2,0.95) 100%), url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=900&h=600&fit=crop')`,
+        backgroundImage: `linear-gradient(180deg, rgba(10,0,2,0.35) 0%, rgba(30,6,8,0.82) 55%, rgba(10,0,2,0.95) 100%), url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=900&h=600&fit=crop&auto=format&q=75')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>

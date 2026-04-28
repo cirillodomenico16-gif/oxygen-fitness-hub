@@ -41,7 +41,7 @@ const COURSES: Course[] = [
     current: 12,
     capacity: 20,
     status: 'available',
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop&auto=format&q=75',
   },
   {
     id: 2,
@@ -54,7 +54,7 @@ const COURSES: Course[] = [
     current: 18,
     capacity: 18,
     status: 'full',
-    image: 'https://images.unsplash.com/photo-1549824506-b1f02ea6ac5b?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1549824506-b1f02ea6ac5b?w=400&h=300&fit=crop&auto=format&q=75',
   },
   {
     id: 3,
@@ -67,7 +67,7 @@ const COURSES: Course[] = [
     current: 15,
     capacity: 20,
     status: 'almost_full',
-    image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400&h=300&fit=crop&auto=format&q=75',
   },
   {
     id: 4,
@@ -80,7 +80,7 @@ const COURSES: Course[] = [
     current: 8,
     capacity: 20,
     status: 'available',
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop&auto=format&q=75',
   },
   {
     id: 5,
@@ -93,7 +93,7 @@ const COURSES: Course[] = [
     current: 15,
     capacity: 20,
     status: 'available',
-    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop&auto=format&q=75',
   },
   {
     id: 6,
@@ -106,7 +106,7 @@ const COURSES: Course[] = [
     current: 22,
     capacity: 25,
     status: 'available',
-    image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=400&h=300&fit=crop',
+    image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=400&h=300&fit=crop&auto=format&q=75',
   },
 ];
 
@@ -343,8 +343,8 @@ const CorsiPage: React.FC = () => {
 
       {/* Header */}
       <div style={headerStyle}>
-        <button style={iconBtnStyle} onClick={() => navigate('/')}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <button style={iconBtnStyle} onClick={() => navigate('/')} aria-label="Torna alla home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
@@ -354,8 +354,8 @@ const CorsiPage: React.FC = () => {
           gradientAnimationDuration={2.4}
           textStyle={{ ...headerTitleStyle, fontSize: '20px', fontWeight: 800, letterSpacing: '-0.3px' }}
         />
-        <button style={iconBtnStyle}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <button style={iconBtnStyle} aria-label="Apri filtri">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
             <line x1="4" y1="6" x2="20" y2="6"></line>
             <line x1="7" y1="12" x2="17" y2="12"></line>
             <line x1="10" y1="18" x2="14" y2="18"></line>

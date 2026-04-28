@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
-import { getApiKey, setApiKey, hasApiKey } from '../lib/llm';
+import { useNavigate } from 'react-router-dom';
+import { isAiConfigured } from '../lib/llm';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
+import { useAuth } from '../contexts/AuthContext';
 
 const AdminSettings: React.FC = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
   const [toggles, setToggles] = useState({ backup: true, email: true, maint: false });
-  const [apiKey, setApiKeyInput] = useState<string>(getApiKey() || '');
-  const [showKey, setShowKey] = useState(false);
-  const [keyStatus, setKeyStatus] = useState<string | null>(null);
 
-  const saveKey = () => {
-    setApiKey(apiKey.trim());
-    setKeyStatus(apiKey.trim() ? 'Chiave salvata. Gli agenti AI ora useranno Claude.' : 'Chiave rimossa. Gli agenti useranno il generatore locale.');
-    setTimeout(() => setKeyStatus(null), 3500);
-  };
-  const clearKey = () => {
-    setApiKey('');
-    setApiKeyInput('');
-    setKeyStatus('Chiave rimossa.');
-    setTimeout(() => setKeyStatus(null), 3000);
-  };
+  const aiActive = isAiConfigured();
 
   const section = (title: string, children: React.ReactNode, delay: number) => (
     <div style={{ marginBottom: '18px', animation: `fadeInUp 0.5s ease-out ${delay}s both` }}>
@@ -103,95 +98,38 @@ const AdminSettings: React.FC = () => {
       {section('Intelligenza Artificiale', (
         <div style={{ padding: '14px' }}>
           <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)', fontWeight: 700, marginBottom: 6 }}>
-            Claude API Key
+            Agenti AI (Claude)
           </div>
-          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginBottom: 10, lineHeight: 1.5 }}>
-            Inserisci la tua chiave Anthropic per attivare gli agenti AI (scheda, dieta, programmazione corsi). Senza chiave gli agenti usano il generatore locale di fallback. La chiave viene salvata solo nel browser.
-          </div>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-            <input
-              type={showKey ? 'text' : 'password'}
-              value={apiKey}
-              onChange={(e) => setApiKeyInput(e.target.value)}
-              placeholder="sk-ant-api03-..."
-              style={{
-                flex: 1,
-                padding: '11px 12px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1.5px solid rgba(229,57,53,0.45)',
-                borderRadius: '10px',
-                color: '#fff',
-                fontSize: '12px',
-                fontFamily: 'ui-monospace, monospace',
-                outline: 'none',
-              }}
-            />
-            <button
-              onClick={() => setShowKey(!showKey)}
-              style={{
-                padding: '0 12px',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: '10px',
-                color: '#fff',
-                fontSize: '11px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}
-            >{showKey ? 'Nascondi' : 'Mostra'}</button>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button
-              onClick={saveKey}
-              style={{
-                flex: 2,
-                padding: '11px',
-                background: 'linear-gradient(135deg,#ef4444,#b71c1c)',
-                border: '1px solid #ff5252',
-                borderRadius: '10px',
-                color: '#fff',
-                fontSize: '12px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                boxShadow: '0 4px 14px rgba(229,57,53,0.4)',
-              }}
-            >Salva Chiave</button>
-            <button
-              onClick={clearKey}
-              style={{
-                flex: 1,
-                padding: '11px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: '10px',
-                color: 'rgba(255,255,255,0.75)',
-                fontSize: '11px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-              }}
-            >Rimuovi</button>
+          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginBottom: 12, lineHeight: 1.5 }}>
+            Le richieste agli agenti AI passano da un proxy server-side (Supabase Edge Function) che gestisce la chiave Anthropic. La chiave non viene mai esposta al browser.
           </div>
           <div style={{
-            marginTop: 12,
-            fontSize: 11,
-            fontWeight: 700,
-            color: hasApiKey() ? '#4ade80' : 'rgba(255,255,255,0.45)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '10px 12px',
+            borderRadius: 10,
+            background: aiActive ? 'rgba(74,222,128,0.08)' : 'rgba(251,191,36,0.08)',
+            border: `1px solid ${aiActive ? 'rgba(74,222,128,0.45)' : 'rgba(251,191,36,0.45)'}`,
           }}>
-            Stato agenti AI: {hasApiKey() ? 'Attivi (Claude)' : 'Fallback locale'}
+            <span
+              aria-hidden="true"
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                background: aiActive ? '#4ade80' : '#fbbf24',
+                boxShadow: `0 0 8px ${aiActive ? 'rgba(74,222,128,0.8)' : 'rgba(251,191,36,0.7)'}`,
+              }}
+            />
+            <span style={{ fontSize: 12, fontWeight: 700, color: aiActive ? '#86efac' : '#fcd34d' }}>
+              {aiActive ? 'Attivi (proxy configurato)' : 'Fallback locale (proxy non configurato)'}
+            </span>
           </div>
-          {keyStatus && (
-            <div style={{
-              marginTop: 10,
-              padding: '8px 10px',
-              background: 'rgba(74,222,128,0.12)',
-              border: '1px solid rgba(74,222,128,0.4)',
-              borderRadius: 8,
-              fontSize: 11,
-              color: '#86efac',
-            }}>{keyStatus}</div>
+          {!aiActive && (
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 10, lineHeight: 1.5 }}>
+              Per attivarli: collega Supabase al progetto, deploya la edge function <code style={{ color: '#ff8a80' }}>ai-proxy</code> e imposta la variabile d'ambiente <code style={{ color: '#ff8a80' }}>VITE_AI_PROXY_URL</code>.
+            </div>
           )}
         </div>
       ), 0.08)}
@@ -220,7 +158,7 @@ const AdminSettings: React.FC = () => {
           color: 'rgba(255,255,255,0.8)', fontSize: '12px', fontWeight: 700,
           cursor: 'pointer', fontFamily: "'Plus Jakarta Sans', sans-serif",
         }}>Ripristina Predefiniti</button>
-        <button onClick={() => (window as any).__oxygenLogout?.()} style={{
+        <button onClick={handleLogout} style={{
           padding: '14px',
           background: 'rgba(239,68,68,0.08)',
           border: '1px solid rgba(239,68,68,0.5)', borderRadius: '14px',

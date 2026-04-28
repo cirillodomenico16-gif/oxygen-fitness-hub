@@ -45,7 +45,7 @@ const CHALLENGES: Challenge[] = [
     participants: 124,
     description: '30 Giorni Squat Challenge',
     reward: 'Badge Iron Legs + 500 XP',
-    image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&h=400&fit=crop&auto=format&q=75',
   },
   {
     id: 2,
@@ -56,14 +56,14 @@ const CHALLENGES: Challenge[] = [
     participants: 89,
     description: '7 Giorni HIIT Burn',
     reward: 'Badge Burn + 250 XP',
-    image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600&h=400&fit=crop&auto=format&q=75',
   },
 ];
 
 const PODIUM: Podium[] = [
-  { name: 'Sara B.', xp: 2210, rank: 2, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face' },
-  { name: 'Marco R.', xp: 2840, rank: 1, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face' },
-  { name: 'Luca M.', xp: 1980, rank: 3, avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face' },
+  { name: 'Sara B.', xp: 2210, rank: 2, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&auto=format&q=75&crop=face' },
+  { name: 'Marco R.', xp: 2840, rank: 1, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format&q=75&crop=face' },
+  { name: 'Luca M.', xp: 1980, rank: 3, avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&auto=format&q=75&crop=face' },
 ];
 
 const BADGES: Badge[] = [
@@ -75,11 +75,11 @@ const BADGES: Badge[] = [
 ];
 
 const ACTIVITIES: Activity[] = [
-  { id: 1, user: 'Marco', action: 'ha completato Upper Body', time: '13 min ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
-  { id: 2, user: 'Sara', action: 'ha battuto il suo record', time: '16 min ago', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face' },
-  { id: 3, user: 'Luca', action: 'ha completato 10 serie', time: '32 min ago', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face' },
-  { id: 4, user: 'Elena', action: 'ha sbloccato Iron Warrior', time: '1 ora ago', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
-  { id: 5, user: 'Giulia', action: 'ha iniziato Squat Challenge', time: '2 ore ago', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face' },
+  { id: 1, user: 'Marco', action: 'ha completato Upper Body', time: '13 min ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&auto=format&q=75&crop=face' },
+  { id: 2, user: 'Sara', action: 'ha battuto il suo record', time: '16 min ago', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&auto=format&q=75&crop=face' },
+  { id: 3, user: 'Luca', action: 'ha completato 10 serie', time: '32 min ago', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&auto=format&q=75&crop=face' },
+  { id: 4, user: 'Elena', action: 'ha sbloccato Iron Warrior', time: '1 ora ago', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&auto=format&q=75&crop=face' },
+  { id: 5, user: 'Giulia', action: 'ha iniziato Squat Challenge', time: '2 ore ago', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&auto=format&q=75&crop=face' },
 ];
 
 const CommunityPage: React.FC = () => {

@@ -4,9 +4,9 @@ import { AnimatedText } from '../components/ui/animated-shiny-text';
 import ShaderBackground from '../components/ui/shader-background';
 
 const EXPIRING = [
-  { name: 'Luca Ferrari', plan: 'Mensile', date: '09/04/2026', email: 'luca.ferrari@email.com', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
-  { name: 'Sara Conti', plan: 'Trimestrale', date: '09/04/2026', email: 'sara.conti@email.com', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop' },
-  { name: 'Davide Greco', plan: 'Annuale', date: '09/04/2026', email: 'davide.greco@email.com', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop' },
+  { name: 'Luca Ferrari', plan: 'Mensile', date: '09/04/2026', email: 'luca.ferrari@email.com', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&auto=format&q=75' },
+  { name: 'Sara Conti', plan: 'Trimestrale', date: '09/04/2026', email: 'sara.conti@email.com', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&auto=format&q=75' },
+  { name: 'Davide Greco', plan: 'Annuale', date: '09/04/2026', email: 'davide.greco@email.com', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format&q=75' },
 ];
 
 const AdminDashboard: React.FC = () => {
@@ -67,9 +67,9 @@ const AdminDashboard: React.FC = () => {
   const area = path + ` L ${pts[pts.length - 1][0]} ${padT + plotH} L ${pts[0][0]} ${padT + plotH} Z`;
 
   const activities = [
-    { name: 'Marco Rossi', plan: 'Annuale', date: '20/1/2023', status: 'ATTIVO', color: '#22c55e', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop' },
-    { name: 'Elena Bianchi', plan: 'Mensile', date: '19/1/2023', status: 'ATTIVO', color: '#22c55e', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop' },
-    { name: 'Marca Rossi', plan: 'Mensile', date: '18/1/2023', status: 'SCADUTO', color: '#ef4444', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
+    { name: 'Marco Rossi', plan: 'Annuale', date: '20/1/2023', status: 'ATTIVO', color: '#22c55e', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&auto=format&q=75' },
+    { name: 'Elena Bianchi', plan: 'Mensile', date: '19/1/2023', status: 'ATTIVO', color: '#22c55e', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&auto=format&q=75' },
+    { name: 'Marca Rossi', plan: 'Mensile', date: '18/1/2023', status: 'SCADUTO', color: '#ef4444', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&auto=format&q=75' },
   ];
 
   const quick = [

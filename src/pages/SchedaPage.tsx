@@ -313,7 +313,7 @@ const SchedaPage: React.FC = () => {
         boxShadow: '0 0 28px rgba(229,57,53,0.18)',
         animation: 'fadeInUp 0.5s ease-out',
         minHeight: '180px',
-        backgroundImage: `linear-gradient(180deg, rgba(10,0,2,0.35) 0%, rgba(30,6,8,0.82) 55%, rgba(10,0,2,0.95) 100%), url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=900&h=600&fit=crop')`,
+        backgroundImage: `linear-gradient(180deg, rgba(10,0,2,0.35) 0%, rgba(30,6,8,0.82) 55%, rgba(10,0,2,0.95) 100%), url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=900&h=600&fit=crop&auto=format&q=75')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
@@ -449,7 +449,7 @@ const SchedaPage: React.FC = () => {
                         width: '50px',
                         height: '50px',
                         borderRadius: '10px',
-                        backgroundImage: `url('${EX_IMG[ex.name] || 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop'}')`,
+                        backgroundImage: `url('${EX_IMG[ex.name] || 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=200&h=200&fit=crop&auto=format&q=75'}')`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         border: '1px solid rgba(229,57,53,0.35)',

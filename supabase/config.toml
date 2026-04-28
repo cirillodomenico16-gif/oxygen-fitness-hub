@@ -1,0 +1,6 @@
+project_id = "oxygen-fitness-hub"
+
+[functions.ai-proxy]
+# JWT verification disabled because the app's own auth is currently client-side.
+# Re-enable (remove this line or set to true) once Supabase Auth is integrated.
+verify_jwt = false

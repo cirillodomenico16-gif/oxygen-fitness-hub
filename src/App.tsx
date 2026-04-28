@@ -1,37 +1,74 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-// Page imports
-import UserHome from './pages/UserHome';
-import CorsiPage from './pages/CorsiPage';
-import WorkoutActivePage from './pages/WorkoutActivePage';
-import ProgressPage from './pages/ProgressPage';
-import CommunityPage from './pages/CommunityPage';
-import ProfilePage from './pages/ProfilePage';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminSchedeAI from './pages/AdminSchedeAI';
-import AdminCalendar from './pages/AdminCalendar';
-import AdminSettings from './pages/AdminSettings';
-import AdminMembri from './pages/AdminMembri';
-import AdminMembroDetail from './pages/AdminMembroDetail';
-import AdminSchedaManuale from './pages/AdminSchedaManuale';
-import AgentChat from './pages/AgentChat';
-import AdminReport from './pages/AdminReport';
-import AdminCampagna from './pages/AdminCampagna';
-import AgentProgrammazione from './pages/AgentProgrammazione';
-import DietaPage from './pages/DietaPage';
-import SchedaPage from './pages/SchedaPage';
-import LoginPage from './pages/LoginPage';
-import SubscriptionPage from './pages/SubscriptionPage';
-
-// Component imports
 import UserBottomNav from './components/UserBottomNav';
 import AdminBottomNav from './components/AdminBottomNav';
+import PageLoader from './components/PageLoader';
+import { useAuth } from './contexts/AuthContext';
 
 import { PHOTOS } from './constants';
 
-// Header component with user dropdown
-const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdminRoute, navigate }) => {
+// Eager — login is the entry point, lazy-loading it would just add a spinner before first paint
+import LoginPage from './pages/LoginPage';
+
+// Lazy user routes
+const UserHome = lazy(() => import('./pages/UserHome'));
+const CorsiPage = lazy(() => import('./pages/CorsiPage'));
+const WorkoutActivePage = lazy(() => import('./pages/WorkoutActivePage'));
+const ProgressPage = lazy(() => import('./pages/ProgressPage'));
+const CommunityPage = lazy(() => import('./pages/CommunityPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const DietaPage = lazy(() => import('./pages/DietaPage'));
+const SchedaPage = lazy(() => import('./pages/SchedaPage'));
+const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
+
+// Lazy admin routes — separate chunk
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminSchedeAI = lazy(() => import('./pages/AdminSchedeAI'));
+const AdminCalendar = lazy(() => import('./pages/AdminCalendar'));
+const AdminSettings = lazy(() => import('./pages/AdminSettings'));
+const AdminMembri = lazy(() => import('./pages/AdminMembri'));
+const AdminMembroDetail = lazy(() => import('./pages/AdminMembroDetail'));
+const AdminSchedaManuale = lazy(() => import('./pages/AdminSchedaManuale'));
+const AdminReport = lazy(() => import('./pages/AdminReport'));
+const AdminCampagna = lazy(() => import('./pages/AdminCampagna'));
+const AgentChat = lazy(() => import('./pages/AgentChat'));
+const AgentProgrammazione = lazy(() => import('./pages/AgentProgrammazione'));
+
+const headerStyle: React.CSSProperties = {
+  background: '#111827',
+  borderBottom: '1px solid rgba(255,255,255,0.1)',
+  padding: '12px 20px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  flexShrink: 0,
+  zIndex: 100,
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+};
+
+const logoStyle: React.CSSProperties = {
+  width: 130,
+  height: 32,
+  cursor: 'pointer',
+  backgroundColor: '#e53935',
+  WebkitMaskImage: "url('/oxygen-logo.png')",
+  maskImage: "url('/oxygen-logo.png')",
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+  WebkitMaskPosition: 'left center',
+  maskPosition: 'left center',
+  WebkitMaskSize: 'contain',
+  maskSize: 'contain',
+};
+
+interface AppHeaderProps {
+  isAdminRoute: boolean;
+  navigate: (path: string) => void;
+  onLogout: () => void;
+}
+
+const AppHeader: React.FC<AppHeaderProps> = ({ isAdminRoute, navigate, onLogout }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +78,6 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
         setDropdownOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -51,49 +87,38 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
     setTimeout(() => navigate(path), 10);
   };
 
+  const handleLogout = () => {
+    setDropdownOpen(false);
+    onLogout();
+  };
+
+  const avatarBorderColor = isAdminRoute ? '#f59e0b' : '#e53935';
+
   return (
-    <header
-      style={{
-        background: '#111827',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        padding: '12px 20px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexShrink: 0,
-        zIndex: 100,
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-      }}
-    >
-      {/* Left: O2 Logo */}
-      <div
+    <header style={headerStyle}>
+      <button
         onClick={() => navigate(isAdminRoute ? '/admin' : '/')}
+        aria-label="Vai alla home"
         style={{
-          width: 130,
-          height: 32,
-          cursor: 'pointer',
-          backgroundColor: '#e53935',
-          WebkitMaskImage: "url('/oxygen-logo.png')",
-          maskImage: "url('/oxygen-logo.png')",
-          WebkitMaskRepeat: 'no-repeat',
-          maskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'left center',
-          maskPosition: 'left center',
-          WebkitMaskSize: 'contain',
-          maskSize: 'contain',
+          ...logoStyle,
+          border: 'none',
+          padding: 0,
+          minHeight: 32,
         }}
       />
 
-      {/* Right: User Avatar with dropdown */}
       <div ref={wrapperRef} style={{ position: 'relative' }}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
+          aria-haspopup="menu"
+          aria-expanded={dropdownOpen}
+          aria-label="Apri menu utente"
           style={{
-            width: '42px',
-            height: '42px',
+            width: 42,
+            height: 42,
             borderRadius: '50%',
-            border: isAdminRoute ? '2px solid #f59e0b' : '2px solid #e53935',
-            padding: '0',
+            border: `2px solid ${avatarBorderColor}`,
+            padding: 0,
             cursor: 'pointer',
             overflow: 'hidden',
             background: 'transparent',
@@ -102,20 +127,26 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
         >
           <img
             src={PHOTOS.avatar}
-            alt="Avatar"
+            alt=""
+            loading="lazy"
+            decoding="async"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-              (e.target as HTMLImageElement).parentElement!.style.background = isAdminRoute
-                ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #e53935, #c62828)';
-              (e.target as HTMLImageElement).parentElement!.innerHTML = `<span style="color:white;font-size:14px;font-weight:700">${isAdminRoute ? 'A' : 'MR'}</span>`;
+              const target = e.currentTarget;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (!parent) return;
+              parent.style.background = isAdminRoute
+                ? 'linear-gradient(135deg, #f59e0b, #d97706)'
+                : 'linear-gradient(135deg, #e53935, #c62828)';
+              parent.innerHTML = `<span style="color:white;font-size:14px;font-weight:700">${isAdminRoute ? 'A' : 'MR'}</span>`;
             }}
           />
         </button>
 
-        {/* Dropdown Menu */}
         {dropdownOpen && (
           <div
+            role="menu"
             style={{
               position: 'absolute',
               top: '52px',
@@ -130,25 +161,30 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
               animation: 'scaleIn 0.15s ease-out',
             }}
           >
-            {/* User Info */}
             <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <img src={PHOTOS.avatar} alt="" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+              <img
+                src={PHOTOS.avatar}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }}
+              />
               <div>
-                <div style={{ color: 'white', fontSize: '14px', fontWeight: '600' }}>Marco Rossi</div>
-                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginTop: '2px' }}>Membro Premium</div>
+                <div style={{ color: 'white', fontSize: '14px', fontWeight: 600 }}>Marco Rossi</div>
+                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginTop: 2 }}>Membro Premium</div>
               </div>
             </div>
 
-            {/* Menu Items */}
             <div style={{ padding: '6px 0' }}>
               {[
-                { label: 'Il Mio Profilo', path: '/profilo', icon: '' },
-                { label: isAdminRoute ? 'Torna Utente' : 'Pannello Admin', path: isAdminRoute ? '/' : '/admin', icon: isAdminRoute ? '' : '' },
-                { label: 'La Mia Scheda', path: '/scheda', icon: '' },
-                { label: 'La Mia Dieta', path: '/dieta', icon: '' },
+                { label: 'Il Mio Profilo', path: '/profilo' },
+                { label: isAdminRoute ? 'Torna Utente' : 'Pannello Admin', path: isAdminRoute ? '/' : '/admin' },
+                { label: 'La Mia Scheda', path: '/scheda' },
+                { label: 'La Mia Dieta', path: '/dieta' },
               ].map((item) => (
                 <button
                   key={item.path}
+                  role="menuitem"
                   onClick={() => handleMenuClick(item.path)}
                   style={{
                     width: '100%',
@@ -157,7 +193,7 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
                     border: 'none',
                     color: 'rgba(255,255,255,0.9)',
                     fontSize: '13px',
-                    fontWeight: '500',
+                    fontWeight: 500,
                     textAlign: 'left',
                     cursor: 'pointer',
                     display: 'flex',
@@ -169,7 +205,6 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span style={{ fontSize: '16px', width: '20px', textAlign: 'center' }}>{item.icon}</span>
                   {item.label}
                 </button>
               ))}
@@ -177,7 +212,8 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
               <div style={{ margin: '4px 16px', borderTop: '1px solid rgba(255,255,255,0.06)' }} />
 
               <button
-                onClick={() => setDropdownOpen(false)}
+                role="menuitem"
+                onClick={handleLogout}
                 style={{
                   width: '100%',
                   padding: '11px 16px',
@@ -185,7 +221,7 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
                   border: 'none',
                   color: 'rgba(239,68,68,0.9)',
                   fontSize: '13px',
-                  fontWeight: '500',
+                  fontWeight: 500,
                   textAlign: 'left',
                   cursor: 'pointer',
                   display: 'flex',
@@ -197,7 +233,6 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
                 onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.06)')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
-                <span style={{ fontSize: '16px', width: '20px', textAlign: 'center' }}></span>
                 Esci
               </button>
             </div>
@@ -208,99 +243,108 @@ const AppHeader: React.FC<{ isAdminRoute: boolean; navigate: any }> = ({ isAdmin
   );
 };
 
+const USER_NAV_ROUTES = new Set([
+  '/',
+  '/corsi',
+  '/allenamento',
+  '/progressi',
+  '/community',
+  '/profilo',
+  '/dieta',
+  '/scheda',
+  '/abbonamento',
+]);
+
+const shellStyle: React.CSSProperties = {
+  maxWidth: '100%',
+  width: '100%',
+  margin: '0 auto',
+  height: '100dvh',
+  minHeight: '100vh',
+  backgroundColor: '#000',
+  position: 'relative',
+  fontFamily: "'Plus Jakarta Sans', sans-serif",
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  boxShadow: '0 0 60px rgba(239,68,68,0.12)',
+};
+
+const scrollAreaStyle: React.CSSProperties = {
+  flex: 1,
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  WebkitOverflowScrolling: 'touch',
+  paddingBottom: '80px',
+};
+
 const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, setUser, logout } = useAuth();
+
   const isAdminRoute = location.pathname.startsWith('/admin');
 
-  const [currentUser, setCurrentUser] = React.useState(() => {
-    try { return JSON.parse(localStorage.getItem('oxygen_auth') || 'null'); } catch { return null; }
-  });
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
-  if (!currentUser) {
+  const showUserNav = useMemo(() => USER_NAV_ROUTES.has(location.pathname), [location.pathname]);
+
+  if (!user) {
     return (
       <div style={{ maxWidth: '430px', margin: '0 auto', minHeight: '100vh', backgroundColor: '#000' }}>
-        <LoginPage onLogin={() => {
-          try { setCurrentUser(JSON.parse(localStorage.getItem('oxygen_auth') || 'null')); } catch {}
-          navigate(JSON.parse(localStorage.getItem('oxygen_auth') || 'null')?.role === 'admin' ? '/admin' : '/');
-        }} />
+        <LoginPage
+          onLogin={() => {
+            try {
+              const fresh = JSON.parse(localStorage.getItem('oxygen_auth') || 'null');
+              setUser(fresh);
+              navigate(fresh?.role === 'admin' ? '/admin' : '/');
+            } catch {}
+          }}
+        />
       </div>
     );
   }
 
-  // expose logout handler globally for ProfilePage
-  (window as any).__oxygenLogout = () => {
-    localStorage.removeItem('oxygen_auth');
-    setCurrentUser(null);
-    navigate('/');
-  };
-
-  const userRoutes = ['/', '/corsi', '/allenamento', '/progressi', '/community', '/profilo', '/dieta', '/scheda', '/abbonamento'];
-  const showUserNav = userRoutes.includes(location.pathname);
-  const showAdminNav = isAdminRoute;
-
   return (
-    <div
-      style={{
-        maxWidth: '100%',
-        width: '100%',
-        margin: '0 auto',
-        height: '100dvh',
-        minHeight: '100vh',
-        backgroundColor: '#000',
-        position: 'relative',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        boxShadow: '0 0 60px rgba(239,68,68,0.12)',
-      }}
-    >
-      {/* Scrollable content area */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          WebkitOverflowScrolling: 'touch',
-          paddingBottom: '80px',
-        }}
-      >
-        <Routes>
-          {/* User routes */}
-          <Route path="/" element={<UserHome />} />
-          <Route path="/corsi" element={<CorsiPage />} />
-          <Route path="/allenamento" element={<WorkoutActivePage />} />
-          <Route path="/progressi" element={<ProgressPage />} />
-          <Route path="/community" element={<CommunityPage />} />
-          <Route path="/profilo" element={<ProfilePage />} />
-          <Route path="/dieta" element={<DietaPage />} />
-          <Route path="/scheda" element={<SchedaPage />} />
-          <Route path="/abbonamento" element={<SubscriptionPage />} />
+    <div style={shellStyle}>
+      <AppHeader isAdminRoute={isAdminRoute} navigate={navigate} onLogout={handleLogout} />
+      <div style={scrollAreaStyle}>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<UserHome />} />
+            <Route path="/corsi" element={<CorsiPage />} />
+            <Route path="/allenamento" element={<WorkoutActivePage />} />
+            <Route path="/progressi" element={<ProgressPage />} />
+            <Route path="/community" element={<CommunityPage />} />
+            <Route path="/profilo" element={<ProfilePage />} />
+            <Route path="/dieta" element={<DietaPage />} />
+            <Route path="/scheda" element={<SchedaPage />} />
+            <Route path="/abbonamento" element={<SubscriptionPage />} />
 
-          {/* Admin routes */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/schede-ai" element={<AdminSchedeAI />} />
-          <Route path="/admin/membri" element={<AdminMembri />} />
-          <Route path="/admin/membro/:id" element={<AdminMembroDetail />} />
-          <Route path="/admin/membro/:id/agent-scheda" element={<AgentChat type="scheda" />} />
-          <Route path="/admin/membro/:id/scheda-manuale" element={<AdminSchedaManuale />} />
-          <Route path="/admin/membro/:id/agent-dieta" element={<AgentChat type="dieta" />} />
-          <Route path="/admin/calendario" element={<AdminCalendar />} />
-          <Route path="/admin/calendario/agent-programmazione" element={<AgentProgrammazione />} />
-          <Route path="/admin/analisi" element={<AdminReport />} />
-          <Route path="/admin/report" element={<AdminReport />} />
-          <Route path="/admin/campagna" element={<AdminCampagna />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/schede-ai" element={<AdminSchedeAI />} />
+            <Route path="/admin/membri" element={<AdminMembri />} />
+            <Route path="/admin/membro/:id" element={<AdminMembroDetail />} />
+            <Route path="/admin/membro/:id/agent-scheda" element={<AgentChat type="scheda" />} />
+            <Route path="/admin/membro/:id/scheda-manuale" element={<AdminSchedaManuale />} />
+            <Route path="/admin/membro/:id/agent-dieta" element={<AgentChat type="dieta" />} />
+            <Route path="/admin/calendario" element={<AdminCalendar />} />
+            <Route path="/admin/calendario/agent-programmazione" element={<AgentProgrammazione />} />
+            <Route path="/admin/analisi" element={<AdminReport />} />
+            <Route path="/admin/report" element={<AdminReport />} />
+            <Route path="/admin/campagna" element={<AdminCampagna />} />
+            <Route path="/admin/settings" element={<AdminSettings />} />
 
-          {/* Default redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </div>
 
-      {/* Bottom navigation */}
       {showUserNav && <UserBottomNav />}
-      {showAdminNav && <AdminBottomNav />}
+      {isAdminRoute && <AdminBottomNav />}
     </div>
   );
 };
