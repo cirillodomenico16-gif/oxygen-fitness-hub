@@ -1,18 +1,12 @@
-// Claude API client - runs in browser with user-provided API key
-// Key is stored in localStorage under 'oxy_api_key'
+// AI client — calls the `ai-proxy` edge function which routes to the
+// Lovable AI Gateway server-side. No API keys are stored in the browser.
+import { supabase } from '@/integrations/supabase/client';
 
-export const getApiKey = (): string | null => {
-  try { return localStorage.getItem('oxy_api_key'); } catch { return null; }
-};
-
-export const setApiKey = (key: string) => {
-  try {
-    if (key) localStorage.setItem('oxy_api_key', key);
-    else localStorage.removeItem('oxy_api_key');
-  } catch {}
-};
-
-export const hasApiKey = () => !!getApiKey();
+// Backwards-compat shims (some pages still import these). AI is always on
+// server-side now, so hasApiKey() returns true and setters are no-ops.
+export const getApiKey = (): string | null => 'lovable-gateway';
+export const setApiKey = (_key: string) => { /* no-op: managed server-side */ };
+export const hasApiKey = () => true;
 
 export interface ClaudeMessage {
   role: 'user' | 'assistant';
@@ -25,32 +19,21 @@ export async function callClaude(opts: {
   model?: string;
   max_tokens?: number;
 }): Promise<string> {
-  const apiKey = getApiKey();
-  if (!apiKey) throw new Error('API key mancante. Configurala in Impostazioni.');
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: opts.model || 'claude-sonnet-4-5-20250929',
-      max_tokens: opts.max_tokens || 2500,
+  const { data, error } = await supabase.functions.invoke('ai-proxy', {
+    body: {
       system: opts.system,
       messages: opts.messages,
-    }),
+      max_tokens: opts.max_tokens || 2500,
+    },
   });
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Claude API ${res.status}: ${err.slice(0, 200)}`);
+  if (error) {
+    throw new Error(`AI proxy error: ${error.message || 'unknown'}`);
   }
-
-  const data = await res.json();
-  return data.content?.[0]?.text || '';
+  if (data?.error) {
+    throw new Error(data.error);
+  }
+  return data?.content?.[0]?.text || '';
 }
 
 // ---------- History helpers ----------
