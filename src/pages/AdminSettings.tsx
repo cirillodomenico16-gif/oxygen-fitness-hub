@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAiConfigured } from '../lib/llm';
 import { AnimatedText } from '../components/ui/animated-shiny-text';
@@ -98,10 +98,10 @@ const AdminSettings: React.FC = () => {
       {section('Intelligenza Artificiale', (
         <div style={{ padding: '14px' }}>
           <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.8)', fontWeight: 700, marginBottom: 6 }}>
-            Agenti AI (Claude)
+            Agenti AI
           </div>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginBottom: 12, lineHeight: 1.5 }}>
-            Le richieste agli agenti AI passano da un proxy server-side (Supabase Edge Function) che gestisce la chiave Anthropic. La chiave non viene mai esposta al browser.
+            Powered by Lovable AI Gateway (Gemini 2.5 Pro). Le richieste passano da una Supabase Edge Function server-side. Nessuna chiave AI esposta al browser.
           </div>
           <div style={{
             display: 'flex',
@@ -123,12 +123,12 @@ const AdminSettings: React.FC = () => {
               }}
             />
             <span style={{ fontSize: 12, fontWeight: 700, color: aiActive ? '#86efac' : '#fcd34d' }}>
-              {aiActive ? 'Attivi (proxy configurato)' : 'Fallback locale (proxy non configurato)'}
+              {aiActive ? 'AI: Lovable Gateway (Gemini 2.5 Pro)' : 'AI non configurato (Supabase env mancanti)'}
             </span>
           </div>
           {!aiActive && (
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 10, lineHeight: 1.5 }}>
-              Per attivarli: collega Supabase al progetto, deploya la edge function <code style={{ color: '#ff8a80' }}>ai-proxy</code> e imposta la variabile d'ambiente <code style={{ color: '#ff8a80' }}>VITE_AI_PROXY_URL</code>.
+              Per attivarli: collega Supabase Cloud da Lovable e verifica che la edge function <code style={{ color: '#ff8a80' }}>ai-proxy</code> sia deployata.
             </div>
           )}
         </div>

@@ -1,17 +1,22 @@
-// Claude client.
+// AI client.
 //
-// All AI calls go through the Supabase Edge Function `ai-proxy`. The Anthropic
-// API key lives on the server and is never shipped to the browser.
-// Configure VITE_AI_PROXY_URL in the project env (see .env.example).
+// All AI calls go through the Supabase Edge Function `ai-proxy`. The proxy is
+// deployed via Lovable Cloud and uses LOVABLE_API_KEY (Lovable AI Gateway,
+// model: google/gemini-2.5-pro). No third-party API keys touch the browser.
 //
-// If VITE_AI_PROXY_URL is not configured, callClaude() rejects with a clear
-// error and the UI falls back to the deterministic local generator.
+// Architecture:
+//   client (this file) -> supabase.functions.invoke('ai-proxy', { body })
+//                       -> Supabase Edge Function (server-side LOVABLE_API_KEY)
+//                       -> Lovable AI Gateway -> Gemini 2.5 Pro
+//
+// Migration note: legacy modes ("direct" call to api.anthropic.com from the
+// browser, and the VITE_AI_PROXY_URL fetch shim) have been removed.
 
-const PROXY_URL = (import.meta.env.VITE_AI_PROXY_URL as string | undefined)?.trim();
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
-export const isAiConfigured = (): boolean => !!PROXY_URL;
+export const isAiConfigured = (): boolean => isSupabaseConfigured();
 
-/** Backwards-compat alias. Prefer isAiConfigured(). */
+/** Backwards-compat alias for the old API-key-in-localStorage UI. */
 export const hasApiKey = isAiConfigured;
 
 export interface ClaudeMessage {
@@ -26,39 +31,45 @@ export interface CallClaudeOptions {
   max_tokens?: number;
 }
 
-const DEFAULT_MODEL = 'claude-sonnet-4-5-20250929';
 const DEFAULT_MAX_TOKENS = 2500;
 
+/**
+ * Invoke the `ai-proxy` Edge Function. Keeps the function name `callClaude`
+ * for backwards compat with the rest of the codebase, but the underlying
+ * model is whatever the edge function selects (currently Gemini 2.5 Pro).
+ */
 export async function callClaude(opts: CallClaudeOptions): Promise<string> {
-  if (!PROXY_URL) {
-    throw new Error('AI non configurato: imposta VITE_AI_PROXY_URL.');
+  if (!isSupabaseConfigured()) {
+    throw new Error('AI non configurato: Supabase env mancante.');
   }
 
-  const res = await fetch(PROXY_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: opts.model || DEFAULT_MODEL,
-      max_tokens: opts.max_tokens || DEFAULT_MAX_TOKENS,
+  const { data, error } = await supabase.functions.invoke('ai-proxy', {
+    body: {
       system: opts.system,
       messages: opts.messages,
-    }),
-    credentials: 'include',
+      max_tokens: opts.max_tokens ?? DEFAULT_MAX_TOKENS,
+      // model intentionally omitted; the edge function picks the model.
+    },
   });
 
-  if (!res.ok) {
-    const err = await res.text().catch(() => '');
-    throw new Error(`AI proxy ${res.status}: ${err.slice(0, 200) || res.statusText}`);
+  if (error) {
+    throw new Error(`AI proxy: ${error.message || 'unknown error'}`);
   }
 
-  const data = await res.json().catch(() => null);
-  if (typeof data?.text === 'string') return data.text;
-  return data?.content?.[0]?.text || '';
+  // Normalize response: edge function returns either { text } or
+  // Anthropic-style { content: [{ text }] }.
+  const anyData = data as { text?: string; content?: Array<{ text?: string }> } | null;
+  if (typeof anyData?.text === 'string') return anyData.text;
+  const content = anyData?.content?.[0]?.text;
+  if (typeof content === 'string') return content;
+  return '';
 }
 
-/** One-time cleanup of the legacy localStorage entry where the key used to live. */
+/** No-op kept for compat — the legacy localStorage key is no longer used. */
 export const purgeLegacyApiKey = () => {
-  try { localStorage.removeItem('oxy_api_key'); } catch {}
+  try { localStorage.removeItem('oxy_api_key'); } catch {
+    // ignore
+  }
 };
 
 // ---------- History helpers ----------
