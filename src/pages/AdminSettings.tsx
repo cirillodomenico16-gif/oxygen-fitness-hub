@@ -103,7 +103,7 @@ const AdminSettings: React.FC = () => {
             letterSpacing: 0.3,
           }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px #4ade80' }} />
-            AI: Lovable Gateway (Claude)
+            AI: Lovable Gateway (Gemini 2.5 Pro)
           </div>
         </div>
       ), 0.08)}
