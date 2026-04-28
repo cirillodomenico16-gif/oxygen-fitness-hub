@@ -5,14 +5,14 @@
 // model: google/gemini-2.5-pro). No third-party API keys touch the browser.
 //
 // Architecture:
-//   client (this file) -> supabase.functions.invoke('ai-proxy', { body })
+//   client (this file) -> getSupabase().functions.invoke('ai-proxy', { body })
 //                       -> Supabase Edge Function (server-side LOVABLE_API_KEY)
 //                       -> Lovable AI Gateway -> Gemini 2.5 Pro
 //
 // Migration note: legacy modes ("direct" call to api.anthropic.com from the
 // browser, and the VITE_AI_PROXY_URL fetch shim) have been removed.
 
-import { supabase, isSupabaseConfigured } from './supabaseClient';
+import { getSupabase, isSupabaseConfigured } from './supabaseClient';
 
 export const isAiConfigured = (): boolean => isSupabaseConfigured();
 
@@ -43,7 +43,7 @@ export async function callClaude(opts: CallClaudeOptions): Promise<string> {
     throw new Error('AI non configurato: Supabase env mancante.');
   }
 
-  const { data, error } = await supabase.functions.invoke('ai-proxy', {
+  const { data, error } = await getSupabase().functions.invoke('ai-proxy', {
     body: {
       system: opts.system,
       messages: opts.messages,
