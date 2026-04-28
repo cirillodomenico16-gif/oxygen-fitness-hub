@@ -40,9 +40,10 @@ body {
 }
 #root { height: 100%; display: flex; flex-direction: column; }
 /* ==== Custom scrollbar (Oxygen red) — globale ==== */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 6px !important; height: 6px !important; display: block !important; }
 ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.04); }
 ::-webkit-scrollbar-thumb {
+  display: block !important;
   background: linear-gradient(180deg, var(--red), var(--red-bright));
   border-radius: 999px;
 }
@@ -50,7 +51,7 @@ body {
   background: linear-gradient(180deg, var(--red-bright), var(--red));
 }
 ::-webkit-scrollbar-corner { background: transparent; }
-* { scrollbar-width: thin; scrollbar-color: var(--red) transparent; }
+* { scrollbar-width: thin !important; scrollbar-color: var(--red) transparent !important; }
 button, a, nav { user-select: none; }
 input, textarea { font-family: var(--font-main); }
 
