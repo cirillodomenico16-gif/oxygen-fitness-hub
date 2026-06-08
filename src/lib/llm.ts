@@ -1,6 +1,10 @@
 // AI client — calls the `ai-proxy` edge function which routes to the
 // Lovable AI Gateway server-side. No API keys are stored in the browser.
-import { supabase } from '@/integrations/supabase/client';
+
+async function getSupabaseClient() {
+  const mod = await import('@/integrations/supabase/client');
+  return mod.supabase;
+}
 
 // Backwards-compat shims (some pages still import these). AI is always on
 // server-side now, so hasApiKey() returns true and setters are no-ops.
@@ -19,6 +23,7 @@ export async function callClaude(opts: {
   model?: string;
   max_tokens?: number;
 }): Promise<string> {
+  const supabase = await getSupabaseClient();
   const { data, error } = await supabase.functions.invoke('ai-proxy', {
     body: {
       system: opts.system,
